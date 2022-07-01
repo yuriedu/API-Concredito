@@ -60,7 +60,6 @@ class Banrisul {
         data.saldoDevedor = data.saldoDevedor / 1.02
         return this.simularPropostaPortabilidade(data, log)
       } else if (!aux && response && response.data && response.data.retorno && response.data.retorno.viabilidadeEspecial && response.data.retorno.viabilidadeEspecial.saldoDevedorCorrigido !== data.saldoDevedor) {
-        console.log(response.data.retorno.viabilidadeEspecial)
         data.saldoDevedor = response.data.retorno.viabilidadeEspecial.saldoDevedorCorrigido
         return this.simularPropostaPortabilidade(data, log, true)
       }
