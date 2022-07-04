@@ -31,18 +31,18 @@ const BMGFGTS = async (cpf, log) => {
             var data = {
               status: true,
               cpf: cpf,
-              saldoLiberado: simularResponse.valorLiberado,
-              saldoTotal: simularResponse.valorOriginal,
-              taxa: simularResponse.valorTaxaCadastro,
+              saldoLiberado: `R$ ${simularResponse.valorLiberado.replace('.',',')}`,
+              saldoTotal: `R$ ${simularResponse.valorOriginal.replace('.',',')}`,
               data: `${dia}/${mes}/${ano}`,
               parcelas: [],
             }
             await simularResponse.parcelas.forEach((parc)=>{
+              if (parc.parcelaLiberada == "0.0") return;
               var valor = parc.dataVencimento.slice(0, 10)
               var ano = valor.slice(0,4)
               var mes = valor.slice(5,7)
               var dia = valor.slice(8,10)
-              data.parcelas[data.parcelas.length] = { data: `${dia}/${mes}/${ano}`, valor: parc.parcelaLiberada }
+              data.parcelas[data.parcelas.length] = { data: `${dia}/${mes}/${ano}`, valor: `R$ ${parc.parcelaLiberada.replace('.',',')}` }
             })
             return data;
           } else {
