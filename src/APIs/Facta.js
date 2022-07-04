@@ -17,7 +17,11 @@ class Facta {
         this.token = response.data.token
         this.api = await axios.create({ baseURL: this.url, headers: { Authorization: `Bearer ${this.token}` } });
         return true;
-      } else return false;
+      } else if (response) {
+        console.log(`[API Facta TOKEN - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=> ${err}`)
+        console.log(response.data ? response.data : response);
+        return false;
+      } return false;
     } catch(err) {
       if (err.code && (err.code == 'ETIMEDOUT')) {
         await this.timeout(5000)
