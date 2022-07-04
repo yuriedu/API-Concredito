@@ -47,6 +47,11 @@ class Mercantil {
         await this.refreshToken(log);
         return this.getSaldo(cpf, log)
       }
+      if (err.response && err.response.data && err.response.data.logEntryId) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.getSaldo(cpf, log)
+      }
       console.log(`[API Mercantil ERROR(2) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
       return false;

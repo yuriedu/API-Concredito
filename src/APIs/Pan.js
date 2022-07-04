@@ -19,6 +19,7 @@ class Panamericano {
         return true;
       } else return false;
     } catch(err) {
+      if (err.response && err.response.data && err.response.data.detalhes && err.response.data.detalhes[0]) return err.response
       if(err.response && (err.response.status == 401 || err.response.status == 504)) {
         await this.timeout(5000)
         return this.refreshToken(log);

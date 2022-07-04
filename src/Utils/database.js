@@ -22,16 +22,27 @@ mongoose.connect(process.env.MONGODB_URL, {
   return console.log(`[Dashboard] => MongoDB Connected!`);
 });
 
+
+var ConsultFgtsBanksSchema = new mongoose.Schema({
+  _id: String,
+  saldoTotal: String,
+  saldoLiberado: String,
+  data: String,
+  parcelas: String,
+})
+var ConsultFgtsSchema = new mongoose.Schema({ _id: String, banks: [ConsultFgtsBanksSchema] })
+
 var userSchema = new mongoose.Schema({
   _id: String,
   password: String,
   permissions: {
     administrator: Boolean,
     register: Boolean,
-    consult: Boolean,
+    consultFgts: Boolean,
     lots: Boolean,
   },
   counts: {
+    consultFgts: [ConsultFgtsSchema],
     register: Number,
   }
 })

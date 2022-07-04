@@ -20,6 +20,7 @@ express()
   .post('/cadastrar', async function(req, res) { routes.cadastrar(req, res, logs) })
   .post('/verifySituation', async function(req, res) { routes.verifySituation(req, res, logs) })
   .post('/consultar', async function(req, res) { routes.consultar(req, res, queue) })
+  .post('/verifyQueue', async function(req, res) { routes.verifyQueue(req, res, queue) })
 
   .listen(process.env.PORT, function (err) {
     if (err) return console.log(`[Dashboard] => Error Loading:\n${err}`)

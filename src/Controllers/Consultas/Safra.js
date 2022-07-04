@@ -38,8 +38,7 @@ const SafraFGTS = async (cpf, produto, log) => {
                     data.parcelas[data.parcelas.length] = { data: `${dia}/${mes}/${ano}`, valor: `R$ ${String(parc.valor).replace(".",",")}` }
                   })
                   data.saldoTotal = `R$ ${String(data.saldoTotal).replace('.',',')}`
-                  console.log(data)
-                  return data
+                  return data;
                 } else {
                   if (calcularProposta.data.erros && calcularProposta.data.erros[0].descricao) return { status: false, error: `[13]=> ${calcularProposta.data.erros[0].descricao}` }
                   if (calcularProposta.data.erros && calcularProposta.data.erros.descricao) return { status: false, error: `[12]=> ${calcularProposta.data.erros.descricao}` }
