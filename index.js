@@ -5,6 +5,7 @@ const express = require("express");
 const { MSSQL, MongoDB } = require('./src/Utils/database');
 const routes = require('./src/Routes/routes')
 var logs = []
+var queue = []
 
 express()
   .use(require('cors')())
@@ -18,6 +19,8 @@ express()
   .post('/refresh', async function(req, res) { routes.refresh(req, res) })
   .post('/cadastrar', async function(req, res) { routes.cadastrar(req, res, logs) })
   .post('/verifySituation', async function(req, res) { routes.verifySituation(req, res, logs) })
+  .post('/consultar', async function(req, res) { routes.consultar(req, res, queue) })
+
   .listen(process.env.PORT, function (err) {
     if (err) return console.log(`[Dashboard] => Error Loading:\n${err}`)
     console.log(`[Dashboard] => Successfully Loaded!`)

@@ -28,8 +28,8 @@ var userSchema = new mongoose.Schema({
   permissions: {
     administrator: Boolean,
     register: Boolean,
-    simulation: Boolean,
-    lotes: Boolean,
+    consult: Boolean,
+    lots: Boolean,
   },
   counts: {
     register: Number,

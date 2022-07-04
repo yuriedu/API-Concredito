@@ -80,7 +80,7 @@ class Banrisul {
     try {
       log.situation = `[4]=> Gravando a proposta...`
       const response = await this.api.post(`/consignado/Consignado/Proposta/GravarPropostaPortabilidade`, data);
-      if (!response.data.retorno.proposta) {
+      if (!response.data.retorno.proposta || response.data.retorno.proposta == 0) {
         console.log(response.data)
       }
       return response;
