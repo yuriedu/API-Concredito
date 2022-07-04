@@ -79,7 +79,8 @@ const C6FGTS = async (cliente, pool, log) => {
                     await updateContratoDB(pool, cliente.IdContrato, simularProposta.data.net_amount, cliente.ValorParcela, 'Valores do Contrato atualizados')
                     return saveDB(pool, cliente.IdContrato, 9232, registerProposta.data.proposal_number, `${getLink.data.url}`, true)
                   } else {
-                    if (getLink.data.details && getLink.data.details) return saveDB(pool, cliente.IdContrato, 824, '', `[5]=> ${getLink.data.details[0] ? getLink.data.details[0] : getLink.data.details}`, false)
+                    if (getLink.data.details && getLink.data.details.length >= 0) return saveDB(pool, cliente.IdContrato, 824, '', `[5]=> ${getLink.data.details[0]}`, false)
+                    if (!Array.isArray(getLink.data.details)) return saveDB(pool, cliente.IdContrato, 824, '', `[5]=> ${getLink.data.details}`, false)
                     if (getLink.data.message) return saveDB(pool, cliente.IdContrato, 824, '', `[5]=> ${getLink.data.message}`, false)
                     console.log(`[C6 FGTS Error(3) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
                     console.log(getLink.data)
@@ -87,15 +88,17 @@ const C6FGTS = async (cliente, pool, log) => {
                   }
                 } else return saveDB(pool, cliente.IdContrato, 824, '', '[8]=> Ocorreu algum erro ao pegar o link de formalização da proposta! Pegue MANUALMENTE...', false)
               } else {
-                if (registerProposta.data.details && registerProposta.data.details) return saveDB(pool, cliente.IdContrato, 824, '', `[5]=> ${registerProposta.data.details[0] ? registerProposta.data.details[0] : registerProposta.data.details}`, false)
-                if (registerProposta.data.message) return saveDB(pool, cliente.IdContrato, 824, '', `[5]=> ${registerProposta.data.message}`, false)
+                if (registerProposta.data.details && registerProposta.data.details.length >= 0) return saveDB(pool, cliente.IdContrato, 824, '', `[6]=> ${registerProposta.data.details[0]}`, false)
+                if (!Array.isArray(registerProposta.data.details)) return saveDB(pool, cliente.IdContrato, 824, '', `[6]=> ${registerProposta.data.details}`, false)
+                if (registerProposta.data.message) return saveDB(pool, cliente.IdContrato, 824, '', `[6]=> ${registerProposta.data.message}`, false)
                 console.log(`[C6 FGTS Error(2) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
                 console.log(registerProposta.data)
                 return saveDB(pool, cliente.IdContrato, 824, '', '[7]=> Ocorreu algum erro ao registrar a proposta do cliente! Tente novamente mais tarde...', false)
               }
             } else return saveDB(pool, cliente.IdContrato, 824, '', '[6]=> Ocorreu algum erro ao registrar a proposta do cliente! Tente novamente mais tarde...', false)
           } else {
-            if (simularProposta.data.details && simularProposta.data.details) return saveDB(pool, cliente.IdContrato, 824, '', `[5]=> ${simularProposta.data.details[0] ? simularProposta.data.details[0] : simularProposta.data.details}`, false)
+            if (simularProposta.data.details && simularProposta.data.details.length >= 0) return saveDB(pool, cliente.IdContrato, 824, '', `[5]=> ${simularProposta.data.details[0]}`, false)
+            if (!Array.isArray(simularProposta.data.details)) return saveDB(pool, cliente.IdContrato, 824, '', `[5]=> ${simularProposta.data.details}`, false)
             if (simularProposta.data.message) return saveDB(pool, cliente.IdContrato, 824, '', `[5]=> ${simularProposta.data.message}`, false)
             console.log(`[C6 FGTS Error(1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
             console.log(simularProposta.data)

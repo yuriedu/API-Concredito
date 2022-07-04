@@ -4,9 +4,9 @@ const { removeSpaces } = require('../Utils/functions');
 const { C6FGTS } = require('../Controllers/Consultas/C6');
 const { FactaFGTS } = require('../Controllers/Consultas/Facta');
 const { BMGFGTS } = require('../Controllers/Consultas/BMG');
+const { MercantilFGTS } = require('../Controllers/Consultas/Mercantil');
+const { SafraFGTS } = require('../Controllers/Consultas/Safra');
 
-const { MercantilFGTS } = require('../Controllers/Cadastros/Mercantil');
-const { SafraFGTS } = require('../Controllers/Cadastros/Safra');
 const { PanFGTS } = require('../Controllers/Cadastros/Pan');
 
 const consultar = async (req, res, queue) => {
@@ -32,6 +32,7 @@ const consultar = async (req, res, queue) => {
       } else if (req.body.bank == "BMG") {
         response = await BMGFGTS(req.body.cpf, { cpf: req.body.cpf, situation: 'Consultando FGTS...' });
       } else return res.status(200).json({ status: false, error: `Banco selecionado não encontrado! Verifique e tente novamente...` })
+      //FAZER SISTEMA DE SALVAR DB
       if (response && response.status) return res.status(200).json(response)
       if (response && response.error) return res.status(200).json({ status: false, error: response.error })
     })

@@ -22,6 +22,9 @@ class C6 {
       if (err.code && (err.code == 'ETIMEDOUT')) {
         await this.timeout(5000)
         return this.refreshToken(log);
+      } else if (err.response && err.response.data && err.response.data.message == "An internal error has occurred"){
+        await this.timeout(5000)
+        return this.refreshToken(log);
       }
       console.log(`[API C6 ERROR(1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=> ${err}`)
       console.log(err.response ? err.response.data : err);
@@ -37,6 +40,10 @@ class C6 {
     } catch(err) {
       if (err.response && err.response.data && err.response.data.details && err.response.data.details[0] && (err.response.data.details[0].includes('Não foi possivel realizar comunicação com a CEF') || err.response.data.details[0].includes('Limite da conta excedido'))) return this.simularProposta(data, log)
       if (err.response && err.response.status == 401) {
+        await this.refreshToken(log)
+        return this.simularProposta(data, log)
+      } else if (err.response && err.response.data && err.response.data.message == "An internal error has occurred"){
+        await this.timeout(5000)
         await this.refreshToken(log)
         return this.simularProposta(data, log)
       }
@@ -60,6 +67,10 @@ class C6 {
     } catch(err) {
       if (err.response && err.response.data && err.response.data.details && err.response.data.details[0] && (err.response.data.details[0].includes('Não foi possivel realizar comunicação com a CEF') || err.response.data.details[0].includes('Limite da conta excedido'))) return this.registerProposta(data, log)
       if (err.response && err.response.status == 401) {
+        await this.refreshToken(log)
+        return this.registerProposta(data, log)
+      } else if (err.response && err.response.data && err.response.data.message == "An internal error has occurred"){
+        await this.timeout(5000)
         await this.refreshToken(log)
         return this.registerProposta(data, log)
       }
@@ -88,6 +99,10 @@ class C6 {
         return this.getLink(proposta, log)
       } else if (response && response.status == 404) {
         return this.getLink(proposta, log)
+      } else if (err.response && err.response.data && err.response.data.message == "An internal error has occurred"){
+        await this.timeout(5000)
+        await this.refreshToken(log)
+        return this.getLink(proposta, log, tentativa+1)
       } else if (!response.data || !response.data.url) {
         await this.timeout(5000)
         await this.refreshToken(log);

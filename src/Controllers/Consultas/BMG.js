@@ -1,5 +1,7 @@
 const BMG = require('../../APIs/BMG');
 const { saveDB, updateContratoDB, dadosCliente, bancoTranslate, bantToString } = require('../../Utils/functions');
+const moment = require(`moment`);
+moment.locale("pt-BR");
 
 const BMGFGTS = async (cpf, log) => {
   try {
@@ -24,16 +26,13 @@ const BMGFGTS = async (cpf, log) => {
         if (simularProposta && simularProposta.data) {
           if (simularProposta.data.simularSaqueAniversarioFgtsResponse && simularProposta.data.simularSaqueAniversarioFgtsResponse.simularSaqueAniversarioFgtsReturn && simularProposta.data.simularSaqueAniversarioFgtsResponse.simularSaqueAniversarioFgtsReturn.sucesso) {
             var simularResponse = simularProposta.data.simularSaqueAniversarioFgtsResponse.simularSaqueAniversarioFgtsReturn
-            var data = simularResponse.dataVigenciaInicial.slice(0, 10)
-            var ano = data.slice(0,4)
-            var mes = data.slice(5,7)
-            var dia = data.slice(8,10)
+            var date = moment(new Date(), 'DD/MM/YYYY').format('DD-MM-YYYY').replace("-","/").replace("-","/")
             var data = {
               status: true,
               cpf: cpf,
               saldoLiberado: `R$ ${simularResponse.valorLiberado.replace('.',',')}`,
               saldoTotal: `R$ ${simularResponse.valorOriginal.replace('.',',')}`,
-              data: `${dia}/${mes}/${ano}`,
+              data: `${date}`,
               parcelas: [],
             }
             await simularResponse.parcelas.forEach((parc)=>{
@@ -49,10 +48,10 @@ const BMGFGTS = async (cpf, log) => {
             if (simularProposta.data.simularSaqueAniversarioFgtsResponse && simularProposta.data.simularSaqueAniversarioFgtsResponse.error && simularProposta.data.simularSaqueAniversarioFgtsResponse.error.message) return saveDB(pool, cliente.IdContrato, 824, '', `[4]=> ${simularProposta.data.simularSaqueAniversarioFgtsResponse.error.message.replace("java.lang.IllegalArgumentException:", "").replace("com.bmg.econsig.common.exception.ServiceException:", "")}`, false)
             console.log(`[BMG FGTS Error(1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
             console.log(simularProposta.data)
-            return saveDB(pool, cliente.IdContrato, 824, '', '[4]=> Ocorreu algum erro ao simular a proposta do cliente! Tente novamente mais tarde...', false)
+            return saveDB(pool, cliente.IdContrato, 824, '', '[3]=> Ocorreu algum erro ao simular a proposta do cliente! Tente novamente mais tarde...', false)
           }
-        } else return saveDB(pool, cliente.IdContrato, 824, '', '[3]=> Ocorreu algum erro ao simular a proposta do cliente! Tente novamente mais tarde...', false)
-      } else return saveDB(pool, cliente.IdContrato, 824, '', '[2]=> Problema na conexão da API! Tente novamente mais tarde...', false)
+        } else return saveDB(pool, cliente.IdContrato, 824, '', '[2]=> Ocorreu algum erro ao simular a proposta do cliente! Tente novamente mais tarde...', false)
+      } else return saveDB(pool, cliente.IdContrato, 824, '', '[1]=> Problema na conexão da API! Tente novamente mais tarde...', false)
   } catch(err) {
     console.log(`[BMG FGTS ERROR - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
     console.log(err)
