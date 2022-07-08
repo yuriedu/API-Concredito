@@ -1,8 +1,11 @@
 const BMG = require('../../APIs/BMG');
 const { saveDB, updateContratoDB, dadosCliente, bancoTranslate, bantToString } = require('../../Utils/functions');
 
-const BMGFGTS = async (cliente, pool, log, token) => {
+var token = false
+
+const BMGFGTS = async (cliente, pool, log, newToken) => {
   try {
+    if (newToken) token = newToken
     log.situation = `[0]=> Verificando dados do cliente...`
     var client = await dadosCliente(cliente, "FGTS");
     if (client && client.status) {
@@ -27,6 +30,23 @@ const BMGFGTS = async (cliente, pool, log, token) => {
         var simularProposta = await bmg.simularProposta(simula, log);
         if (simularProposta && simularProposta.data) {
           if (simularProposta.data.simularSaqueAniversarioFgtsResponse && simularProposta.data.simularSaqueAniversarioFgtsResponse.simularSaqueAniversarioFgtsReturn && simularProposta.data.simularSaqueAniversarioFgtsResponse.simularSaqueAniversarioFgtsReturn.valorLiberado) {
+            
+            var parcelas = simularProposta.data.simularSaqueAniversarioFgtsResponse.simularSaqueAniversarioFgtsReturn.parcelas
+            simularProposta.data.simularSaqueAniversarioFgtsResponse.simularSaqueAniversarioFgtsReturn.parcelas = []
+            await parcelas.forEach((parc)=>{
+              if (parc.parcelaLiberada == "0.0") return;
+              simularProposta.data.simularSaqueAniversarioFgtsResponse.simularSaqueAniversarioFgtsReturn.parcelas[simularProposta.data.simularSaqueAniversarioFgtsResponse.simularSaqueAniversarioFgtsReturn.parcelas.length] = {
+                dataVencimento: parc.dataVencimento,
+                iof: parc.iof,
+                motivo: parc.motivo,
+                numeroParcela: parc.numeroParcela,
+                parcelaLiberada: parc.parcelaLiberada,
+                parcelaObrigatoria: parc.parcelaObrigatoria,
+                parcelaOriginal: parc.parcelaOriginal,
+                parcelaProporcional: parc.parcelaProporcional,
+                parcelaValida: parc.parcelaValida,
+              }
+            })
             var telefone = cliente.TelefoneConvenio.replace(cliente.TelefoneConvenio.slice(0,5), "").replace('-','')
             var register = {
               parameters: {

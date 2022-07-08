@@ -20,7 +20,7 @@ class Panamericano {
       } else return false;
     } catch(err) {
       if (err.response && err.response.data && err.response.data.detalhes && err.response.data.detalhes[0]) return err.response
-      if(err.response && (err.response.status == 401 || err.response.status == 504)) {
+      if(err.response && (err.response.status == 401 || err.response.status == 504 || err.response.status == 502)) {
         await this.timeout(5000)
         return this.refreshToken(log);
       }
@@ -40,7 +40,7 @@ class Panamericano {
       return response;
     } catch(err) {
       if (err.response && err.response.data && err.response.data.detalhes && err.response.data.detalhes[0]) return err.response
-      if(err.response && (err.response.status == 401 || err.response.status == 504)) {
+      if(err.response && (err.response.status == 401 || err.response.status == 504 || err.response.status == 502)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.simularProposta(data, log)
@@ -62,7 +62,7 @@ class Panamericano {
       return response;
     } catch(err) {
       if (err.response && err.response.data && err.response.data.detalhes && err.response.data.detalhes[0]) return err.response
-      if(err.response && (err.response.status == 401 || err.response.status == 504)) {
+      if(err.response && (err.response.status == 401 || err.response.status == 504 || err.response.status == 502)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.simularPropostaINSS(data, log)
@@ -84,7 +84,7 @@ class Panamericano {
       return response;
     } catch(err) {
       if (err.response && err.response.data && err.response.data.detalhes && err.response.data.detalhes[0]) return err.response
-      if(err.response && (err.response.status == 401 || err.response.status == 504)) {
+      if(err.response && (err.response.status == 401 || err.response.status == 504 || err.response.status == 502)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.registerProposta(data, log)
@@ -106,7 +106,7 @@ class Panamericano {
       return response;
     } catch(err) {
       if (err.response && err.response.data && err.response.data.detalhes && err.response.data.detalhes[0]) return err.response
-      if(err.response && (err.response.status == 401 || err.response.status == 504)) {
+      if(err.response && (err.response.status == 401 || err.response.status == 504 || err.response.status == 502)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.registerPropostaINSS(data, log)
@@ -128,7 +128,7 @@ class Panamericano {
       return response;
     } catch(err) {
       if (err.response && err.response.data && err.response.data.detalhes && err.response.data.detalhes[0]) return err.response
-      if(err.response && (err.response.status == 401 || err.response.status == 504)) {
+      if(err.response && (err.response.status == 401 || err.response.status == 504 || err.response.status == 502)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.getLink(id, tipoProposta, log)

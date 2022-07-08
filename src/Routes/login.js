@@ -1,6 +1,6 @@
 const { MSSQL, MongoDB } = require('../Utils/database');
 
-const loginVerify = async (req, res) => {
+const login = async (req, res) => {
   try {
     if (!req.body.user || !req.body.password) return res.status(500).json({ status: false, error: `Usuário ou senha não foi informado...` })
     MongoDB.findById('db', async (error, table) => {
@@ -8,10 +8,10 @@ const loginVerify = async (req, res) => {
       return res.status(200).json({ status: true })
     })
   } catch(err) {
-    console.log(`[POST /verifyLogin] => ${err}`)
+    console.log(`[POST /login] => ${err}`)
     console.log(err)
     return res.status(500).json(err)
   }
 }
 
-module.exports = loginVerify
+module.exports = login

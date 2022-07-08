@@ -36,10 +36,18 @@ var userSchema = new mongoose.Schema({
   _id: String,
   password: String,
   permissions: {
-    administrator: Boolean,
-    register: Boolean,
-    consultFgts: Boolean,
-    lots: Boolean,
+    administrativo: {
+      funcionarios: Boolean,
+      relatorios: Boolean,
+    },
+    propostas: {
+      lista: Boolean,
+      cadastrar: Boolean,
+    },
+    consultas: {
+      fgts: Boolean,
+      lotes: Boolean
+    }
   },
   counts: {
     consultFgts: [ConsultFgtsSchema],
