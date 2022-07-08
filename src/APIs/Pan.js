@@ -28,6 +28,10 @@ class Panamericano {
         await this.timeout(5000)
         return this.refreshToken(log);
       }
+      if (err.response && err.response.data && err.response.data.mensagem == "Limite de requisições excedidas") {
+        await this.timeout(5000)
+        return this.refreshToken(log);
+      }
       console.log(`[API Pan ERROR(1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=> ${err}`)
       console.log(err.response ? err.response.data : err);
       return false;
@@ -46,6 +50,11 @@ class Panamericano {
         return this.simularProposta(data, log)
       }
       if (err.code && (err.code == 'ETIMEDOUT')) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.simularProposta(data, log)
+      }
+      if (err.response && err.response.data && err.response.data.mensagem == "Limite de requisições excedidas") {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.simularProposta(data, log)
@@ -72,6 +81,11 @@ class Panamericano {
         await this.refreshToken(log);
         return this.simularPropostaINSS(data, log)
       }
+      if (err.response && err.response.data && err.response.data.mensagem == "Limite de requisições excedidas") {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.simularPropostaINSS(data, log)
+      }
       console.log(`[API Pan ERROR(5) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
       return false;
@@ -90,6 +104,11 @@ class Panamericano {
         return this.registerProposta(data, log)
       }
       if (err.code && (err.code == 'ETIMEDOUT')) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.registerProposta(data, log)
+      }
+      if (err.response && err.response.data && err.response.data.mensagem == "Limite de requisições excedidas") {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.registerProposta(data, log)
@@ -116,6 +135,11 @@ class Panamericano {
         await this.refreshToken(log);
         return this.registerPropostaINSS(data, log)
       }
+      if (err.response && err.response.data && err.response.data.mensagem == "Limite de requisições excedidas") {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.registerPropostaINSS(data, log)
+      }
       console.log(`[API Pan ERROR(6) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
       return false;
@@ -134,6 +158,11 @@ class Panamericano {
         return this.getLink(id, tipoProposta, log)
       }
       if (err.code && (err.code == 'ETIMEDOUT')) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.getLink(id, tipoProposta, log)
+      }
+      if (err.response && err.response.data && err.response.data.mensagem == "Limite de requisições excedidas") {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.getLink(id, tipoProposta, log)

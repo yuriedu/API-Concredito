@@ -42,7 +42,8 @@ const SafraFGTS = async (cpf, produto, log) => {
                 } else {
                   if (calcularProposta.data.erros && calcularProposta.data.erros[0].descricao) return { status: false, error: `[13]=> ${calcularProposta.data.erros[0].descricao}` }
                   if (calcularProposta.data.erros && calcularProposta.data.erros.descricao) return { status: false, error: `[12]=> ${calcularProposta.data.erros.descricao}` }
-                  console.log(`[Safra FGTS Error(3) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
+                  if (calcularProposta.data.simulacoes && calcularProposta.data.simulacoes[0] && calcularProposta.data[0].valorPrincipal == 0) return { status: false, error: `[4]=> O cliente não possui saldo...` }
+                  console.log(`[Safra Consultas FGTS Error(3) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
                   console.log(calcularProposta.data)
                   return { status: false, error: '[11]=> Ocorreu algum erro ao calcular a proposta! Tente novamente mais tarde...' }
                 }
@@ -50,7 +51,7 @@ const SafraFGTS = async (cpf, produto, log) => {
             } else {
               if (tabelas.data.erros && tabelas.data.erros[0].descricao) return { status: false, error: `[9]=> ${tabelas.data.erros[0].descricao}` }
               if (tabelas.data.erros && tabelas.data.erros.descricao) return { status: false, error: `[8]=> ${tabelas.data.erros.descricao}` }
-              console.log(`[Safra FGTS Error(2) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
+              console.log(`[Safra Consultas FGTS Error(2) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
               console.log(tabelas.data)
               return { status: false, error: '[7]=> Ocorreu algum erro ao consultar o juros da tabela! Tente novamente mais tarde...' }
             }
@@ -58,14 +59,14 @@ const SafraFGTS = async (cpf, produto, log) => {
         } else {
           if (getSaldo.data.erros && getSaldo.data.erros[0].descricao) return { status: false, error: `[5]=> ${getSaldo.data.erros[0].descricao}` }
           if (getSaldo.data.erros && getSaldo.data.erros.descricao) return { status: false, error: `[4]=> ${getSaldo.data.erros.descricao}` }
-          console.log(`[Safra FGTS Error(1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
+          console.log(`[Safra Consultas FGTS Error(1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
           console.log(getSaldo.data)
           return { status: false, error: '[3]=> Ocorreu algum erro ao consultar o saldo do cliente! Tente novamente mais tarde...' }
         }
       } else return { status: false, error: '[2]=> Ocorreu algum erro ao consultar o saldo do cliente! Tente novamente mais tarde...' }
     } else return { status: false, error: '[1]=> Problema na conexão da API! Tente novamente mais tarde...' }
   } catch(err) {
-    console.log(`[Safra FGTS ERROR - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
+    console.log(`[Safra Consultas FGTS ERROR - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
     console.log(err)
   }
 }

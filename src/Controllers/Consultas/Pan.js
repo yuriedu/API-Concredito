@@ -36,14 +36,14 @@ const PanFGTS = async (cpf, type, valor, log) => {
           } else return { status: false, error: `[5]=> Não foi possivel fazer a consulta de saldo com esse cpf e valor!` }
         } else {
           if (simularProposta.data.detalhes) return { status: false, error: `[4]=> ${simularProposta.data.detalhes[0] ? simularProposta.data.detalhes[0] : simularProposta.data.detalhes}` }
-          console.log(`[Pan FGTS Error(1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
+          console.log(`[Pan Consultas FGTS Error(1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
           console.log(simularProposta.data)
           return { status: false, error: '[3]=> Ocorreu algum erro ao simular a proposta do cliente! Tente novamente mais tarde...' }
         }
       } else return { status: false, error: '[2]=> Ocorreu algum erro ao simular a proposta do cliente! Tente novamente mais tarde...' }
     } else return { status: false, error: '[1]=> Problema na conexão da API! Tente novamente mais tarde...' }
   } catch(err) {
-    console.log(`[Pan FGTS ERROR - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
+    console.log(`[Pan Consultas FGTS ERROR - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
     console.log(err)
   }
 }

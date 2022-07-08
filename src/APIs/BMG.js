@@ -27,7 +27,11 @@ class BMG {
       } else return false;
     } catch(err) {
       if (err.response && err.response.status == 403) return this.refreshToken(log)
-      if (err.code && (err.code == 'ETIMEDOUT')) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET')) {
+        await this.timeout(5000)
+        return this.refreshToken(log);
+      }
+      if (err.response && err.response.data && err.response.data.code == "soapenv:Server.userException") {
         await this.timeout(5000)
         return this.refreshToken(log);
       }
@@ -49,7 +53,12 @@ class BMG {
         await this.refreshToken(log)
         return this.simularProposta(data, log)
       }
-      if (err.code && (err.code == 'ETIMEDOUT')) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET')) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.simularProposta(data, log)
+      }
+      if (err.response && err.response.data && err.response.data.code == "soapenv:Server.userException") {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.simularProposta(data, log)
@@ -72,7 +81,12 @@ class BMG {
         await this.refreshToken(log)
         return this.gravarProposta(data, log)
       }
-      if (err.code && (err.code == 'ETIMEDOUT')) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET')) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.gravarProposta(data, log)
+      }
+      if (err.response && err.response.data && err.response.data.code == "soapenv:Server.userException") {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.gravarProposta(data, log)
@@ -94,7 +108,12 @@ class BMG {
         await this.refreshToken(log)
         return this.getLink(proposta, log)
       }
-      if (err.code && (err.code == 'ETIMEDOUT')) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET')) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.getLink(proposta, log)
+      }
+      if (err.response && err.response.data && err.response.data.code == "soapenv:Server.userException") {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.getLink(proposta, log)

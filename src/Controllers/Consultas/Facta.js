@@ -36,7 +36,7 @@ const FactaFGTS = async (cpf, table, log) => {
               if (calcularSaldo.data.mensagem) return { status: false, error: `[13]=> ${calcularSaldo.data.mensagem}` }
               if (calcularSaldo.data['<b>Fatal error</b>']) return { status: false, error: `[12]=> Ocorreu algum erro no banco de dados da facta! Tente novamente mais tarde...` }
               if (calcularSaldo.data['<b>Notice</b>']) return { status: false, error: `[11]=> Ocorreu algum erro no banco de dados da facta! Tente novamente mais tarde...` }
-              console.log(`[Facta FGTS Error(2) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
+              console.log(`[Facta Consultas FGTS Error(2) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
               console.log(calcularSaldo.data)
               return { status: false, error: '[10]=> Ocorreu algum erro ao calcular o saldo do cliente! Tente novamente mais tarde...' }
             }
@@ -47,14 +47,14 @@ const FactaFGTS = async (cpf, table, log) => {
           if (getSaldo.data.mensagem) return { status: false, error: `[6]=> ${getSaldo.data.mensagem}` }
           if (getSaldo.data['<b>Fatal error</b>']) return { status: false, error: `[5]=> Ocorreu algum erro no banco de dados da facta! Tente novamente mais tarde...` }
           if (getSaldo.data['<b>Notice</b>']) return { status: false, error: `[4]=> Ocorreu algum erro no banco de dados da facta! Tente novamente mais tarde...` }
-          console.log(`[Facta FGTS Error(1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
+          console.log(`[Facta Consultas FGTS Error(1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
           console.log(getSaldo.data)
           return { status: false, error: '[3]=> Ocorreu algum erro ao consultar o saldo do cliente! Tente novamente mais tarde...' }
         }
       } else return { status: false, error: '[2]=> Ocorreu algum erro ao consultar o saldo do cliente! Tente novamente mais tarde...' }
     } else return { status: false, error: '[1]=> Problema na conexão da API! Tente novamente mais tarde...' }
   } catch(err) {
-    console.log(`[Facta FGTS ERROR - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
+    console.log(`[Facta Consultas FGTS ERROR - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
     console.log(err)
   }
 }

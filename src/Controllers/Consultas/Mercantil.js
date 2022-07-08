@@ -53,7 +53,7 @@ const MercantilFGTS = async (cpf, type, valor, log) => {
               } else {
                 if (simularProposta.data.errors && simularProposta.data.errors[0] && simularProposta.data.errors[0].message) return { status: false, error: `[9]=> ${simularProposta.data.errors[0].message}` }
                 if (simularProposta.data.errors && Object.keys(simularProposta.data.errors) && Object.keys(simularProposta.data.errors)[0]) return { status: false, error: `[8]=> ${Object.keys(simularProposta.data.errors)[0]}! Verifique e tente novamente...` }
-                console.log(`[Mercantil FGTS Error(2) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
+                console.log(`[Mercantil Consultas FGTS Error(2) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
                 console.log(simularProposta.data)
                 return { status: false, error: '[7]=> Ocorreu algum erro ao simular a proposta do cliente! Tente novamente mais tarde...' }
               }
@@ -61,14 +61,15 @@ const MercantilFGTS = async (cpf, type, valor, log) => {
           } else {
             if (getSaldo.data.errors && getSaldo.data.errors[0] && getSaldo.data.errors[0].message) return { status: false, error: `[5]=> ${getSaldo.data.errors[0].message}` }
             if (getSaldo.data.errors && Object.keys(getSaldo.data.errors) && Object.keys(getSaldo.data.errors)[0]) return { status: false, error: `[4]=> ${Object.keys(getSaldo.data.errors)[0]}! Verifique e tente novamente...` }
-            console.log(`[Mercantil FGTS Error(1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
+            if (getSaldo.data.valorTotal == 0) return { status: false, error: `[4]=> O cliente não possui saldo...` }
+            console.log(`[Mercantil Consultas FGTS Error(1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
             console.log(getSaldo.data)
             return { status: false, error: '[3]=> Ocorreu algum erro ao consultar o saldo do cliente! Tente novamente mais tarde...' }
           }
         } else return { status: false, error: '[2]=> Ocorreu algum erro ao consultar o saldo do cliente! Tente novamente mais tarde...' }
       } else return { status: false, error: '[1]=> Problema na conexão da API! Tente novamente mais tarde...' }
   } catch(err) {
-    console.log(`[Mercantil FGTS ERROR - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
+    console.log(`[Mercantil Consultas FGTS ERROR - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
     console.log(err)
   }
 }

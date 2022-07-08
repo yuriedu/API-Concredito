@@ -45,15 +45,15 @@ const BMGFGTS = async (cpf, log) => {
             })
             return data;
           } else {
-            if (simularProposta.data.simularSaqueAniversarioFgtsResponse && simularProposta.data.simularSaqueAniversarioFgtsResponse.error && simularProposta.data.simularSaqueAniversarioFgtsResponse.error.message) return { status: false, error: `[4]=> ${simularProposta.data.simularSaqueAniversarioFgtsResponse.error.message.replace("java.lang.IllegalArgumentException:", "").replace("com.bmg.econsig.common.exception.ServiceException:", "")}` }
-            console.log(`[BMG FGTS Error(1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
+            if (simularProposta.data.simularSaqueAniversarioFgtsResponse && simularProposta.data.simularSaqueAniversarioFgtsResponse.error && simularProposta.data.simularSaqueAniversarioFgtsResponse.error.message) return { status: false, error: `[4]=> ${simularProposta.data.simularSaqueAniversarioFgtsResponse.error.message.replace("java.lang.IllegalArgumentException:", "").replace("com.bmg.econsig.common.exception.ServiceException:", "").replace("com.bmg.consig.saquefgts.exception.SaqueFgtsException:", "")}` }
+            console.log(`[BMG Consultas FGTS Error(1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
             console.log(simularProposta.data)
             return { status: false, error: '[3]=> Ocorreu algum erro ao simular a proposta do cliente! Tente novamente mais tarde...' }
           }
         } else return { status: false, error: '[2]=> Ocorreu algum erro ao simular a proposta do cliente! Tente novamente mais tarde...' }
       } else return { status: false, error: '[1]=> Problema na conexão da API! Tente novamente mais tarde...' }
   } catch(err) {
-    console.log(`[BMG FGTS ERROR - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
+    console.log(`[BMG Consultas FGTS ERROR - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
     console.log(err)
   }
 }
