@@ -18,7 +18,7 @@ const fgts = async (req, res, queue, verify) => {
       }
       if (!queue[req.body.bank]) return res.status(200).json({ status: false, error: `O banco não foi encontrado...` })
       if (!verify) {
-        if (queue[req.body.bank].length > 0 && queue[req.body.bank].find(r=>r.user == req.body.user)) return res.status(200).json({ status: false, error: `Você já está consultando algum CPF! Aguarde a consulta anterior acabar para consultar outro CPF...` })
+        if (queue[req.body.bank].length > 0 && queue[req.body.bank].find(r=>r.user == req.body.user)) return res.status(200).json({ status: false, error: `Você já está consultando algum CPF nesse banco! Aguarde a consulta anterior acabar para consultar outro CPF...` })
         queue[req.body.bank][queue[req.body.bank].length] = { user: req.body.user, cpf: req.body.cpf }
         setTimeout(()=>{
           if (queue[req.body.bank].findIndex(r=>r.user == req.body.user) >= 0) queue[req.body.bank].splice(queue[req.body.bank].findIndex(r=>r.user == req.body.user), 1)
