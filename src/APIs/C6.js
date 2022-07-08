@@ -99,7 +99,7 @@ class C6 {
         return this.getLink(proposta, log)
       } else if (response && response.status == 404) {
         return this.getLink(proposta, log)
-      } else if (response.data && err.response.data.message == "An internal error has occurred"){
+      } else if (response.data && response.data.message == "An internal error has occurred"){
         await this.timeout(5000)
         await this.refreshToken(log)
         return this.getLink(proposta, log, tentativa+1)
