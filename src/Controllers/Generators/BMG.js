@@ -27,8 +27,8 @@ const BMGCART = async (cliente) => {
       page2 += `document.getElementById('data_renda').value = '${moment(new Date(), 'DD/MM/YYYY').format('DD-MM-YYYY').replace("-","/").replace("-","/")}'\n`
       page2 += `document.getElementById('valor_renda').value = '${client.ValorParcela / 5 * 100 + 3}'\n`
       page2 += `document.getElementById('valor_renda').onchange()\n`
-      page2 += `document.getElementById('j_idt226:find:txt-value').value = document.getElementById('j_idt226:find:txt-value') ? document.getElementById('j_idt226:find:txt-value').value = '${client.EspecieAF}' : document.getElementById('j_idt221:find:txt-value').value = '${client.EspecieAF}'\n`
-      page2 += `document.getElementById('j_idt226:find:txt-value') ? document.getElementById('j_idt226:find:txt-value').onchange() : document.getElementById('j_idt221:find:txt-value').onchange()\n`
+      page2 += `if (document.getElementById('j_idt226:find:txt-value')) { document.getElementById('j_idt226:find:txt-value').value = '${client.EspecieAF}' } else { document.getElementById('j_idt221:find:txt-value').value = '${client.EspecieAF}' }`
+      page2 += `if (document.getElementById('j_idt226:find:txt-value')) { document.getElementById('j_idt226:find:txt-value').onchange() } else { document.getElementById('j_idt221:find:txt-value').onchange() }`
       page2 += `document.getElementById('grau_instrucao').value = '7'\n`
       page2 += `document.getElementById('cep:txt-value').value = '${client.Cep}'\n`
       page2 += `document.getElementById('cep:txt-value').onchange()\n`
