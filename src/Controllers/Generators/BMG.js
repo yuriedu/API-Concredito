@@ -14,7 +14,7 @@ const BMGCART = async (cliente) => {
       var dia = date.slice(8,10)
       var telefone = cliente.TelefoneConvenio.replace(cliente.TelefoneConvenio.slice(0,5), "").replace('-','')
       var naturalidadeCode = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"]
-      var page1 = `if (document.getElementById('identificacao-form:j_idt27:find:txt-value')) { document.getElementById('identificacao-form:j_idt27:find:txt-value').value = '4277' } else { document.getElementById('identificacao-form:j_idt27:find:txt-value').value = '4277' }\n`
+      var page1 = `if (document.getElementById('identificacao-form:j_idt27:find:txt-value')) { document.getElementById('identificacao-form:j_idt27:find:txt-value').value = '4277' } else { document.getElementById('identificacao-form:j_idt32:find:txt-value').value = '4277' }\n`
       page1 += `document.getElementById('identificacao-form:j_idt27:find:txt-value').onchange()\n`
       page1 += `setTimeout(()=>{\n`
         page1 += `  document.getElementById('identificacao-form:cpf').value = '${client.Cpf}'\n`
