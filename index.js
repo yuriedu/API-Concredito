@@ -34,6 +34,7 @@ express()
   .post('/propostas/lista', async function(req, res) { routes.propostas.lista(req, res) })
   .post('/propostas/register', async function(req, res) { routes.propostas.register(req, res, logs) })
   .post('/propostas/situation', async function(req, res) { routes.propostas.situation(req, res, logs) })
+  .post('/propostas/generator', async function(req, res) { routes.propostas.generator(req, res, logs) })
   //.post('/cadastros/new', async function(req, res) { routes.cadastros.new(req, res, logs) })
 
   .post('/consultas/fgts', async function(req, res) { routes.consultas.fgts(req, res, queue) })

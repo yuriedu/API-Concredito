@@ -10,6 +10,7 @@ const admLimpar = require('./Administrativo/limpar')
 const propostasLista = require('./Propostas/lista')
 const propostasRegister = require('./Propostas/register')
 const propostasSituation = require('./Propostas/situation')
+const propostasGenerator = require('./Propostas/generator')
 //const propostasNew = require('./Cadastros/new')
 
 const consultasFGTS = require('./Consultas/fgts')
@@ -30,6 +31,7 @@ module.exports = {
     lista: propostasLista,
     register: propostasRegister,
     situation: propostasSituation,
+    generator: propostasGenerator,
     //new: CadastrosNew
   },
   consultas: {
