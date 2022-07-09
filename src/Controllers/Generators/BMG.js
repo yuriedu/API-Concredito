@@ -48,7 +48,7 @@ const BMGCART = async (cliente) => {
       page2 += "document.getElementById('forma_de_credito').value = `${document.getElementById('forma_de_credito').options[1].text == 'TRANSFERÊNCIA BANCÁRIA' ? 1 : document.getElementById('forma_de_credito').options[2].text == 'TRANSFERÊNCIA BANCÁRIA' ? 2 : 3}`\n"
       page2 += `document.getElementById('forma_de_credito').onchange()\n`
       page2 += `setTimeout(()=>{\n`
-        page2 += `  document.getElementById('j_idt598:find:txt-value').value = '${client.CodBancoCliente}'\n`
+        page2 += `  if (document.getElementById('j_idt598:find:txt-value')) { document.getElementById('j_idt593:find:txt-value').value = '${client.CodBancoCliente}' } else { document.getElementById('j_idt598:find:txt-value').value = '${client.CodBancoCliente}' }\n`
         page2 += `  document.getElementById('j_idt598:find:txt-value').onchange()\n`
         page2 += `  document.getElementById('findAgencia:find:txt-value').value = '${client.Agencia}'\n`
         page2 += `  document.getElementById('findAgencia:find:txt-value').onchange()\n`
@@ -65,10 +65,10 @@ const BMGCART = async (cliente) => {
       page2 += `document.getElementById('estado_civil').value = '5'\n`
       page2 += `document.getElementById('nome_mae').value = '${client.NomeMae}'\n`
       page2 += `document.getElementById('nome_pai').value = '${client.NomePai}'\n`
-      page2 += `document.getElementById('j_idt787:selecionaUf').value = '${naturalidadeCode.findIndex(r=>r==client.UF) + 1}'\n`
-      page2 += `document.getElementById('j_idt787:selecionaUf').onchange()\n`
+      page2 += `if (document.getElementById('j_idt787:selecionaUf')) { document.getElementById('j_idt787:selecionaUf').value = '${naturalidadeCode.findIndex(r=>r==client.UF) + 1}' } else { document.getElementById('j_idt782:selecionaUf').value = '${naturalidadeCode.findIndex(r=>r==client.UF) + 1}' }\n`
+      page2 += `if (document.getElementById('j_idt787:selecionaUf')) { document.getElementById('j_idt787:selecionaUf').onchange() } else { document.getElementById('j_idt782:selecionaUf').onchange() }\n`
       page2 += `setTimeout(()=>{\n`
-        page2 += `  document.getElementById('naturalidade_input').value = '${client.Cidade.toUpperCase()}'\n`
+        page2 += `  document.getElementById('naturalidade_input').value = l'${cient.Cidade.toUpperCase()}'\n`
         page2 += `  document.getElementById('naturalidade_hinput').value = '${client.Cidade.toUpperCase()}'\n`
       page2 += `}, 2000)\n`
       page2 += `document.getElementById('nacionalidade').value = 'BRASILEIRA'\n`
