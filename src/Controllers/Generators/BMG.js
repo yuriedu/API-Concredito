@@ -49,7 +49,7 @@ const BMGCART = async (cliente) => {
       page2 += `document.getElementById('forma_de_credito').onchange()\n`
       page2 += `setTimeout(()=>{\n`
         page2 += `  if (document.getElementById('j_idt598:find:txt-value')) { document.getElementById('j_idt598:find:txt-value').value = '${client.CodBancoCliente}' } else { document.getElementById('j_idt593:find:txt-value').value = '${client.CodBancoCliente}' }\n`
-        page2 += `  document.getElementById('j_idt598:find:txt-value').onchange()\n`
+        page2 += `  if (document.getElementById('j_idt598:find:txt-value')) { document.getElementById('j_idt598:find:txt-value').onchange() } else { document.getElementById('j_idt593:find:txt-value').onchange() }\n`
         page2 += `  document.getElementById('findAgencia:find:txt-value').value = '${client.Agencia}'\n`
         page2 += `  document.getElementById('findAgencia:find:txt-value').onchange()\n`
         page2 += `  setTimeout(()=>{\n`
