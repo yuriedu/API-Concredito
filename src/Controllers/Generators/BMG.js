@@ -68,7 +68,7 @@ const BMGCART = async (cliente) => {
       page2 += `if (document.getElementById('j_idt787:selecionaUf')) { document.getElementById('j_idt787:selecionaUf').value = '${naturalidadeCode.findIndex(r=>r==client.UF) + 1}' } else { document.getElementById('j_idt782:selecionaUf').value = '${naturalidadeCode.findIndex(r=>r==client.UF) + 1}' }\n`
       page2 += `if (document.getElementById('j_idt787:selecionaUf')) { document.getElementById('j_idt787:selecionaUf').onchange() } else { document.getElementById('j_idt782:selecionaUf').onchange() }\n`
       page2 += `setTimeout(()=>{\n`
-        page2 += `  document.getElementById('naturalidade_input').value = l'${cient.Cidade.toUpperCase()}'\n`
+        page2 += `  document.getElementById('naturalidade_input').value = l'${client.Cidade.toUpperCase()}'\n`
         page2 += `  document.getElementById('naturalidade_hinput').value = '${client.Cidade.toUpperCase()}'\n`
       page2 += `}, 2000)\n`
       page2 += `document.getElementById('nacionalidade').value = 'BRASILEIRA'\n`
