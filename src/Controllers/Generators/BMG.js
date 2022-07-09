@@ -48,7 +48,7 @@ const BMGCART = async (cliente) => {
       page2 += "document.getElementById('forma_de_credito').value = `${document.getElementById('forma_de_credito').options[1].text == 'TRANSFERÊNCIA BANCÁRIA' ? 1 : document.getElementById('forma_de_credito').options[2].text == 'TRANSFERÊNCIA BANCÁRIA' ? 2 : 3}`\n"
       page2 += `document.getElementById('forma_de_credito').onchange()\n`
       page2 += `setTimeout(()=>{\n`
-        page2 += `  if (document.getElementById('j_idt598:find:txt-value')) { document.getElementById('j_idt593:find:txt-value').value = '${client.CodBancoCliente}' } else { document.getElementById('j_idt598:find:txt-value').value = '${client.CodBancoCliente}' }\n`
+        page2 += `  if (document.getElementById('j_idt598:find:txt-value')) { document.getElementById('j_idt598:find:txt-value').value = '${client.CodBancoCliente}' } else { document.getElementById('j_idt593:find:txt-value').value = '${client.CodBancoCliente}' }\n`
         page2 += `  document.getElementById('j_idt598:find:txt-value').onchange()\n`
         page2 += `  document.getElementById('findAgencia:find:txt-value').value = '${client.Agencia}'\n`
         page2 += `  document.getElementById('findAgencia:find:txt-value').onchange()\n`
