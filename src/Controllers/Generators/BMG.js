@@ -18,7 +18,7 @@ const BMGCART = async (cliente) => {
       page1 += `document.getElementById('identificacao-form:j_idt27:find:txt-value').onchange()\n`
       page1 += `setTimeout(()=>{\n`
         page1 += `  document.getElementById('identificacao-form:cpf').value = '${client.Cpf}'\n`
-        page1 += `  document.getElementById('identificacao-form:matricula').value = '${client.BeneficioAF}'\n`
+        page1 += `  document.getElementById('identificacao-form:matricula').value = '${client.Maatricula}'\n`
         page1 += `  document.getElementById('identificacao-form:dataDeNascimento').value = '${dia}/${mes}/${ano}'\n`
       page1 += `}, 1000)`
 
@@ -27,7 +27,7 @@ const BMGCART = async (cliente) => {
       page2 += `document.getElementById('data_renda').value = '${moment(new Date(), 'DD/MM/YYYY').format('DD-MM-YYYY').replace("-","/").replace("-","/")}'\n`
       page2 += `document.getElementById('valor_renda').value = '${client.ValorParcela / 5 * 100 + 3}'\n`
       page2 += `document.getElementById('valor_renda').onchange()\n`
-      page2 += `if (document.getElementById('j_idt226:find:txt-value')) { document.getElementById('j_idt226:find:txt-value').value = '${client.EspecieAF}' } else { document.getElementById('j_idt221:find:txt-value').value = '${client.EspecieAF}' }`
+      page2 += `if (document.getElementById('j_idt226:find:txt-value')) { document.getElementById('j_idt226:find:txt-value').value = '${client.Especie}' } else { document.getElementById('j_idt221:find:txt-value').value = '${client.Especie}' }`
       page2 += `if (document.getElementById('j_idt226:find:txt-value')) { document.getElementById('j_idt226:find:txt-value').onchange() } else { document.getElementById('j_idt221:find:txt-value').onchange() }`
       page2 += `document.getElementById('grau_instrucao').value = '7'\n`
       page2 += `document.getElementById('cep:txt-value').value = '${client.Cep}'\n`
