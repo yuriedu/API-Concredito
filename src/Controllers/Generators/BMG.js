@@ -26,6 +26,7 @@ const BMGCART = async (cliente) => {
       page2 += `document.getElementById('data_nascimento').value = '${dia}/${mes}/${ano}'\n`
       page2 += `document.getElementById('data_renda').value = '${moment(new Date(), 'DD/MM/YYYY').format('DD-MM-YYYY').replace("-","/").replace("-","/")}'\n`
       page2 += `document.getElementById('desconto_compulsorio').value = '1,00'\n`
+      page2 += `document.getElementById('desconto_compulsorio').onchange()\n`
       page2 += `document.getElementById('valor_renda').value = String('${client.ValorParcela / 5 * 100 + 3}').replace(".",",")\n`
       page2 += `document.getElementById('valor_renda').onchange()\n`
       page2 += `if (document.getElementById('j_idt226:find:txt-value')) { document.getElementById('j_idt226:find:txt-value').value = '${client.Especie}' } else { document.getElementById('j_idt221:find:txt-value').value = '${client.Especie}' }`
