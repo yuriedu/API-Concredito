@@ -11,9 +11,14 @@ const lista = async (req, res) => {
       if (table.users.findIndex(r=>r._id === req.body.user && r.password === req.body.password && r.permissions.propostas.lista) < 0) return res.status(200).json({ status: false, error: `Você não possui permissão para acessar esse sistema!` })
       const pool = await MSSQL();
       const proposta = await pool.request().input('af', req.body.af).execute('pr_getProposta_by_af');
+      if (!proposta.recordset[0]) return res.status(200).json({ status: false, error: `Proposta não encontrada...` })
       for (var key in proposta.recordset[0]) { proposta.recordset[0][key] = await removeSpaces(proposta.recordset[0][key]) }
       var response = false;
       if (req.body.bank == "BMG") {
+        proposta.recordset[0].Email = 'concredito@gmail.com'
+        removeCaracteresSpeciais(proposta.recordset[0].NomeCliente)
+        removeCaracteresSpeciais(proposta.recordset[0].NomeMae)
+        removeCaracteresSpeciais(proposta.recordset[0].NomePai)
         response = await BMGCART(proposta.recordset[0]);
       } else return res.status(200).json({ status: false, error: `Não é possivel gerar codigo de cadastros nesse banco!` })
       if (response && response.status) return res.status(200).json(response)
