@@ -76,7 +76,7 @@ const BMGCART = async (cliente) => {
       page2 += `document.getElementById('nacionalidade').value = 'BRASILEIRA'\n`
       page2 += `document.getElementById('tipo_documento_identificacao').value = 'Carteira de Identidade'\n`
       page2 += `document.getElementById('numero_identidade').value = '${client.rg}'\n`
-      page2 += `document.getElementById('emissor').value = '${client.OrgaoEmissor}'\n`
+      page2 += `document.getElementById('emissor').value = 'SSP'\n`
       page2 += `document.getElementById('uf_identidade:selecionaUf').value = '${naturalidadeCode.findIndex(r=>r==client.UF) + 1}'\n`
       page2 += `document.getElementById('data_emissao_identidade').value = '01/01/2001'\n`
       page2 += `setTimeout(()=>{\n`
