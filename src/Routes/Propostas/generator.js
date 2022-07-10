@@ -1,4 +1,5 @@
 const { MSSQL, MongoDB } = require('../../Utils/database');
+const { removeSpaces } = require('../../Utils/functions');
 
 const { BMGCART } = require('../../Controllers/Generators/BMG');
 
