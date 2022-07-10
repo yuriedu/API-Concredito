@@ -24,7 +24,7 @@ const BMGCART = async (cliente) => {
 
       var page2 = `document.getElementById('uf_conta_beneficiaria').value = '${client.UF}'\n`
       page2 += `document.getElementById('data_nascimento').value = '${dia}/${mes}/${ano}'\n`
-      page2 += `document.getElementById('data_renda').value = '${moment(new Date(), 'DD/MM/YYYY').format('DD-MM-YYYY').replace("-","/").replace("-","/")}'\n`
+      page2 += `document.getElementById('data_renda').value = '01/07/2022'\n`
       page2 += `document.getElementById('desconto_compulsorio').value = '1,00'\n`
       page2 += `document.getElementById('desconto_compulsorio').onchange()\n`
       page2 += `document.getElementById('valor_renda').value = String('${client.ValorParcela / 5 * 100 + 3}').replace(".",",")\n`
