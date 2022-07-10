@@ -3,6 +3,14 @@ const { saveDB, updateContratoDB, dadosCliente, bancoTranslate, bantToString } =
 const moment = require(`moment`);
 moment.locale("pt-BR");
 
+
+
+
+
+
+
+
+
 const BMGCART = async (cliente) => {
   try {
     var client = await dadosCliente(cliente, "INSS");
@@ -14,13 +22,26 @@ const BMGCART = async (cliente) => {
       var dia = date.slice(8,10)
       var telefone = cliente.TelefoneConvenio.replace(cliente.TelefoneConvenio.slice(0,5), "").replace('-','')
       var naturalidadeCode = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"]
-      var page1 = `if (document.getElementById('identificacao-form:j_idt33:find:txt-value')) { document.getElementById('identificacao-form:j_idt33:find:txt-value').value = '4277' } else { document.getElementById('identificacao-form:j_idt31:find:txt-value').value = '4277' }\n`
-      page1 += `if (document.getElementById('identificacao-form:j_idt33:find:txt-value')) { document.getElementById('identificacao-form:j_idt33:find:txt-value').onchange() } else { document.getElementById('identificacao-form:j_idt31:find:txt-value').onchange() }`
-      page1 += `setTimeout(()=>{\n`
-        page1 += `  document.getElementById('identificacao-form:cpf').value = '${client.Cpf}'\n`
-        page1 += `  document.getElementById('identificacao-form:matricula').value = '${client.Maatricula.replace(".","").replace(".","").replace("-","")}'\n`
-        page1 += `  document.getElementById('identificacao-form:dataDeNascimento').value = '${dia}/${mes}/${ano}'\n`
-      page1 += `}, 1000)`
+
+      var code1 = `var allInputs = document.getElementsByTagName("input");
+for (var i = 0, n = allInputs.length; i < n; ++i) {
+  var input = allInputs[i];
+  if (input.id) {
+    if (input.id.includes('j_idt') && input.id.includes('find:txt-value')) {
+      document.getElementById(input.id).value = '4277'
+      document.getElementById(input.id).onchange()
+    }
+    setTimeout(()=>{
+      var allInputs = document.getElementsByTagName("input");
+      for (var i = 0, n = allInputs.length; i < n; ++i) {
+        var input = allInputs[i];
+        if (input.id.includes('cpf')) document.getElementById(input.id).value = '${client.Cpf}'
+        if (input.id.includes('matricula')) document.getElementById(input.id).value = '${client.Maatricula.replace(".","").replace(".","").replace("-","")}'
+        if (input.id.includes('dataDeNascimento')) document.getElementById(input.id).value = '${dia}/${mes}/${ano}'
+      }
+    }, 1000)
+  }
+}`
 
       var page2 = `document.getElementById('uf_conta_beneficiaria').value = '${client.UF}'\n`
       page2 += `document.getElementById('data_nascimento').value = '${dia}/${mes}/${ano}'\n`
@@ -82,7 +103,7 @@ const BMGCART = async (cliente) => {
       page2 += `setTimeout(()=>{\n`
         page2 += `  document.getElementById('seleciona_forma_envio').value = 'BIOMETRIA_REMOTA_APP'\n`
       page2 += `}, 2000)`
-      return { status: true, code1: page1, code2: page2 }
+      return { status: true, code1: code1, code2: page2 }
       } else return { status: false, error: client && client.data ? client.data : '[0]=> Ocorreu algum erro ao verificar os dados! Verifique e tente novamente...' }
   } catch(err) {
     console.log(`[BMG GENERATOR CARD ERROR] => ${err}`)
