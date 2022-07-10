@@ -18,7 +18,7 @@ const BMGCART = async (cliente) => {
       page1 += `if (document.getElementById('identificacao-form:j_idt27:find:txt-value')) { document.getElementById('identificacao-form:j_idt27:find:txt-value').onchange() } else { document.getElementById('identificacao-form:j_idt32:find:txt-value').onchange() }`
       page1 += `setTimeout(()=>{\n`
         page1 += `  document.getElementById('identificacao-form:cpf').value = '${client.Cpf}'\n`
-        page1 += `  document.getElementById('identificacao-form:matricula').value = '${client.Maatricula}'\n`
+        page1 += `  document.getElementById('identificacao-form:matricula').value = '${client.Maatricula.replace(".","").replace(".","").replace("-","")}'\n`
         page1 += `  document.getElementById('identificacao-form:dataDeNascimento').value = '${dia}/${mes}/${ano}'\n`
       page1 += `}, 1000)`
 
