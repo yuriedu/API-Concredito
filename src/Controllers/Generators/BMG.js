@@ -6,7 +6,7 @@ moment.locale("pt-BR");
 const BMGCART = async (cliente) => {
   try {
     var client = await dadosCliente(cliente, "INSS");
-   if (client && client.status) {
+    if (client && client.status) {
       client = client.dados
       var date = client.Datanascimento.toISOString().slice(0, 10)
       var ano = date.slice(0,4)
@@ -56,7 +56,7 @@ const BMGCART = async (cliente) => {
         page2 += `  document.getElementById('findAgencia:find:txt-value').onchange()\n`
         page2 += `  setTimeout(()=>{\n`
           page2 += `    document.getElementById('finalidade_credito').value = '${cliente.Poupanca ? 2 : 1}'\n`
-          page2 += `    document.getElementById('numero_conta').value = '${client.ContaCorrente.slice(0, client.ContaCorrente.length-1)}'\n`
+          page2 += `    document.getElementById('numero_conta').value = '${client.ContaCorrente.slice(0, client.ContaCorrente.length-1).replace("-","")}'\n`
           page2 += `    document.getElementById('digito_conta').value = '${client.ContaCorrente.slice(client.ContaCorrente.length-1, client.ContaCorrente.length)}'\n`
           page2 += `    document.getElementById('motivos_pagamento_outra_conta_ted').value = '1'\n`
           page2 += `    document.getElementById('motivos_pagamento_outra_conta_ted').onchange()\n`
