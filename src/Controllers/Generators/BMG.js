@@ -46,7 +46,7 @@ const BMGCART = async (cliente) => {
       page2 += `setTimeout(()=>{\n`
         page2 += `  document.getElementById('valor_saque').value = document.getElementById('valor_saque_maximo').innerHTML.replace(".","")\n`
         page2 += `  document.getElementById('valor_saque').onchange()\n`
-      page2 += `}, 1000)\n`
+      page2 += `}, 2000)\n`
       page2 += "document.getElementById('forma_de_credito').value = `${document.getElementById('forma_de_credito').options[1].text == 'TRANSFERÊNCIA BANCÁRIA' ? 1 : document.getElementById('forma_de_credito').options[2].text == 'TRANSFERÊNCIA BANCÁRIA' ? 2 : 3}`\n"
       page2 += `document.getElementById('forma_de_credito').onchange()\n`
       page2 += `setTimeout(()=>{\n`
@@ -60,7 +60,7 @@ const BMGCART = async (cliente) => {
           page2 += `    document.getElementById('digito_conta').value = '${client.ContaCorrente.slice(client.ContaCorrente.length-1, client.ContaCorrente.length)}'\n`
           page2 += `    document.getElementById('motivos_pagamento_outra_conta_ted').value = '1'\n`
           page2 += `    document.getElementById('motivos_pagamento_outra_conta_ted').onchange()\n`
-        page2 += `  }, 1000)\n`
+        page2 += `  }, 2000)\n`
       page2 += `}, 2000)\n`
       page2 += `document.getElementById('nome').value = '${client.NomeCliente}'\n`
       page2 += `document.getElementById('sexo').value = '${client.sexo == "F" ? 2 : 1}'\n`
