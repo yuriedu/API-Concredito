@@ -16,7 +16,7 @@ const lista = async (req, res) => {
         proposta.recordset[0][key] = await removeSpaces(proposta.recordset[0][key])
         proposta.recordset[0][key] = await removeCaracteresSpeciais(proposta.recordset[0][key])
       }
-      if (proposta.recordset[0].Agencia) proposta.recordset[0].Agencia = await fixAgencia(proposta.recordset[0].Agencia)
+      //if (proposta.recordset[0].Agencia) proposta.recordset[0].Agencia = await fixAgencia(proposta.recordset[0].Agencia)
       if (proposta.recordset[0].NomeCliente) proposta.recordset[0].NomeCliente = await fixName(proposta.recordset[0].NomeCliente)
       if (proposta.recordset[0].NomeMae) proposta.recordset[0].NomeMae = await fixName(proposta.recordset[0].NomeMae)
       if (proposta.recordset[0].NomePai) proposta.recordset[0].NomePai = await fixName(proposta.recordset[0].NomePai)

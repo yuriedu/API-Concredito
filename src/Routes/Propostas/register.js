@@ -30,7 +30,7 @@ const registerPropostas = async (req, res, logs) => {
         element[key] = await removeSpaces(element[key])
         element[key] = await removeCaracteresSpeciais(element[key])
       }
-      if (element.Agencia) element.Agencia = await fixAgencia(element.Agencia)
+      //if (element.Agencia) element.Agencia = await fixAgencia(element.Agencia)
       if (element.NomeCliente) element.NomeCliente = await fixName(element.NomeCliente)
       if (element.NomeMae) element.NomeMae = await fixName(element.NomeMae)
       if (element.NomePai) element.NomePai = await fixName(element.NomePai)
