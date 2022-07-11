@@ -12,15 +12,20 @@ const lista = async (req, res) => {
       const pool = await MSSQL();
       const proposta = await pool.request().input('af', req.body.af).execute('pr_getProposta_by_af');
       if (!proposta.recordset[0] || !proposta.recordset[0].Cpf) return res.status(200).json({ status: false, error: `Proposta não encontrada...` })
-      for (var key in proposta.recordset[0]) { 
-        proposta.recordset[0][key] = await removeSpaces(proposta.recordset[0][key])
-        proposta.recordset[0][key] = await removeCaracteresSpeciais(proposta.recordset[0][key])
-      }
+      for (var key in proposta.recordset[0]) { proposta.recordset[0][key] = await removeSpaces(proposta.recordset[0][key]) }
       //if (proposta.recordset[0].Agencia) proposta.recordset[0].Agencia = await fixAgencia(proposta.recordset[0].Agencia)
-      if (proposta.recordset[0].NomeCliente) proposta.recordset[0].NomeCliente = await fixName(proposta.recordset[0].NomeCliente)
-      if (proposta.recordset[0].NomeMae) proposta.recordset[0].NomeMae = await fixName(proposta.recordset[0].NomeMae)
-      if (proposta.recordset[0].NomePai) proposta.recordset[0].NomePai = await fixName(proposta.recordset[0].NomePai)
-      if (!proposta.recordset[0].NomePai) proposta.recordset[0].NomePai = 'nao identificado'
+      if (proposta.recordset[0].NomeCliente) {
+        proposta.recordset[0].NomeCliente = await fixName(proposta.recordset[0].NomeCliente)
+        proposta.recordset[0].NomeCliente = await removeCaracteresSpeciais(proposta.recordset[0].NomeCliente)
+      }
+      if (proposta.recordset[0].NomeMae) {
+        proposta.recordset[0].NomeMae = await fixName(proposta.recordset[0].NomeMae)
+        proposta.recordset[0].NomeMae = await removeCaracteresSpeciais(proposta.recordset[0].NomeMae)
+      }
+      if (proposta.recordset[0].NomePai) {
+        proposta.recordset[0].NomePai = await fixName(proposta.recordset[0].NomePai)
+        proposta.recordset[0].NomePai = await removeCaracteresSpeciais(proposta.recordset[0].NomePai)
+      } else proposta.recordset[0].NomePai = 'nao identificado'
       var response = false;
       if (req.body.bank == "BMG") {
         proposta.recordset[0].Email = 'concredito@gmail.com'
