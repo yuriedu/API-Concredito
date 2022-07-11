@@ -1,5 +1,5 @@
 const { MSSQL, MongoDB } = require('../../Utils/database');
-const { removeSpaces } = require('../../Utils/functions');
+const { removeSpaces, removeCaracteresSpeciais, fixAgencia, fixName } = require('../../Utils/functions');
 
 const { FactaFGTS } = require('../../Controllers/Cadastros/Facta');
 const { C6FGTS } = require('../../Controllers/Cadastros/C6');
@@ -26,7 +26,15 @@ const registerPropostas = async (req, res, logs) => {
       if (!element) return res.status(200).json({ status: false, proposta: req.body.proposta, error: `Essa proposta não está na fase 'AGUARDANDO DIGITAÇÃO AUTOMÁTICA'` })
       var logUser = logs[logs.length] = { id: req.body.proposta.Cpf, af: req.body.proposta.IdContrato, situation: "Iniciando Cadastro..." }
       setTimeout(()=>{ if (logs.findIndex(r => r.id == req.body.proposta.Cpf && r.af == req.body.proposta.IdContrato) >= 0) logs.splice(logs.findIndex(r => r.id == req.body.proposta.Cpf && r.af == req.body.proposta.IdContrato), 1) }, 600000)
-      for (var key in element) { element[key] = await removeSpaces(element[key]) }
+      for (var key in element) {
+        element[key] = await removeSpaces(element[key])
+        element[key] = await removeCaracteresSpeciais(element[key])
+      }
+      if (element.Agencia) element.Agencia = await fixAgencia(element.Agencia)
+      if (element.NomeCliente) element.NomeCliente = await fixName(element.NomeCliente)
+      if (element.NomeMae) element.NomeMae = await fixName(element.NomeMae)
+      if (element.NomePai) element.NomePai = await fixName(element.NomePai)
+      if (!element.NomePai) element.NomePai = 'nao identificado'
       var response = false;
       if (element.BancoContrato == "FACTA FINANCEIRA" && req.body.proposta.orgaoProposta == "FGTS") {
         response = await FactaFGTS(element, pool, logUser);

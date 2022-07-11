@@ -217,7 +217,7 @@ async function removeSpaces(value) {
   } else return value;
 }
 
-removeCaracteresSpeciais = function(s){
+async function removeCaracteresSpeciais(s){
   var r=s.toLowerCase();
   r = r.replace(new RegExp("[àáâãäå]", 'g'),"a");
   r = r.replace(new RegExp("ç", 'g'),"c");
@@ -229,6 +229,30 @@ removeCaracteresSpeciais = function(s){
   r = r.replace(new RegExp("[']", 'g'),"");
   r = r.replace(new RegExp('["]', 'g'),"");
   return r;
+};
+
+async function fixAgencia(agencia){
+  agencia = agencia.slice(0, 4)
+  return agencia;
+};
+
+async function fixName(name){
+  if (name.length > 35) {
+    var nameArray = name.split(" ");
+    var newName = ''
+    for (var i = 0; i < nameArray.length; ++i) {
+      if (i != 0 && i != (nameArray.length-1) && nameArray[i].length > 3) {
+        nameArray[i] = nameArray[i].slice(0,1)
+        if (newName) {
+          newName += ` ${nameArray[i]}`
+        } else newName += `${nameArray[i]}`
+      } else if (newName) {
+        newName += ` ${nameArray[i]}`
+      } else newName += `${nameArray[i]}`
+    }
+    if (newName) return newName;
+    return name;
+  } else return name
 };
 
 async function updateContratoDB(pool, id, contrato, parcela, text) {
@@ -274,6 +298,8 @@ module.exports = {
   bantToString,
   removeSpaces,
   removeCaracteresSpeciais,
+  fixAgencia,
+  fixName,
   updateContratoDB,
   saveDB,
 }
