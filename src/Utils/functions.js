@@ -218,6 +218,7 @@ async function removeSpaces(value) {
 }
 
 async function removeCaracteresSpeciais(s){
+  if (typeof s != "string") return s
   var r=s.toLowerCase();
   r = r.replace(new RegExp("[àáâãäå]", 'g'),"a");
   r = r.replace(new RegExp("ç", 'g'),"c");
