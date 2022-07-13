@@ -3,6 +3,7 @@ const { MSSQL, MongoDB } = require('../../Utils/database');
 const create = async (req, res) => {
   try {
     if (!req.body.user || !req.body.password || !req.body.proposta) return res.status(200).json({ status: false, proposta: req.body.proposta, error: `Informações necessarias estão faltando...` })
+    return res.status(200).json({ status: false, proposta: req.body.proposta, error: `Novas propostas foram desativadas pois o agilus voltou...` })
     MongoDB.findById('db', async (error, table) => {
       if (table.users.findIndex(r=>r._id === req.body.user && r.password === req.body.password &&  r.permissions.propostas.cadastrar) < 0) return res.status(200).json({ status: false, proposta: req.body.proposta, error: `Você não possui permissão para acessar esse sistema!` })
       if (table.propostas.find(r=>r._id == req.body.proposta.Cpf)) return res.status(200).json({ status: false, error: `Esse cliente já tem uma proposta em meu banco de dados!` })
