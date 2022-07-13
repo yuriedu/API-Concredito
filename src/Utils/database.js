@@ -49,6 +49,7 @@ var propostasSchema = new mongoose.Schema({
   Orgao: String,
   Tabela: String,
   Valor: Number,
+  Agente: String,
 
   CodigoContrato: Number,
 })
