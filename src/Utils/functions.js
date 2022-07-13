@@ -233,11 +233,6 @@ async function removeCaracteresSpeciais(s){
   } else return s;
 };
 
-async function fixAgencia(agencia){
-  agencia = agencia.slice(0, 4)
-  return agencia;
-};
-
 async function fixName(name){
   if (name.length > 35) {
     var nameArray = name.split(" ");
@@ -257,18 +252,34 @@ async function fixName(name){
   } else return name
 };
 
-async function updateContratoDB(pool, id, contrato, parcela, text) {
+const { MSSQL, MongoDB } = require('./database');
+var SQLOFF = true
+
+async function updateContratoDB(pool, id, valor, parcela, text) {
   try {
-    await pool.request()
-      .input('id', id)
-      .input('vlrContratoAtual', contrato)
-      .input('vlrParcelaAtual', parcela)
-      .input('texto', text)
-      .execute('pr_atualiza_valor_contrato_robo')
+    if (SQLOFF) {
+      MongoDB.findById('db', async (error, table) => {
+        if (valor && parcela && table.propostas.find(r=>r.Cpf == id)) {
+          table.propostas.find(r=>r.Cpf == id).valor = valor
+          table.propostas.find(r=>r.Cpf == id).ValorParcela = parcela
+          table.save()
+        }
+      })
+    } else {
+      await pool.request()
+        .input('id', id)
+        .input('vlrContratoAtual', valor)
+        .input('vlrParcelaAtual', parcela)
+        .input('texto', text)
+        .execute('pr_atualiza_valor_contrato_robo')
+    }
     return true;
   } catch(err) {
-    if (err.originalError && (err.originalError.code == "ETIMEOUT" || err.code == "ETIMEOUT")) return updateContratoDB(pool, id, contrato, parcela, text)
-    if (err.originalError && (err.originalError.code == "EREQUEST" || err.code == "EREQUEST")) return console.log(`[MSSQL Contrato ERROR] => Algum valor está vazio! ID: ${id} - Contrato: ${contrato} - Parcela: ${parcela} - Text: ${text}`)
+    if (err.originalError && (err.originalError.code == "ETIMEOUT" || err.code == "ETIMEOUT")) return updateContratoDB(pool, id, valor, parcela, text)
+    if (err.originalError && (err.originalError.code == "EREQUEST" || err.code == "EREQUEST")) {
+      console.log(`[MSSQL Contrato ERROR] => Valores - ID: ${id} - Valor: ${valor} - Parcela: ${parcela} - Text: ${text}`)
+      console.log(err)
+    }
     console.log(`[MSSQL ERROR] => Erro no banco de dados: ${err}`)
     console.log(err)
   }
@@ -276,12 +287,22 @@ async function updateContratoDB(pool, id, contrato, parcela, text) {
 
 async function saveDB(pool, id, fase, contrato, text, status) {
   try {
-    await pool.request()
-      .input('id', id)
-      .input('faseDestino', fase)
-      .input('CodContrato', contrato)
-      .input('texto', text)
-      .execute('pr_atualiza_contrato_robo');
+    if (SQLOFF) {
+      MongoDB.findById('db', async (error, table) => {
+        if (contrato && table.propostas.find(r=>r.Cpf == id)) {
+          table.propostas.find(r=>r.Cpf == id).status = false
+          table.propostas.find(r=>r.Cpf == id).CodigoContrato = contrato
+          table.save()
+        }
+      })
+    } else {
+      await pool.request()
+        .input('id', id)
+        .input('faseDestino', fase)
+        .input('CodContrato', contrato)
+        .input('texto', text)
+        .execute('pr_atualiza_contrato_robo');
+    }
     return { status: status, data: text };
   } catch(err) {
     if (err.originalError && (err.originalError.code == "ETIMEOUT" || err.code == "ETIMEOUT")) return saveDB(pool, id, fase, contrato, text, status)
@@ -300,7 +321,6 @@ module.exports = {
   bantToString,
   removeSpaces,
   removeCaracteresSpeciais,
-  fixAgencia,
   fixName,
   updateContratoDB,
   saveDB,

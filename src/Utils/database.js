@@ -22,6 +22,36 @@ mongoose.connect(process.env.MONGODB_URL, {
   return console.log(`[Dashboard] => MongoDB Connected!`);
 });
 
+var propostasSchema = new mongoose.Schema({
+  _id: String,
+  status: Boolean,
+  NomeCliente: String,
+  Cpf: String,
+  rg: String,
+  TelefoneConvenio: String,
+  Email: String,
+  Datanascimento: String,
+  sexo: String,
+  Cep: String,
+  Cidade: String,
+  Bairro: String,
+  UF: String,
+  Endereco: String,
+  EndNumero: String,
+  NomeMae: String,
+  CodBancoCliente: String,
+  Agencia: String,
+  ContaCorrente: String,
+  Poupanca: String,
+  Prazo: Number,
+  ValorParcela: Number,
+  BancoContrato: String,
+  Orgao: String,
+  Tabela: String,
+  Valor: Number,
+
+  CodigoContrato: Number,
+})
 
 var ConsultFgtsBanksSchema = new mongoose.Schema({
   _id: String,
@@ -31,7 +61,6 @@ var ConsultFgtsBanksSchema = new mongoose.Schema({
   parcelas: String,
 })
 var ConsultFgtsSchema = new mongoose.Schema({ _id: String, banks: [ConsultFgtsBanksSchema] })
-
 var userSchema = new mongoose.Schema({
   _id: String,
   password: String,
@@ -57,6 +86,7 @@ var userSchema = new mongoose.Schema({
 var mongoSchema = new mongoose.Schema({
   _id: String,
   users: [userSchema],
+  propostas: [propostasSchema]
 })
 
 module.exports = { MSSQL, MongoDB: mongoose.model('db', mongoSchema)  }

@@ -100,7 +100,7 @@ const FactaFGTS = async (cliente, pool, log) => {
                       return saveDB(pool, cliente.IdContrato, 824, '', '[10]=> Ocorreu algum erro ao simular a proposta do cliente! Tente novamente mais tarde...', false)
                     }
                   } else return saveDB(pool, cliente.IdContrato, 824, '', '[9]=> Ocorreu algum erro ao simular a proposta do cliente! Tente novamente mais tarde...', false)
-                } else return saveDB(pool, cliente.IdContrato, 824, '', '[8]=> Ocorreu algum erro ao procurar a cidade do cliente no banco! Tente novamente mais tarde...', false)
+                } else return saveDB(pool, cliente.IdContrato, 824, '', '[8]=> A cidade não foi encontrada no banco da facta! Verifique e tente novamente....', false)
               } else {
                 if (calcularSaldo.data.msg) return saveDB(pool, cliente.IdContrato, 824, '', `[6]=> ${calcularSaldo.data.msg}`, false)
                 if (calcularSaldo.data.message) return saveDB(pool, cliente.IdContrato, 824, '', `[6]=> ${calcularSaldo.data.message}`, false)

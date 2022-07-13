@@ -3,6 +3,8 @@ const { removeSpaces, removeCaracteresSpeciais, fixAgencia, fixName } = require(
 
 const { BMGCART } = require('../../Controllers/Generators/BMG');
 
+
+
 const lista = async (req, res) => {
   try {
     if (!req.body.user || !req.body.password) return res.status(500).json({ status: false, error: `Usuário ou senha não foi informado...` })
@@ -13,7 +15,6 @@ const lista = async (req, res) => {
       const proposta = await pool.request().input('af', req.body.af).execute('pr_getProposta_by_af');
       if (!proposta.recordset[0] || !proposta.recordset[0].Cpf) return res.status(200).json({ status: false, error: `Proposta não encontrada...` })
       for (var key in proposta.recordset[0]) { proposta.recordset[0][key] = await removeSpaces(proposta.recordset[0][key]) }
-      //if (proposta.recordset[0].Agencia) proposta.recordset[0].Agencia = await fixAgencia(proposta.recordset[0].Agencia)
       if (proposta.recordset[0].NomeCliente) {
         proposta.recordset[0].NomeCliente = await fixName(proposta.recordset[0].NomeCliente)
         proposta.recordset[0].NomeCliente = await removeCaracteresSpeciais(proposta.recordset[0].NomeCliente)
@@ -38,7 +39,7 @@ const lista = async (req, res) => {
     })
   } catch(err){
     if (err.originalError && err.originalError.code == "ETIMEOUT") return res.status(500).json({ status: false, error: `Erro de conexão com o banco de dados! Aguarde um tempo e tente novamente...` })
-    console.log(`[POST /cadastros/listas] => ${err}`)
+    console.log(`[POST /propostas/listas] => ${err}`)
     console.log(err)
     return res.status(500).json(err)
   }

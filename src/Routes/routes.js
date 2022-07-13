@@ -7,6 +7,8 @@ const admDeletar = require('./Administrativo/deletar')
 const admEdit = require('./Administrativo/edit')
 const admLimpar = require('./Administrativo/limpar')
 
+const propostasCreate = require('./Propostas/create')
+const propostasDelete = require('./Propostas/delete')
 const propostasLista = require('./Propostas/lista')
 const propostasRegister = require('./Propostas/register')
 const propostasSituation = require('./Propostas/situation')
@@ -28,6 +30,8 @@ module.exports = {
     limpar: admLimpar,
   },
   propostas: {
+    create: propostasCreate,
+    delete: propostasDelete,
     lista: propostasLista,
     register: propostasRegister,
     situation: propostasSituation,

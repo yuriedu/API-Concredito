@@ -13,7 +13,7 @@ const verifySituation = async (req, res, logs) => {
     })
   } catch(err) {
     if (err.originalError && err.originalError.code == "ETIMEOUT") return res.status(500).json({ status: false, error: `Erro de conexão com o banco de dados! Aguarde um tempo e tente novamente...` })
-    console.log(`[POST /cadastros/situation] => ${err}`)
+    console.log(`[POST /propostas/situation] => ${err}`)
     console.log(err)
     return res.status(500).json(err)
   }

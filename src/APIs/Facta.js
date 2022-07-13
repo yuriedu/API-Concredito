@@ -208,6 +208,51 @@ class Facta {
       return false;
     }
   }
+  async getPropostas(log) {
+    try {
+      log.situation = `[8]=> Puxando todas as propostas...`
+      const form = new FormData();
+      const response = await this.api.get(`/proposta/andamento-propostas?data_alteracao_ini=11/07/2022`, { headers: form.getHeaders() });
+      return response
+    } catch(err) {
+      if (err.code && (err.code == 'ETIMEDOUT')) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.getPropostas(log);
+      }
+      if (err.response && err.response.data && (Object.keys(err.response.data)[1].includes('<br />') || Object.keys(err.response.data)[1].includes('<br/>') || Object.keys(err.response.data)[1].includes('Fatal error'))) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.getPropostas(log);
+      }
+      console.log(`[API Facta ERROR(8) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
+      console.log(err.response ? err.response.data : err);
+      return false;
+    }
+  }
+  async getOcorrencias(af, log) {
+    try {
+      log.situation = `[9]=> Puxando proposta...`
+      const form = new FormData();
+      const response = await this.api.get(`/proposta/consulta-ocorrencias?af=${af}`, { headers: form.getHeaders() });
+      return response
+    } catch(err) {
+      if (err.code && (err.code == 'ETIMEDOUT')) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.getProposta(af, log);
+      }
+      if (err.response && err.response.data && (Object.keys(err.response.data)[1].includes('<br />') || Object.keys(err.response.data)[1].includes('<br/>') || Object.keys(err.response.data)[1].includes('Fatal error'))) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.getProposta(af, log);
+      }
+      console.log(`[API Facta ERROR(9) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
+      console.log(err.response ? err.response.data : err);
+      return false;
+    }
+  }
+
 }
 
 module.exports = Facta

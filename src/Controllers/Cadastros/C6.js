@@ -118,12 +118,12 @@ module.exports = { C6FGTS }
 const validateBanck = (banco, agencia) => {
   const validos = [ 756, 748, 136, 091, 001, 104, 033, 070, 341, 237, 041, 336, 41, 260 ]
   const invalid341 = [ 3750, 3728, 3929, 3925, 7320, 7160, 7802, 6176, 7526, 7615, 3738, 3737 ]
-  if(validos.includes(banco)){
+  if(validos.includes(Number(banco))){
     switch(banco){
       case 33:
         return agencia === 77 ? false : true
       case 237:
-        return invalid341.includes(agencia) ? false : true
+        return invalid341.includes(Number(agencia)) ? false : true
       case 655:
         return agencia === 655 ? false : true
       case 341:
