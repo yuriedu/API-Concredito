@@ -8,6 +8,7 @@ const create = async (req, res) => {
       if (table.propostas.find(r=>r._id == req.body.proposta.Cpf)) return res.status(200).json({ status: false, error: `Esse cliente já tem uma proposta em meu banco de dados!` })
       req.body.proposta.Cep = req.body.proposta.Cep.replace("-","")
       if (req.body.operadores) {
+        console.log(req.body)
         var salvar = table.propostas[table.propostas.length] = { _id: req.body.proposta.Cpf, status: true }
         for(var key in req.body.proposta) {
           var value = req.body.proposta[key];
