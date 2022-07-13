@@ -8,7 +8,7 @@ const lista = async (req, res) => {
     MongoDB.findById('db', async (error, table) => {
       if (table.users.findIndex(r=>r._id === req.body.user && r.password === req.body.password && r.permissions.propostas.lista) < 0) return res.status(200).json({ status: false, error: `Você não possui permissão para acessar esse sistema!` })
       if (SQLOFF) {
-        return res.status(200).send({ MongoDB: table.propostas.filter(r=>r.status == true), FGTS: false, INSS: false, CART: false })
+        return res.status(200).send({ MongoDB: table.propostas.filter(r=>r.status == true), MongoDBSucess: table.propostas.filter(r=>r.status == false), FGTS: false, INSS: false, CART: false })
       } else {
         const pool = await MSSQL();
         const FGTS = await pool.request().input('orgao', 23).execute('pr_consulta_contratos_para_robo');

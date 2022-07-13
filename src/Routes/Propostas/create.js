@@ -7,6 +7,7 @@ const create = async (req, res) => {
       if (table.users.findIndex(r=>r._id === req.body.user && r.password === req.body.password &&  r.permissions.propostas.cadastrar) < 0) return res.status(200).json({ status: false, proposta: req.body.proposta, error: `Você não possui permissão para acessar esse sistema!` })
       if (table.propostas.find(r=>r._id == req.body.proposta.Cpf)) return res.status(200).json({ status: false, error: `Esse cliente já tem uma proposta em meu banco de dados!` })
       req.body.proposta.Cep = req.body.proposta.Cep.replace("-","")
+      if (req.body.proposta.BancoContrato == "MERCANTIL") return res.status(200).json({ status: false, error: `O Banco MERCANTIL está desativado no momento...` })
       if (req.body.operadores) {
         var salvar = table.propostas[table.propostas.length] = { _id: req.body.proposta.Cpf, status: true }
         for(var key in req.body.proposta) {

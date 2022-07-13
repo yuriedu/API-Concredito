@@ -52,6 +52,7 @@ var propostasSchema = new mongoose.Schema({
   Agente: String,
 
   CodigoContrato: Number,
+  link: String,
 })
 
 var ConsultFgtsBanksSchema = new mongoose.Schema({

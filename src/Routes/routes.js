@@ -8,6 +8,7 @@ const admEdit = require('./Administrativo/edit')
 const admLimpar = require('./Administrativo/limpar')
 
 const propostasCreate = require('./Propostas/create')
+const propostasChangeFase = require('./Propostas/changeFase')
 const propostasDelete = require('./Propostas/delete')
 const propostasLista = require('./Propostas/lista')
 const propostasRegister = require('./Propostas/register')
@@ -36,6 +37,7 @@ module.exports = {
     register: propostasRegister,
     situation: propostasSituation,
     generator: propostasGenerator,
+    changeFase: propostasChangeFase,
     //new: CadastrosNew
   },
   consultas: {

@@ -103,6 +103,7 @@ express()
   .post('/administrativo/limpar', async function(req, res) { routes.administrativo.limpar(req, res) })
 
   .post('/propostas/create', async function(req, res) { routes.propostas.create(req, res) })
+  .post('/propostas/changeFase', async function(req, res) { routes.propostas.changeFase(req, res) })
   .post('/propostas/delete', async function(req, res) { routes.propostas.delete(req, res) })
   .post('/propostas/lista', async function(req, res) { routes.propostas.lista(req, res) })
   .post('/propostas/register', async function(req, res) { routes.propostas.register(req, res, logs) })

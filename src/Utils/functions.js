@@ -292,6 +292,7 @@ async function saveDB(pool, id, fase, contrato, text, status) {
         if (contrato && table.propostas.find(r=>r.Cpf == id)) {
           table.propostas.find(r=>r.Cpf == id).status = false
           table.propostas.find(r=>r.Cpf == id).CodigoContrato = contrato
+          table.propostas.find(r=>r.Cpf == id).link = text
           table.save()
         }
       })
