@@ -40,6 +40,7 @@ const fgts = async (req, res, queue, verify) => {
           return fgts(req, res, queue, true)
         }
       }
+      console.log(`[Consulta FGTS]=> CPF: ${req.body.cpf}`)
       var response = false
       if (req.body.bank == "FACTA FINANCEIRA") {
         response = await FactaFGTS(req.body.cpf, req.body.option1, { cpf: req.body.cpf, situation: 'Consultando FGTS...' });
