@@ -38,7 +38,16 @@ class C6 {
       if (response && response.data && response.data.details && response.data.details[0] && (response.data.details[0].includes('Não foi possivel realizar comunicação com a CEF') || response.data.details[0].includes('Limite da conta excedido'))) return this.simularProposta(data, log)
       return response
     } catch(err) {
-      if (err.response && err.response.data && err.response.data.details && err.response.data.details[0] && (err.response.data.details[0].includes('Não foi possivel realizar comunicação com a CEF') || err.response.data.details[0].includes('Limite da conta excedido'))) return this.simularProposta(data, log)
+      if (err.response && err.response.data && err.response.data.details && err.response.data.details[0] && (err.response.data.details[0].includes('Não foi possivel realizar comunicação com a CEF') || err.response.data.details[0].includes('Limite da conta excedido'))) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.simularProposta(data, log)
+      }
+      if (err.response && err.response.data && err.response.data.details && err.response.data.details[0] && (err.response.data.details[0].includes('Tente novamente mais tarde'))) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.simularProposta(data, log)
+      }
       if (err.response && err.response.status == 401) {
         await this.refreshToken(log)
         return this.simularProposta(data, log)
@@ -65,7 +74,16 @@ class C6 {
       if (response && response.data && response.data.details && response.data.details[0] && (response.data.details[0].includes('Não foi possivel realizar comunicação com a CEF') || response.data.details[0].includes('Limite da conta excedido'))) return this.registerProposta(data, log)
       return response
     } catch(err) {
-      if (err.response && err.response.data && err.response.data.details && err.response.data.details[0] && (err.response.data.details[0].includes('Não foi possivel realizar comunicação com a CEF') || err.response.data.details[0].includes('Limite da conta excedido'))) return this.registerProposta(data, log)
+      if (err.response && err.response.data && err.response.data.details && err.response.data.details[0] && (err.response.data.details[0].includes('Não foi possivel realizar comunicação com a CEF') || err.response.data.details[0].includes('Limite da conta excedido'))) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.registerProposta(data, log)
+      }
+      if (err.response && err.response.data && err.response.data.details && err.response.data.details[0] && (err.response.data.details[0].includes('Tente novamente mais tarde'))) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.registerProposta(data, log)
+      }
       if (err.response && err.response.status == 401) {
         await this.refreshToken(log)
         return this.registerProposta(data, log)
@@ -74,6 +92,7 @@ class C6 {
         await this.refreshToken(log)
         return this.registerProposta(data, log)
       }
+      
       if (err.response && err.response.data && (err.response.data.message || (err.response.data.details && err.response.data.details[0]))) return err.response;
       if (err.code && (err.code == 'ETIMEDOUT')) {
         await this.timeout(5000)
@@ -115,7 +134,16 @@ class C6 {
         await this.refreshToken(log);
         return this.getLink(proposta, log, tentativa+1)
       }
-      if (err.response && err.response.data && err.response.data.details && err.response.data.details[0] && (err.response.data.details[0].includes('Não foi possivel realizar comunicação com a CEF') || err.response.data.details[0].includes('Limite da conta excedido'))) return this.getLink(proposta, log)
+      if (err.response && err.response.data && err.response.data.details && err.response.data.details[0] && (err.response.data.details[0].includes('Não foi possivel realizar comunicação com a CEF') || err.response.data.details[0].includes('Limite da conta excedido'))) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.getLink(proposta, log)
+      }
+      if (err.response && err.response.data && err.response.data.details && err.response.data.details[0] && (err.response.data.details[0].includes('Tente novamente mais tarde'))) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.getLink(proposta, log)
+      }
       if (err.response && err.response.status == 404) return this.getLink(proposta, log)
       if (err.response && err.response.status == 401) {
         await this.refreshToken(log)

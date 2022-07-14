@@ -33,7 +33,7 @@ const PanFGTS = async (cpf, type, valor, log) => {
               data.parcelas[data.parcelas.length] = { data: parc.data_vencimento, valor: parc.valor_parcela }
             })
             return data;
-          } else return { status: false, error: `[5]=> Não foi possivel fazer a consulta de saldo com esse cpf e valor!` }
+          } else return { status: false, error: `[5]=> Esse cliente não tem saldo liberado nessa tabela...` }
         } else {
           if (simularProposta.data.detalhes) return { status: false, error: `[4]=> ${simularProposta.data.detalhes[0] ? simularProposta.data.detalhes[0] : simularProposta.data.detalhes}` }
           console.log(`[Pan Consultas FGTS Error(1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)

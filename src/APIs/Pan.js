@@ -59,6 +59,16 @@ class Panamericano {
         await this.refreshToken(log);
         return this.simularProposta(data, log)
       }
+      if (err.response && err.response.data && err.response.data.detalhes.includes('Tente novamente mais tarde')) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.simularProposta(data, log)
+      }
+      if (err.response && err.response.data && err.response.data.detalhes && err.response.data.detalhes[0].includes('Tente novamente mais tarde')) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.simularProposta(data, log)
+      }
       console.log(`[API Pan ERROR(2) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
       return false;
@@ -82,6 +92,16 @@ class Panamericano {
         return this.simularPropostaINSS(data, log)
       }
       if (err.response && err.response.data && err.response.data.mensagem == "Limite de requisições excedidas") {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.simularPropostaINSS(data, log)
+      }
+      if (err.response && err.response.data && err.response.data.detalhes.includes('Tente novamente mais tarde')) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.simularPropostaINSS(data, log)
+      }
+      if (err.response && err.response.data && err.response.data.detalhes && err.response.data.detalhes[0].includes('Tente novamente mais tarde')) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.simularPropostaINSS(data, log)
@@ -113,6 +133,16 @@ class Panamericano {
         await this.refreshToken(log);
         return this.registerProposta(data, log)
       }
+      if (err.response && err.response.data && err.response.data.detalhes.includes('Tente novamente mais tarde')) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.registerProposta(data, log)
+      }
+      if (err.response && err.response.data && err.response.data.detalhes && err.response.data.detalhes[0].includes('Tente novamente mais tarde')) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.registerProposta(data, log)
+      }
       console.log(`[API Pan ERROR(3) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
       return false;
@@ -136,6 +166,16 @@ class Panamericano {
         return this.registerPropostaINSS(data, log)
       }
       if (err.response && err.response.data && err.response.data.mensagem == "Limite de requisições excedidas") {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.registerPropostaINSS(data, log)
+      }
+      if (err.response && err.response.data && err.response.data.detalhes.includes('Tente novamente mais tarde')) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.registerPropostaINSS(data, log)
+      }
+      if (err.response && err.response.data && err.response.data.detalhes && err.response.data.detalhes[0].includes('Tente novamente mais tarde')) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.registerPropostaINSS(data, log)
@@ -166,6 +206,16 @@ class Panamericano {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.getLink(id, tipoProposta, log)
+      }
+      if (err.response && err.response.data && err.response.data.detalhes.includes('Tente novamente mais tarde')) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.getLink(data, log)
+      }
+      if (err.response && err.response.data && err.response.data.detalhes && err.response.data.detalhes[0].includes('Tente novamente mais tarde')) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.getLink(data, log)
       }
       console.log(`[API Pan ERROR(4) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);

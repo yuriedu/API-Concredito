@@ -18,7 +18,7 @@ class Facta {
         this.api = await axios.create({ baseURL: this.url, headers: { Authorization: `Bearer ${this.token}` } });
         return true;
       } else if (response) {
-        console.log(`[API Facta TOKEN - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=> ${err}`)
+        console.log(`[API Facta TOKEN - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
         console.log(response.data ? response.data : response);
         return false;
       } return false;
@@ -31,7 +31,7 @@ class Facta {
         await this.timeout(5000)
         return this.refreshToken(log);
       }
-      console.log(`[API Facta ERROR(1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=> ${err}`)
+      console.log(`[API Facta TOKEN - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=> ${err}`)
       console.log(err.response ? err.response.data : err);
       return false;
     }
