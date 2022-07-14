@@ -20,7 +20,7 @@ class Panamericano {
       } else if (response) {
         console.log(`[API Pan TOKEN - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
         console.log(response.data ? response.data : response);
-        return response
+        return false
       } else return false
     } catch(err) {
       if (err.response && err.response.data && err.response.data.detalhes && err.response.data.detalhes[0]) return err.response

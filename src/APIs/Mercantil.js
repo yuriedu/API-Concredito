@@ -19,7 +19,7 @@ class Mercantil {
       } else if (response) {
         console.log(`[API Mercantil TOKEN - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
         console.log(response.data ? response.data : response);
-        return response
+        return false
       } else return false
     } catch(err) {
       if (err.response && (err.response.status == 401 || err.response.status == 504)){

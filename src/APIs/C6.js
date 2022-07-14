@@ -20,7 +20,7 @@ class C6 {
       } else if (response) {
         console.log(`[API C6 TOKEN - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
         console.log(response.data ? response.data : response);
-        return response
+        return false
       } else return false;
     } catch(err) {
       if (err.code && (err.code == 'ETIMEDOUT')) {

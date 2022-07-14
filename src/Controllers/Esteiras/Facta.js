@@ -10,11 +10,11 @@ const FactaEsteira = async (pool, log) => {
     log.situation = `[1]=> Conectando na API...`
     const loadAPI = await facta.refreshToken(log)
     if (loadAPI) {
-      const getPropostas = await facta.getPropostas(log)
-      if (getPropostas && getPropostas.data) {
-        if (getPropostas.data.propostas && getPropostas.data.propostas[0] && getPropostas.data.propostas[0].codigo_af) {
-          getPropostas.data.propostas = getPropostas.data.propostas.filter(r=> !r.status_proposta.includes('186 - CLIENTE COM INADIMPLENCIA') && !r.status_proposta.includes('AGUARDANDO ASSINATURA DIGITAL') && !r.status_proposta.includes('AGUARDA CANCELAMENTO'))
-          getPropostas.data.propostas.forEach(async(proposta, index)=>{
+      const getEsteira = await facta.getEsteira(log)
+      if (getEsteira && getEsteira.data) {
+        if (getEsteira.data.propostas && getEsteira.data.propostas[0] && getEsteira.data.propostas[0].codigo_af) {
+          getEsteira.data.propostas = getEsteira.data.propostas.filter(r=> !r.status_proposta.includes('186 - CLIENTE COM INADIMPLENCIA') && !r.status_proposta.includes('AGUARDANDO ASSINATURA DIGITAL') && !r.status_proposta.includes('AGUARDA CANCELAMENTO'))
+          getEsteira.data.propostas.forEach(async(proposta, index)=>{
             if (index == 0) {
               var test = await facta.getProposta(proposta.codigo_af, log)
               console.log(proposta.codigo_af)
@@ -46,12 +46,12 @@ const FactaEsteira = async (pool, log) => {
             }
           })
         } else {
-          if (getPropostas.data.msg) return { status: false, error: `[7]=> ${getPropostas.data.msg}` }
-          if (getPropostas.data.message) return { status: false, error: `[6]=> ${getPropostas.data.message}` }
-          if (getPropostas.data.mensagem) return { status: false, error: `[5]=> ${getPropostas.data.mensagem}` }
-          if (getPropostas.data.propostas && (!getPropostas.data.propostas[0] || !getPropostas.data.propostas[0].codigo_af)) return { status: false, error: `[4]=> Sem propostas na esteira...` }
+          if (getEsteira.data.msg) return { status: false, error: `[7]=> ${getEsteira.data.msg}` }
+          if (getEsteira.data.message) return { status: false, error: `[6]=> ${getEsteira.data.message}` }
+          if (getEsteira.data.mensagem) return { status: false, error: `[5]=> ${getEsteira.data.mensagem}` }
+          if (getEsteira.data.propostas && (!getEsteira.data.propostas[0] || !getEsteira.data.propostas[0].codigo_af)) return { status: false, error: `[4]=> Sem propostas na esteira...` }
           console.log(`[Facta Esteira Error(1)]=>`)
-          console.log(getPropostas.data)
+          console.log(getEsteira.data)
           return { status: false, error: '[3]=> Ocorreu algum erro ao puxar todas as propostas! Tente novamente mais tarde...' }
         }
       } else return { status: false, error: '[2]=> Ocorreu algum erro ao puxar todas as propostas! Tente novamente mais tarde', }

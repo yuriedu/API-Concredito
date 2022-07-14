@@ -19,7 +19,7 @@ class Banrisul {
       } else if (response) {
         console.log(`[API Banrisul TOKEN - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
         console.log(response.data ? response.data : response);
-        return response
+        return false
       } else return false;
     } catch(err) {
       if (err.response && err.response.data && err.response.data.erros && err.response.data.erros[0] && err.response.data.erros[0].mensagem) return err.response

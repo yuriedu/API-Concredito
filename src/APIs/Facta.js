@@ -20,7 +20,7 @@ class Facta {
       } else if (response) {
         console.log(`[API Facta TOKEN - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
         console.log(response.data ? response.data : response);
-        return response
+        return false
       } return false;
     } catch(err) {
       if (err.code && (err.code == 'ETIMEDOUT')) {
@@ -208,7 +208,7 @@ class Facta {
       return err.response
     }
   }
-  async getPropostas(log) {
+  async getEsteira(log) {
     try {
       log.situation = `[8]=> Puxando todas as propostas...`
       const form = new FormData();

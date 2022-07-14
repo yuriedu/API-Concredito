@@ -19,7 +19,7 @@ class Safra {
       } else if (response) {
         console.log(`[API Safra TOKEN - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
         console.log(response.data ? response.data : response);
-        return response
+        return false
       } else return false
     } catch(err) {
       if (err.response && (err.response.status == 403 || err.response.status == 500 || err.response.status == 401 || err.response.status == 429 || err.response.status == 404)) {
@@ -151,6 +151,39 @@ class Safra {
     }
   }
   async getLink(idProposta, cpf, log) {
+    try {
+      log.situation = `[6]=> Aguardando liberação na esteira...`
+      const response = await this.api.get(`/Propostas/ObterLinkFormalizacao?idProposta=${idProposta}&idCliente=${cpf}&idConvenio=50057`);
+      if (response.status == 401 || response.status == 429 || response.status == 404) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.getLink(idProposta, cpf, log)
+      } else if (response.data && response.data.erros && response.data.erros[0] && response.data.erros[0].descricao && (response.data.erros[0].descricao.includes('Tente novamente mais tarde') || response.data.erros[0].descricao.includes('Time out de Recebimento'))) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.getLink(idProposta, cpf, log)
+      } else if (!response.data || !response.data[0] || !response.data[0].idProposta) {
+        await this.timeout(60000);
+        await this.refreshToken(log)
+        return this.getLink(idProposta, cpf, log)
+      }else return response;
+    } catch(err) {
+      if (err.response && err.response.data && err.response.data.errors) return err.response
+      if (err.response && (err.response.status == 401 || err.response.status == 429 || err.response.status == 404)) {
+        await this.timeout(60000);
+        await this.refreshToken(log)
+        return this.getLink(idProposta, cpf, log)
+      } else if (err.code && err.code == 'ETIMEDOUT') {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.getLink(idProposta, cpf, log)
+      }
+      console.log(`[API Safra ERROR(6) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
+      console.log(err.response ? err.response.data : err);
+      return err.response
+    }
+  }
+  async getPropostas(idProposta, cpf, log) {
     try {
       log.situation = `[6]=> Aguardando liberação na esteira...`
       const response = await this.api.get(`/Propostas/ObterLinkFormalizacao?idProposta=${idProposta}&idCliente=${cpf}&idConvenio=50057`);

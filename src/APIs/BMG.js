@@ -27,7 +27,7 @@ class BMG {
       } else if (response) {
         console.log(`[API BMG TOKEN - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
         console.log(response.data ? response.data : response);
-        return response
+        return false
       } else return false;
     } catch(err) {
       if (err.response && err.response.status == 403) return this.refreshToken(log)
