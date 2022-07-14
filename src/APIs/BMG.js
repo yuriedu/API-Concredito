@@ -24,6 +24,10 @@ class BMG {
         this.token = response.data.access_token;
         this.api2 = axios.create({ baseURL: this.url2, headers: { Authorization: `Bearer ${response.data.access_token}` } });
         return true;
+      } else if (response) {
+        console.log(`[API BMG TOKEN - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
+        console.log(response.data ? response.data : response);
+        return response
       } else return false;
     } catch(err) {
       if (err.response && err.response.status == 403) return this.refreshToken(log)
@@ -37,7 +41,7 @@ class BMG {
       }
       console.log(`[API BMG ERROR(1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=> ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async simularProposta(data, log) {
@@ -65,7 +69,7 @@ class BMG {
       }
       console.log(`[API BMG ERROR(2) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async gravarProposta(data, log) {
@@ -93,7 +97,7 @@ class BMG {
       }
       console.log(`[API BMG ERROR(3) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async getLink(proposta, log) {
@@ -120,7 +124,7 @@ class BMG {
       }
       console.log(`[API BMG ERROR(4) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
 }

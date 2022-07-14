@@ -20,7 +20,7 @@ class Facta {
       } else if (response) {
         console.log(`[API Facta TOKEN - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
         console.log(response.data ? response.data : response);
-        return false;
+        return response
       } return false;
     } catch(err) {
       if (err.code && (err.code == 'ETIMEDOUT')) {
@@ -31,9 +31,9 @@ class Facta {
         await this.timeout(5000)
         return this.refreshToken(log);
       }
-      console.log(`[API Facta TOKEN - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=> ${err}`)
+      console.log(`[API Facta Error(1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=> ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async getSaldo(cpf, log) {
@@ -57,7 +57,7 @@ class Facta {
       }
       console.log(`[API Facta ERROR(2) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async calcularSaldo(cpf, parcelas, tabela, taxa, log) {
@@ -81,7 +81,7 @@ class Facta {
       }
       console.log(`[API Facta ERROR(3) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async getCidadesByCidade(nomeCidade, estado, log) {
@@ -110,10 +110,10 @@ class Facta {
         await this.refreshToken(log);
         return this.getCidadesByCidade(nomeCidade, estado, log)
       }
-      if (err.response && err.response.data && String(err.response.data) && String(err.response.data).logEntryId) return false;
+      if (err.response && err.response.data && String(err.response.data) && String(err.response.data).logEntryId) return err.response
       console.log(`[API Facta ERROR(4) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async simularProposta(cpf, simulacao_fgts, data_nascimento, log) {
@@ -146,7 +146,7 @@ class Facta {
       }
       console.log(`[API Facta ERROR(5) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async registerProposta(id_simulador, clientData, log) {
@@ -172,7 +172,7 @@ class Facta {
       }
       console.log(`[API Facta ERROR(6) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async requestProposta(id_simulador, codigo_cliente, log, tentativa) {
@@ -205,7 +205,7 @@ class Facta {
       }
       console.log(`[API Facta ERROR(7) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async getPropostas(log) {
@@ -227,7 +227,7 @@ class Facta {
       }
       console.log(`[API Facta ERROR(8) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async getOcorrencias(af, log) {
@@ -249,7 +249,7 @@ class Facta {
       }
       console.log(`[API Facta ERROR(9) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
 

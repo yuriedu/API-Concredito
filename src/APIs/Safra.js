@@ -16,7 +16,11 @@ class Safra {
         this.token = response.data.token
         this.api = await axios.create({ baseURL: this.url, headers: { Authorization: `Bearer ${this.token}` } });
         return true;
-      } else return false;
+      } else if (response) {
+        console.log(`[API Safra TOKEN - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
+        console.log(response.data ? response.data : response);
+        return response
+      } else return false
     } catch(err) {
       if (err.response && (err.response.status == 403 || err.response.status == 500 || err.response.status == 401 || err.response.status == 429 || err.response.status == 404)) {
         await this.timeout(60000);
@@ -27,7 +31,7 @@ class Safra {
       }
       console.log(`[API Safra ERROR(1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=> ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async getSaldo(cpf, produto, log) {
@@ -56,7 +60,7 @@ class Safra {
       }
       console.log(`[API Safra ERROR(2) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async getTabelaJuros(log) {
@@ -85,7 +89,7 @@ class Safra {
       }
       console.log(`[API Safra ERROR(3) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async calcularProposta(idTabelaJuros, periodos, idCliente, tpProduto, log){
@@ -114,7 +118,7 @@ class Safra {
       }
       console.log(`[API Safra ERROR(4) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async gravarProposta(data,log) {
@@ -143,7 +147,7 @@ class Safra {
       }
       console.log(`[API Safra ERROR(5) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async getLink(idProposta, cpf, log) {
@@ -176,7 +180,7 @@ class Safra {
       }
       console.log(`[API Safra ERROR(6) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
 }

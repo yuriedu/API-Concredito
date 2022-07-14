@@ -17,6 +17,10 @@ class C6 {
         this.token = response.data.access_token;
         this.api = await axios.create({ baseURL: this.url, headers: { Authorization: `${this.token}` } });
         return true;
+      } else if (response) {
+        console.log(`[API C6 TOKEN - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
+        console.log(response.data ? response.data : response);
+        return response
       } else return false;
     } catch(err) {
       if (err.code && (err.code == 'ETIMEDOUT')) {
@@ -28,7 +32,7 @@ class C6 {
       }
       console.log(`[API C6 ERROR(1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=> ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async simularProposta(data, log) {
@@ -64,7 +68,7 @@ class C6 {
       }
       console.log(`[API C6 ERROR(2) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err);
-      return false;
+      return err.response
     }
   }
   async registerProposta(data, log) {
@@ -101,7 +105,7 @@ class C6 {
       }
       console.log(`[API C6 ERROR(3) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err);
-      return false;
+      return err.response
     }
   }
   async getLink(proposta, log, tentativa) {
@@ -157,7 +161,7 @@ class C6 {
       if (err.response && err.response.data && (err.response.data.message || (err.response.data.details && err.response.data.details[0]))) return err.response;
       console.log(`[API C6 ERROR(4) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err);
-      return false;
+      return err.response
     }
   }
 }

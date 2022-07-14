@@ -14,7 +14,7 @@ const lista = async (req, res) => {
         const FGTS = await pool.request().input('orgao', 23).execute('pr_consulta_contratos_para_robo');
         const INSS = await pool.request().input('orgao', 1).execute('pr_consulta_contratos_para_robo');
         const CART = await pool.request().input('orgao', 7).execute('pr_consulta_contratos_para_robo');
-        return res.status(200).send({ MongoDB: false, FGTS: FGTS.recordsets[0], INSS: INSS.recordsets[0], CART: CART.recordsets[0] })
+        return res.status(200).send({ MongoDB: false, MongoDBSucess: false, FGTS: FGTS.recordsets[0], INSS: INSS.recordsets[0], CART: CART.recordsets[0] })
       }
     })
   } catch(err){

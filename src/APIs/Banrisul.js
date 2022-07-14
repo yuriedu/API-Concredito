@@ -16,6 +16,10 @@ class Banrisul {
         this.token = response.data.retorno.jwtToken
         this.api = await axios.create({ baseURL: this.url, headers: { Authorization: `Bearer ${this.token}` } });
         return true;
+      } else if (response) {
+        console.log(`[API Banrisul TOKEN - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
+        console.log(response.data ? response.data : response);
+        return response
       } else return false;
     } catch(err) {
       if (err.response && err.response.data && err.response.data.erros && err.response.data.erros[0] && err.response.data.erros[0].mensagem) return err.response
@@ -25,7 +29,7 @@ class Banrisul {
       }
       console.log(`[API Banrisul ERROR(1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=> ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async ListarBancos(banco, log) {
@@ -33,7 +37,7 @@ class Banrisul {
     try {
       const response = await this.api.get(`consignado/Consignado/Proposta/ListarBancos`);
       if (response.data && response.data.retorno && response.data.retorno.findIndex(r=>r.codigo == banco) >= 0 && response.data.retorno[response.data.retorno.findIndex(r=>r.codigo == banco)].cnpj) return response.data.retorno[response.data.retorno.findIndex(r=>r.codigo == banco)].cnpj
-      return false;
+      return err.response
     } catch (err) {
       if (err.response && err.response.data && err.response.data.erros && err.response.data.erros[0] && err.response.data.erros[0].mensagem) return err.response
       if (err.code && (err.code == 'ETIMEDOUT')) {
@@ -73,7 +77,7 @@ class Banrisul {
       }
       console.log(`[API Banrisul ERROR(3) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async gravarPropostaPortabilidade(data, log) {
@@ -93,7 +97,7 @@ class Banrisul {
       }
       console.log(`[API Banrisul ERROR(4) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
 }

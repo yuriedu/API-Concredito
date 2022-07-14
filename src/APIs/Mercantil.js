@@ -16,7 +16,11 @@ class Mercantil {
         this.token = response.data.access_token
         this.api = await axios.create({ baseURL: this.url, headers: { Authorization: `Bearer ${this.token}` } });
         return true;
-      } else return false;
+      } else if (response) {
+        console.log(`[API Mercantil TOKEN - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
+        console.log(response.data ? response.data : response);
+        return response
+      } else return false
     } catch(err) {
       if (err.response && (err.response.status == 401 || err.response.status == 504)){
         await this.timeout(5000);
@@ -27,7 +31,7 @@ class Mercantil {
       }
       console.log(`[API Mercantil ERROR(1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=> ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async getSaldo(cpf, log) {
@@ -54,7 +58,7 @@ class Mercantil {
       }
       console.log(`[API Mercantil ERROR(2) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async simularProposta(data, log) {
@@ -76,7 +80,7 @@ class Mercantil {
       }
       console.log(`[API Mercantil ERROR(3) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async registerProposta(data, log) {
@@ -98,7 +102,7 @@ class Mercantil {
       }
       console.log(`[API Facta ERROR(4) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async getProposta(data, log) {

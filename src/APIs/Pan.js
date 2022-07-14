@@ -17,7 +17,11 @@ class Panamericano {
         this.token = response.data.token
         this.api = await axios.create({ baseURL: this.url, headers: { Authorization: `Bearer ${this.token}`, ApiKey: this.client } });
         return true;
-      } else return false;
+      } else if (response) {
+        console.log(`[API Pan TOKEN - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
+        console.log(response.data ? response.data : response);
+        return response
+      } else return false
     } catch(err) {
       if (err.response && err.response.data && err.response.data.detalhes && err.response.data.detalhes[0]) return err.response
       if(err.response && (err.response.status == 401 || err.response.status == 504 || err.response.status == 502)) {
@@ -34,7 +38,7 @@ class Panamericano {
       }
       console.log(`[API Pan ERROR(1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=> ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async simularProposta(data, log) {
@@ -71,7 +75,7 @@ class Panamericano {
       }
       console.log(`[API Pan ERROR(2) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async simularPropostaINSS(data, log) {
@@ -108,7 +112,7 @@ class Panamericano {
       }
       console.log(`[API Pan ERROR(5) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async registerProposta(data, log) {
@@ -145,7 +149,7 @@ class Panamericano {
       }
       console.log(`[API Pan ERROR(3) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async registerPropostaINSS(data, log) {
@@ -182,7 +186,7 @@ class Panamericano {
       }
       console.log(`[API Pan ERROR(6) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
   async getLink(cpf, numeroProposta, log) {
@@ -219,7 +223,7 @@ class Panamericano {
       }
       console.log(`[API Pan ERROR(4) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
-      return false;
+      return err.response
     }
   }
 }
