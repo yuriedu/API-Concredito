@@ -253,7 +253,7 @@ async function fixName(name){
 };
 
 const { MSSQL, MongoDB } = require('./database');
-var SQLOFF = true
+var SQLOFF = false
 
 async function updateContratoDB(pool, id, valor, parcela, text) {
   try {

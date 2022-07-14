@@ -1,6 +1,6 @@
 const { MSSQL, MongoDB } = require('../../Utils/database');
 
-var SQLOFF = true
+var SQLOFF = false
 
 const lista = async (req, res) => {
   try {

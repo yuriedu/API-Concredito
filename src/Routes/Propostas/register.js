@@ -9,7 +9,7 @@ const { SafraFGTS } = require('../../Controllers/Cadastros/Safra');
 const { PanFGTS, PanINSS, PanCartINSS } = require('../../Controllers/Cadastros/Pan');
 const { BanrisulINSS } = require('../../Controllers/Cadastros/Banrisul');
 
-var SQLOFF = true
+var SQLOFF = false
 
 const registerPropostas = async (req, res, logs) => {
   try {
