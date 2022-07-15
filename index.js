@@ -15,9 +15,11 @@ var queue = {
 }
 
 // async function Esteira() {
-//   const { FactaEsteira } = require('./src/Controllers/Esteiras/Facta')
 //   const pool = await MSSQL();
-//   console.log(await FactaEsteira(pool, {af: "ESTEIRA"}))
+//   // const { FactaEsteira } = require('./src/Controllers/Esteiras/Facta')
+//   // await FactaEsteira(pool, {af: "ESTEIRA"})
+//   const { C6Esteira } = require('./src/Controllers/Esteiras/C6')
+//   await C6Esteira(pool, {af: "ESTEIRA"})
 // }
 // Esteira()
 

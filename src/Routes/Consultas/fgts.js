@@ -30,16 +30,17 @@ const fgts = async (req, res, queue, verify) => {
         setTimeout(()=>{
           if (queue[req.body.bank].findIndex(r=>r.user == req.body.user) >= 0) queue[req.body.bank].splice(queue[req.body.bank].findIndex(r=>r.user == req.body.user && r.cpf == req.body.cpf), 1)
         }, 600000)
-        await timeout(queue[req.body.bank].findIndex(r=>r.user == req.body.user)+2000)
+        await timeout(queue[req.body.bank].findIndex(r=>r.user == req.body.user) * 3000)
         return fgts(req, res, queue, true)
       } else {
         if (queue[req.body.bank].length <= 0) return fgts(req, res, queue)
         if (queue[req.body.bank].findIndex(r=>r.user == req.body.user) < 0) return res.status(200).json({ status: false, retry: true, error: `Você não está na fila! Tente novamente...` })
         if (queue[req.body.bank].findIndex(r=>r.user == req.body.user) != 0) {
-          await timeout(queue[req.body.bank].findIndex(r=>r.user == req.body.user)+1000)
+          await timeout(queue[req.body.bank].findIndex(r=>r.user == req.body.user) * 3000)
           return fgts(req, res, queue, true)
         }
       }
+      await timeout(5000)
       console.log(`[Consulta FGTS]=> USER: ${req.body.user} - BANK: ${req.body.bank} - CPF: ${req.body.cpf}`)
       var response = false
       if (req.body.bank == "FACTA FINANCEIRA") {

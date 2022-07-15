@@ -36,7 +36,7 @@ const MercantilFGTS = async (cpf, type, valor, log) => {
               parcelas: [],
             }
             await getSaldo.data.parcelas.forEach((element,index)=>{
-              if (type == "POR_QUANTIDADE_DE_PARCELAS" && index > Number(numberParc) - 1) return;
+              if (type == "POR_QUANTIDADE_DE_PARCELAS" && index > Number(valor) - 1) return;
               if (element.valor < 9) return;
               simula.parcelas[simula.parcelas.length] = { dataVencimento: element.dataRepasse, valor: element.valor }
               var date = element.dataRepasse.slice(0, 10)

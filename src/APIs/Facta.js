@@ -208,22 +208,22 @@ class Facta {
       return err.response
     }
   }
-  async getEsteira(log) {
+  async getEsteira(dia,mes,ano,log) {
     try {
       log.situation = `[8]=> Puxando todas as propostas...`
       const form = new FormData();
-      const response = await this.api.get(`/proposta/andamento-propostas?data_alteracao_ini=11/07/2022`, { headers: form.getHeaders() });
+      const response = await this.api.get(`/proposta/andamento-propostas?data_alteracao_ini=${dia}/${mes}/${ano}`, { headers: form.getHeaders() });
       return response
     } catch(err) {
       if (err.code && (err.code == 'ETIMEDOUT')) {
         await this.timeout(5000)
         await this.refreshToken(log);
-        return this.getPropostas(log);
+        return this.getEsteira(log);
       }
       if (err.response && err.response.data && (Object.keys(err.response.data)[1].includes('<br />') || Object.keys(err.response.data)[1].includes('<br/>') || Object.keys(err.response.data)[1].includes('Fatal error'))) {
         await this.timeout(5000)
         await this.refreshToken(log);
-        return this.getPropostas(log);
+        return this.getEsteira(log);
       }
       console.log(`[API Facta ERROR(8) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
@@ -240,12 +240,12 @@ class Facta {
       if (err.code && (err.code == 'ETIMEDOUT')) {
         await this.timeout(5000)
         await this.refreshToken(log);
-        return this.getProposta(af, log);
+        return this.getOcorrencias(af, log);
       }
       if (err.response && err.response.data && (Object.keys(err.response.data)[1].includes('<br />') || Object.keys(err.response.data)[1].includes('<br/>') || Object.keys(err.response.data)[1].includes('Fatal error'))) {
         await this.timeout(5000)
         await this.refreshToken(log);
-        return this.getProposta(af, log);
+        return this.getOcorrencias(af, log);
       }
       console.log(`[API Facta ERROR(9) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);

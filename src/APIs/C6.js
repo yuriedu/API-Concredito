@@ -164,6 +164,43 @@ class C6 {
       return err.response
     }
   }
+  async getProposta(data, log) {
+    try {
+      log.situation = `[3]=> Registrando a proposta...`
+      const response = await this.api.get(`/marketplace/proposal?proposalNumber=${data}`);
+      if (response && response.data && response.data.details && response.data.details[0] && (response.data.details[0].includes('Não foi possivel realizar comunicação com a CEF') || response.data.details[0].includes('Limite da conta excedido'))) return this.getProposta(data, log)
+      return response
+    } catch(err) {
+      if (err.response && err.response.data && err.response.data.details && err.response.data.details[0] && (err.response.data.details[0].includes('Não foi possivel realizar comunicação com a CEF') || err.response.data.details[0].includes('Limite da conta excedido'))) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.getProposta(data, log)
+      }
+      if (err.response && err.response.data && err.response.data.details && err.response.data.details[0] && (err.response.data.details[0].includes('Tente novamente mais tarde'))) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.getProposta(data, log)
+      }
+      if (err.response && err.response.status == 401) {
+        await this.refreshToken(log)
+        return this.getProposta(data, log)
+      } else if (err.response && err.response.data && err.response.data.message == "An internal error has occurred"){
+        await this.timeout(5000)
+        await this.refreshToken(log)
+        return this.getProposta(data, log)
+      }
+      
+      if (err.response && err.response.data && (err.response.data.message || (err.response.data.details && err.response.data.details[0]))) return err.response;
+      if (err.code && (err.code == 'ETIMEDOUT')) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.getProposta(data, log)
+      }
+      console.log(`[API C6 ERROR(3) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
+      console.log(err);
+      return err.response
+    }
+  }
 }
 
 module.exports = C6
