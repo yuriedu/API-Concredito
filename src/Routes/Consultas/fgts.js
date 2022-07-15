@@ -40,7 +40,7 @@ const fgts = async (req, res, queue, verify) => {
           return fgts(req, res, queue, true)
         }
       }
-      await timeout(5000)
+      await timeout(3000)
       console.log(`[Consulta FGTS]=> USER: ${req.body.user} - BANK: ${req.body.bank} - CPF: ${req.body.cpf}`)
       var response = false
       if (req.body.bank == "FACTA FINANCEIRA") {
