@@ -7,6 +7,12 @@ var queue = []
 
 const FactaEsteira = async (pool, log) => {
   try {
+
+    //await pool.request().input('id', '65241').input('faseDestino',2).input('CodContrato', '50874934').input('texto','[ESTEIRA]=> Fase alterada para a mesma que está no banco!').execute('pr_changeFase_by_contrato')
+    await pool.request().input('id', '65241').input('faseDestino',3).input('CodContrato', '50874934').input('texto','[ESTEIRA]=> Fase alterada para a mesma que está no banco!').execute('pr_changeFase_by_contrato')
+    return console.log('foi')
+
+
     const facta = await new Facta();
     log.situation = `[1]=> Conectando na API...`
     const loadAPI = await facta.refreshToken(log)
@@ -33,44 +39,44 @@ const FactaEsteira = async (pool, log) => {
         if (getEsteira.data.propostas && getEsteira.data.propostas[0] && getEsteira.data.propostas[0].codigo_af) {
           getEsteira.data.propostas = getEsteira.data.propostas.filter(r=> !r.status_proposta.includes('CLIENTE COM INADIMPLENCIA') && !r.status_proposta.includes('AGUARDANDO ASSINATURA DIGITAL') && !r.status_proposta.includes('AGUARDA CANCELAMENTO') && !r.status_proposta.includes('RETORNO CORRETOR') && !r.status_proposta.includes('AGUARDA PGTO BCO'))
           getEsteira.data.propostas.forEach(async(proposta, index)=>{
-            //if (index == 0) {
-              if (proposta.status_proposta && proposta.codigo_af) {
-                var fase = false
-                if (proposta.status_proposta.includes('AGUARDA AVERBACAO')) fase = 2 //AGUARDANDO AVERBAÇÃO
-                if (proposta.status_proposta.includes('AVERBADO')) fase = 2 //AGUARDANDO AVERBAÇÃO
-                if (proposta.status_proposta.includes('ANALISE MESA DE CONFERENCIA')) fase = 2 //AGUARDANDO AVERBAÇÃO
-                if (proposta.status_proposta.includes('ATUACAO MASTER')) fase = 1111 //AGUARDANDO ATUAÇÃO MASTER
-                if (proposta.status_proposta.includes('VALIDANDO DOCUMENTOS')) fase = 692 //PROPOSTA EM ANALISE BANCO
-                if (proposta.status_proposta.includes('CONTRATO PAGO')) fase = 3 //PAGO AO CLIENTE
-                if (proposta.status_proposta.includes('ESTEIRA DE ANALISE')) fase = 2 //AGUARDANDO AVERBAÇÃO
-                if (proposta.status_proposta.includes('CANCELADO')) fase = 9 //PENDENTE
-                if (proposta.status_proposta.includes('PENDENTE')) fase = 9 //PENDENTE
-                if (proposta.status_proposta.includes('CAMPANHA FACTA')) fase = 323 //Aguarda Aumento INSS
-                if (proposta.status_proposta.includes('ENVIO DATAPREV')) fase = 692 //PROPOSTA EM ANALISE BANCO
-                var faseName = false
-                if (fase == 2) faseName = 'AGUARDANDO AVERBAÇÃO'
-                if (fase == 1111) faseName = 'AGUARDANDO ATUAÇÃO MASTER'
-                if (fase == 692) faseName = 'PROPOSTA EM ANALISE BANCO'
-                if (fase == 3) faseName = 'PAGO AO CLIENTE'
-                if (fase == 4002) faseName = 'ASSINADO / RESPONDIDO'
-                if (fase == 700) faseName = 'REPROVADO'
-                if (fase == 9) faseName = 'PENDENTE'
-                if (fase == 323) faseName = 'AGUARDA AUMENTO INSS'
-                if (fase && faseName) {
-                  const propostaDB = await pool.request().input('contrato', proposta.codigo_af).input('fase',fase).execute('pr_getProposta_by_contrato_and_not_fase');
-                  if (propostaDB.recordset[0]) {
-                    if (fase == 3 && propostaDB.recordset[0].CodFase != 2) return;
-                    if (fase == 700 || fase == 9) {
-                      queue[queue.length] = { codigo: proposta.codigo_af, proposta: proposta, agilus: propostaDB.recordset[0], fase: fase, faseName: faseName }
-                      if (queue.length == 1) return verifyReason(facta, pool)
-                    } else {
-                      await pool.request().input('id', propostaDB.recordset[0].IdContrato).input('faseDestino',fase).input('CodContrato',proposta.codigo_af).input('texto','[ESTEIRA]=> Fase alterada para a mesma que está no banco!').execute('pr_changeFase_by_contrato')
-                      return console.log(`[ESTEIRA]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${propostaDB.recordset[0].Fase} - FaseNew: ${faseName}`)
-                    }
+            if (proposta.status_proposta && proposta.codigo_af) {
+              var fase = false
+              if (proposta.status_proposta.includes('AGUARDA AVERBACAO')) fase = 2 //AGUARDANDO AVERBAÇÃO
+              if (proposta.status_proposta.includes('AVERBADO')) fase = 2 //AGUARDANDO AVERBAÇÃO
+              if (proposta.status_proposta.includes('ANALISE MESA DE CONFERENCIA')) fase = 692 //PROPOSTA EM ANALISE BANCO
+              if (proposta.status_proposta.includes('ATUACAO MASTER')) fase = 1111 //AGUARDANDO ATUAÇÃO MASTER
+              if (proposta.status_proposta.includes('VALIDANDO DOCUMENTOS')) fase = 692 //PROPOSTA EM ANALISE BANCO
+              if (proposta.status_proposta.includes('CONTRATO PAGO')) fase = 3 //PAGO AO CLIENTE
+              if (proposta.status_proposta.includes('ESTEIRA DE ANALISE')) fase = 692 //PROPOSTA EM ANALISE BANCO
+              if (proposta.status_proposta.includes('CANCELADO')) fase = 9 //PENDENTE
+              if (proposta.status_proposta.includes('PENDENTE')) fase = 9 //PENDENTE
+              if (proposta.status_proposta.includes('CAMPANHA FACTA')) fase = 323 //Aguarda Aumento INSS
+              if (proposta.status_proposta.includes('ENVIO DATAPREV')) fase = 2 //AGUARDANDO AVERBAÇÃO
+              var faseName = false
+              if (fase == 2) faseName = 'AGUARDANDO AVERBAÇÃO'
+              if (fase == 1111) faseName = 'AGUARDANDO ATUAÇÃO MASTER'
+              if (fase == 692) faseName = 'PROPOSTA EM ANALISE BANCO'
+              if (fase == 3) faseName = 'PAGO AO CLIENTE'
+              if (fase == 4002) faseName = 'ASSINADO / RESPONDIDO'
+              if (fase == 700) faseName = 'REPROVADO'
+              if (fase == 9) faseName = 'PENDENTE'
+              if (fase == 323) faseName = 'AGUARDA AUMENTO INSS'
+              if (fase == 692) faseName = 'PROPOSTA EM ANALISE BANCO'
+              if (fase && faseName) {
+                const propostaDB = await pool.request().input('contrato', proposta.codigo_af).input('fase',fase).execute('pr_getProposta_by_contrato_and_not_fase');
+                if (propostaDB.recordset[0]) {
+                  if (fase == 3 && propostaDB.recordset[0].CodFase != 2) return;
+                  if (fase == 700 || fase == 9) {
+                    queue[queue.length] = { codigo: proposta.codigo_af, proposta: proposta, agilus: propostaDB.recordset[0], fase: fase, faseName: faseName }
+                    if (queue.length == 1) return verifyReason(facta, pool)
+                  } else {
+                    await pool.request().input('id', propostaDB.recordset[0].IdContrato).input('faseDestino',fase).input('CodContrato',proposta.codigo_af).input('texto','[ESTEIRA]=> Fase alterada para a mesma que está no banco!').execute('pr_changeFase_by_contrato')
+                    return console.log(`[ESTEIRA]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${propostaDB.recordset[0].Fase} - FaseNew: ${faseName}`)
                   }
-                } else console.log(`[Facta ESTEIRA]=> Nova Fase: ${proposta.status_proposta}`)
-              }
-            //}
+                }
+              } else console.log(`[Facta Esteira CODE: ${proposta.codigo_af}]=> Nova fase: ${proposta.status_proposta}`)
+            }
+            if (index == (getEsteira.data.propostas.length-1) && queue.length <= 0) return console.log(`[Facta Esteira]=> Finalizado!`);
           })
         } else {
           if (getEsteira.data.msg) return { status: false, error: `[ESTEIRA (7)]=> ${getEsteira.data.msg}` }
@@ -93,12 +99,12 @@ module.exports = { FactaEsteira }
 
 async function verifyReason(facta, pool) {
   await timeout(3000)
-  if (queue <= 0) return;
+  if (queue <= 0) return console.log(`[Facta Esteira]=> Finalizado!`);
   var proposta = queue[0].proposta
   var agilus = queue[0].agilus
   var fase = queue[0].fase
   var faseName = queue[0].faseName
-  const getOcorrencias = await facta.getOcorrencias(proposta.codigo_af, { af: "ESTEIRA" })
+  const getOcorrencias = await facta.getOcorrencias(proposta.codigo_af, { af: "FACTA ESTEIRA" })
   if (getOcorrencias && getOcorrencias.data) {
     if (getOcorrencias.data.ocorrencias) {
       var motivo = getOcorrencias.data.ocorrencias

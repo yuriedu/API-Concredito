@@ -14,14 +14,17 @@ var queue = {
   "PANAMERICANO": []
 }
 
-// async function Esteira() {
-//   const pool = await MSSQL();
-//   // const { FactaEsteira } = require('./src/Controllers/Esteiras/Facta')
-//   // await FactaEsteira(pool, {af: "ESTEIRA"})
-//   const { C6Esteira } = require('./src/Controllers/Esteiras/C6')
-//   await C6Esteira(pool, {af: "ESTEIRA"})
-// }
-// Esteira()
+async function Esteira() {
+  const pool = await MSSQL();
+  // const { FactaEsteira } = require('./src/Controllers/Esteiras/Facta')
+  // await FactaEsteira(pool, {af: "FACTA ESTEIRA"})
+  // const { C6Esteira } = require('./src/Controllers/Esteiras/C6')
+  // await C6Esteira(pool, {af: "C6 ESTEIRA"})
+
+  // const { BMGEsteira } = require('./src/Controllers/Esteiras/BMG')
+  // await BMGEsteira(pool, {af: "BMG ESTEIRA"})
+}
+Esteira()
 
 
 express()

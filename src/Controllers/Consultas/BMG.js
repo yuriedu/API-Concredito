@@ -3,7 +3,7 @@ const { saveDB, updateContratoDB, dadosCliente, bancoTranslate, bantToString } =
 const moment = require(`moment`);
 moment.locale("pt-BR");
 
-const BMGCART = async (cpf, log) => {
+const BMGFGTS = async (cpf, log) => {
   try {
     log.situation = `[0]=> Verificando dados do cliente...`
       const bmg = await new BMG();
@@ -58,4 +58,4 @@ const BMGCART = async (cpf, log) => {
   }
 }
 
-module.exports = { BMGCART }
+module.exports = { BMGFGTS }

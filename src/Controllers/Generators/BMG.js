@@ -3,14 +3,6 @@ const { saveDB, updateContratoDB, dadosCliente, bancoTranslate, bantToString } =
 const moment = require(`moment`);
 moment.locale("pt-BR");
 
-
-
-
-
-
-
-
-
 const BMGCART = async (cliente) => {
   try {
     var client = await dadosCliente(cliente, "INSS");
