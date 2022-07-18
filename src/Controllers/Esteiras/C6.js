@@ -79,13 +79,13 @@ async function verifyFaseBank(c6, pool) {
         if ((fase == 3920 && proposta.CodFase == 2) || fase != 3) {
           if (fase == 9 && getProposta.data.loan_track.current_activity_description.includes('PEN DOCUMENTOS')) {
             await pool.request().input('fase',fase).input('contrato',proposta.NumeroContrato).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco!\nMotivo: Enviar novo documento e avisar cliente de possível contato do banco`).input('bank',626).execute('pr_changeFase_by_contrato')
-            console.log(`[C6 Esteira]=> Contrato: ${proposta.NumeroContrato} - FaseOLD: ${proposta.Fase} - FaseNew: ${faseName} - Motivo: Enviar novo documento e avisar cliente de possível contato do banco`)
+            //console.log(`[C6 Esteira]=> Contrato: ${proposta.NumeroContrato} - FaseOLD: ${proposta.Fase} - FaseNew: ${faseName} - Motivo: Enviar novo documento e avisar cliente de possível contato do banco`)
           } else if (fase == 9 && getProposta.data.loan_track.current_activity_description.includes('AGUARDA AUTORIZACAO')) {
             await pool.request().input('fase',fase).input('contrato',proposta.NumeroContrato).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco!\nMotivo: Cliente cancelou a autorização! O mesmo precisa gerar novamente para darmos andamento na operação`).input('bank',626).execute('pr_changeFase_by_contrato')
-            console.log(`[C6 Esteira]=> Contrato: ${proposta.NumeroContrato} - FaseOLD: ${proposta.Fase} - FaseNew: ${faseName} - Motivo: Enviar novo documento e avisar cliente de possível contato do banco`)
+            //console.log(`[C6 Esteira]=> Contrato: ${proposta.NumeroContrato} - FaseOLD: ${proposta.Fase} - FaseNew: ${faseName} - Motivo: Cliente cancelou a autorização! O mesmo precisa gerar novamente para darmos andamento na operação`)
           } else {
             await pool.request().input('fase',fase).input('contrato',proposta.NumeroContrato).input('texto','[ESTEIRA]=> Fase alterada para a mesma que está no banco!').input('bank',626).execute('pr_changeFase_by_contrato')
-            console.log(`[C6 Esteira]=> Contrato: ${proposta.NumeroContrato} - FaseOLD: ${proposta.Fase} - FaseNew: ${faseName}`)
+            //console.log(`[C6 Esteira]=> Contrato: ${proposta.NumeroContrato} - FaseOLD: ${proposta.Fase} - FaseNew: ${faseName}`)
           }
         }
       } else{
