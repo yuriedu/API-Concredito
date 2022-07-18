@@ -55,17 +55,6 @@ class Facta {
         await this.refreshToken(log);
         return this.getSaldo(cpf, log)
       }
-      if (err.response && err.response.data) {
-        var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
-        console.log(`[API Facta ERROR(INDEFINIDO1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
-        console.log(array[0])
-        return false;
-      } else {
-        var array = Object.keys(err).map(function(key) { return err[key] });
-        console.log(`[API Facta ERROR(INDEFINIDO1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
-        console.log(array[0])
-        return false;
-      }
       console.log(`[API Facta ERROR(2) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err);
       return err.response
@@ -78,12 +67,28 @@ class Facta {
       if (response.data.msg && response.data.msg.includes('Tente novamente em alguns minutos')) {
         await this.refreshToken(log);
         return this.calcularSaldo(cpf, parcelas, tabela , taxa, log)
+      } else if (err.response && err.response.data) {
+        var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
+        console.log(`[API Facta ERROR(INDEFINIDO1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
+        console.log(array[0])
+        return false;
       } else return response;
     } catch(err) {
       if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.calcularSaldo(cpf, parcelas, tabela, taxa, log)
+      }
+      if (err.response && err.response.data) {
+        var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
+        console.log(`[API Facta ERROR(INDEFINIDO1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
+        console.log(array[0])
+        return false;
+      } else {
+        var array = Object.keys(err).map(function(key) { return err[key] });
+        console.log(`[API Facta ERROR(INDEFINIDO1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
+        console.log(array[0])
+        return false;
       }
       if (err.response && err.response.data && (Object.keys(err.response.data)[1].includes('<br />') || Object.keys(err.response.data)[1].includes('<br/>') || Object.keys(err.response.data)[1].includes('Fatal error'))) {
         await this.timeout(5000)
