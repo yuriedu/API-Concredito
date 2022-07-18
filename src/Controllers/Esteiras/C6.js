@@ -45,7 +45,7 @@ const C6Esteira = async (pool, log) => {
 module.exports = { C6Esteira }
 
 async function verifyFaseBank(c6, pool) {
-  //await timeout(3000)
+  await timeout(3000)
   if (queue <= 0) return console.log(`[C6 Esteira]=> Finalizado!`);
   var proposta = queue[0].proposta
   const getProposta = await c6.getProposta(proposta.NumeroContrato, { af: "C6 ESTEIRA" })
