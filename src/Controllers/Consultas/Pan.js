@@ -3,7 +3,7 @@ const { saveDB, updateContratoDB, dadosCliente, bancoTranslate, bantToString } =
 const moment = require(`moment`);
 moment.locale("pt-BR");
 
-const PanFGTS = async (cpf, type, valor, log) => {
+const PanFGTS = async (cpf, type, valor, table, log) => {
   try {
     log.situation = `[0]=> Verificando dados do cliente...`
     const pan = await new Pan();
@@ -18,7 +18,7 @@ const PanFGTS = async (cpf, type, valor, log) => {
       const simularProposta = await pan.simularProposta(simulation, log);
       if (simularProposta && simularProposta.data) {
         if (simularProposta.data[0] && simularProposta.data[0].condicoes_credito) {
-          const tabela = simularProposta.data[0].condicoes_credito.find(element => element.codigo_tabela_financiamento == '900001')
+          const tabela = simularProposta.data[0].condicoes_credito.find(element => element.codigo_tabela_financiamento == table)
           if (tabela && tabela.parcelas && tabela.valor_cliente && tabela.valor_bruto) {
             var date = moment(new Date(), 'DD/MM/YYYY').format('DD-MM-YYYY').replace("-","/").replace("-","/")
             var data = {

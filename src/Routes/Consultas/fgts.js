@@ -56,7 +56,7 @@ const fgts = async (req, res, queue, verify) => {
           if (queue[req.body.bank].findIndex(r => r.user == req.body.user && r.cpf == req.body.cpf) >= 0) queue[req.body.bank].splice(queue[req.body.bank].findIndex(r => r.user == req.body.user && r.cpf == req.body.cpf), 1)
           return res.status(200).json({ status: false, error: `Valor não informado! Verifique e tente novamente...` })
         }
-        response = await PanFGTS(req.body.cpf, req.body.option1, req.body.option2, { cpf: req.body.cpf, situation: 'Consultando FGTS...' });
+        response = await PanFGTS(req.body.cpf, req.body.option1, req.body.option2, req.body.option3, { cpf: req.body.cpf, situation: 'Consultando FGTS...' });
       } else if (req.body.bank == "SAFRA") {
         response = await SafraFGTS(req.body.cpf, req.body.option1, { cpf: req.body.cpf, situation: 'Consultando FGTS...' });
       } else if (req.body.bank == "MERCANTIL") {
