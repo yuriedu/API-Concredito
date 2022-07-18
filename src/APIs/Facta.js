@@ -60,6 +60,11 @@ class Facta {
         console.log(`[API Facta ERROR(INDEFINIDO1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
         console.log(array[0])
         return false;
+      } else {
+        var array = Object.keys(err).map(function(key) { return err[key] });
+        console.log(`[API Facta ERROR(INDEFINIDO1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
+        console.log(array[0])
+        return false;
       }
       console.log(`[API Facta ERROR(2) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err);
