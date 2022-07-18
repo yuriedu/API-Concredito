@@ -67,8 +67,8 @@ class Facta {
       if (response.data.msg && response.data.msg.includes('Tente novamente em alguns minutos')) {
         await this.refreshToken(log);
         return this.calcularSaldo(cpf, parcelas, tabela , taxa, log)
-      } else if (err.response && err.response.data) {
-        var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
+      } else if (response && response.data) {
+        var array = Object.keys(response.data).map(function(key) { return response.data[key] });
         console.log(`[API Facta ERROR(INDEFINIDO1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
         console.log(array[0])
         return false;
@@ -81,12 +81,12 @@ class Facta {
       }
       if (err.response && err.response.data) {
         var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
-        console.log(`[API Facta ERROR(INDEFINIDO1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
+        console.log(`[API Facta ERROR(INDEFINIDO2) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
         console.log(array[0])
         return false;
       } else {
         var array = Object.keys(err).map(function(key) { return err[key] });
-        console.log(`[API Facta ERROR(INDEFINIDO1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
+        console.log(`[API Facta ERROR(INDEFINIDO3) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
         console.log(array[0])
         return false;
       }
