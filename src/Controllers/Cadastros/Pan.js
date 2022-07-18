@@ -4,11 +4,10 @@ const { saveDB, updateContratoDB, dadosCliente, bancoTranslate, bantToString } =
 const PanFGTS = async (cliente, pool, log) => {
   try {
     log.situation = `[0]=> Verificando dados do cliente...`
-    console.log(cliente.CodBancoCliente)
     var client = await dadosCliente(cliente, "FGTS");
     if (client && client.status) {
       client = client.dados
-      console.log(client.CodBancoCliente)
+      client.CodBancoCliente = `${String(client.CodBancoCliente).length == 1 ? `000${client.CodBancoCliente}` :  String(client.CodBancoCliente).length == 2 ? `00${client.CodBancoCliente}` : String(client.CodBancoCliente).length == 3 ? `0${client.CodBancoCliente}` : client.CodBancoCliente }`
       const pan = await new Pan();
       log.situation = `[1]=> Conectando na API...`
       const loadAPI = await pan.refreshToken(log)
