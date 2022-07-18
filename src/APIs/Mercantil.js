@@ -78,6 +78,11 @@ class Mercantil {
         await this.refreshToken(log);
         return this.simularProposta(data, log)
       }
+      if (err.response && err.response.data && err.response.data.logEntryId) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.simularProposta(data, log)
+      }
       console.log(`[API Mercantil ERROR(3) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
       return err.response

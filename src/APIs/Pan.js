@@ -63,12 +63,12 @@ class Panamericano {
         await this.refreshToken(log);
         return this.simularProposta(data, log)
       }
-      if (err.response && err.response.data && err.response.data.detalhes.includes('Tente novamente mais tarde')) {
+      if (err.response && err.response.data && (err.response.data.detalhes.includes('Tente novamente mais tarde') || err.response.data.detalhes.includes('Não houve resposta no retorno da chamada'))) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.simularProposta(data, log)
       }
-      if (err.response && err.response.data && err.response.data.detalhes && err.response.data.detalhes[0].includes('Tente novamente mais tarde')) {
+      if (err.response && err.response.data && err.response.data.detalhes && (err.response.data.detalhes[0].includes('Tente novamente mais tarde') || err.response.data.detalhes[0].includes('Não houve resposta no retorno da chamada'))) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.simularProposta(data, log)
@@ -100,12 +100,12 @@ class Panamericano {
         await this.refreshToken(log);
         return this.simularPropostaINSS(data, log)
       }
-      if (err.response && err.response.data && err.response.data.detalhes.includes('Tente novamente mais tarde')) {
+      if (err.response && err.response.data && (err.response.data.detalhes.includes('Tente novamente mais tarde') || err.response.data.detalhes.includes('Não houve resposta no retorno da chamada'))) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.simularPropostaINSS(data, log)
       }
-      if (err.response && err.response.data && err.response.data.detalhes && err.response.data.detalhes[0].includes('Tente novamente mais tarde')) {
+      if (err.response && err.response.data && err.response.data.detalhes && (err.response.data.detalhes[0].includes('Tente novamente mais tarde') || err.response.data.detalhes[0].includes('Não houve resposta no retorno da chamada'))) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.simularPropostaINSS(data, log)
@@ -137,12 +137,12 @@ class Panamericano {
         await this.refreshToken(log);
         return this.registerProposta(data, log)
       }
-      if (err.response && err.response.data && err.response.data.detalhes.includes('Tente novamente mais tarde')) {
+      if (err.response && err.response.data && (err.response.data.detalhes.includes('Tente novamente mais tarde') || err.response.data.detalhes.includes('Não houve resposta no retorno da chamada'))) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.registerProposta(data, log)
       }
-      if (err.response && err.response.data && err.response.data.detalhes && err.response.data.detalhes[0].includes('Tente novamente mais tarde')) {
+      if (err.response && err.response.data && err.response.data.detalhes && (err.response.data.detalhes[0].includes('Tente novamente mais tarde') || err.response.data.detalhes[0].includes('Não houve resposta no retorno da chamada'))) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.registerProposta(data, log)
@@ -174,12 +174,12 @@ class Panamericano {
         await this.refreshToken(log);
         return this.registerPropostaINSS(data, log)
       }
-      if (err.response && err.response.data && err.response.data.detalhes.includes('Tente novamente mais tarde')) {
+      if (err.response && err.response.data && (err.response.data.detalhes.includes('Tente novamente mais tarde') || err.response.data.detalhes.includes('Não houve resposta no retorno da chamada'))) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.registerPropostaINSS(data, log)
       }
-      if (err.response && err.response.data && err.response.data.detalhes && err.response.data.detalhes[0].includes('Tente novamente mais tarde')) {
+      if (err.response && err.response.data && err.response.data.detalhes && (err.response.data.detalhes[0].includes('Tente novamente mais tarde') || err.response.data.detalhes[0].includes('Não houve resposta no retorno da chamada'))) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.registerPropostaINSS(data, log)
@@ -211,12 +211,12 @@ class Panamericano {
         await this.refreshToken(log);
         return this.getLink(id, tipoProposta, log)
       }
-      if (err.response && err.response.data && err.response.data.detalhes.includes('Tente novamente mais tarde')) {
+      if (err.response && err.response.data && (err.response.data.detalhes.includes('Tente novamente mais tarde') || err.response.data.detalhes.includes('Não houve resposta no retorno da chamada'))) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.getLink(data, log)
       }
-      if (err.response && err.response.data && err.response.data.detalhes && err.response.data.detalhes[0].includes('Tente novamente mais tarde')) {
+      if (err.response && err.response.data && err.response.data.detalhes && (err.response.data.detalhes[0].includes('Tente novamente mais tarde') || err.response.data.detalhes[0].includes('Não houve resposta no retorno da chamada'))) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.getLink(data, log)
@@ -248,12 +248,12 @@ class Panamericano {
         await this.refreshToken(log);
         return this.getLink(id, tipoProposta, log)
       }
-      if (err.response && err.response.data && err.response.data.detalhes.includes('Tente novamente mais tarde')) {
+      if (err.response && err.response.data && (err.response.data.detalhes.includes('Tente novamente mais tarde') || err.response.data.detalhes.includes('Não houve resposta no retorno da chamada'))) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.getLink(data, log)
       }
-      if (err.response && err.response.data && err.response.data.detalhes && err.response.data.detalhes[0].includes('Tente novamente mais tarde')) {
+      if (err.response && err.response.data && err.response.data.detalhes && (err.response.data.detalhes[0].includes('Tente novamente mais tarde') || err.response.data.detalhes[0].includes('Não houve resposta no retorno da chamada'))) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.getLink(data, log)
