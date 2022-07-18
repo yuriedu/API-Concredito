@@ -18,10 +18,10 @@ async function Esteira() {
   const pool = await MSSQL();
   const { FactaEsteira } = require('./src/Controllers/Esteiras/Facta')
   const { C6Esteira } = require('./src/Controllers/Esteiras/C6')
-  //setTimeout(function() {
-  //  FactaEsteira(pool, {af: "FACTA ESTEIRA"})
+  setTimeout(function() {
+    FactaEsteira(pool, {af: "FACTA ESTEIRA"})
     C6Esteira(pool, {af: "C6 ESTEIRA"})
-  //},1800000)
+  },1800000)
   // const { BMGEsteira } = require('./src/Controllers/Esteiras/BMG')
   // await BMGEsteira(pool, {af: "BMG ESTEIRA"})
 }
