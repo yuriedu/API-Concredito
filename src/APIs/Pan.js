@@ -45,10 +45,8 @@ class Panamericano {
     try {
       log.situation = `[2]=> Simulando a proposta...`
       const response = await this.api.post(`openapi/consignado/v1/emprestimos/simulacao/fgts`, data);
-      console.log(response.data)
       return response;
     } catch(err) {
-      console.log(err.response.data)
       if (err.response && err.response.data && err.response.data.detalhes && err.response.data.detalhes[0]) return err.response
       if(err.response && (err.response.status == 401 || err.response.status == 504 || err.response.status == 502)) {
         await this.timeout(5000)
