@@ -17,19 +17,33 @@ class Facta {
         this.token = response.data.token
         this.api = await axios.create({ baseURL: this.url, headers: { Authorization: `Bearer ${this.token}` } });
         return true;
-      } else if (response) {
-        console.log(`[API Facta TOKEN - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
-        console.log(response.data ? response.data : response);
-        return false
-      } return false;
+      } else if (response && response.data) {
+        var array = Object.keys(response.data).map(function(key) { return response.data[key] });
+        if (array && array[0].includes('<')) {
+          await this.timeout(5000)
+          return this.refreshToken(log);
+        } else {
+          console.log(`[API Facta TOKEN - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=>`)
+          console.log(response.data ? response.data : response);
+          return false;
+        }
+      } else return false;
     } catch(err) {
       if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         return this.refreshToken(log);
       }
-      if (err.response && err.response.data && (Object.keys(err.response.data)[1].includes('<br />') || Object.keys(err.response.data)[1].includes('<br/>') || Object.keys(err.response.data)[1].includes('Fatal error'))) {
-        await this.timeout(5000)
-        return this.refreshToken(log);
+      if (err.response && err.response.data) {
+        var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
+        if (array && array[0].includes('<')) {
+          await this.timeout(5000)
+          return this.refreshToken(log);
+        } else {
+          console.log(`[API Facta ERROR(DB[1]) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
+          console.log(array[0])
+          console.log(err.response.data)
+          return false
+        }
       }
       console.log(`[API Facta Error(1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}]=> ${err}`)
       console.log(err.response ? err.response.data : err);
@@ -43,20 +57,35 @@ class Facta {
       if (response.data.msg && response.data.msg.includes('Tente novamente em alguns minutos')) {
         await this.refreshToken(log);
         return this.getSaldo(cpf, log)
-      } else return response;
+      } else if (response && response.data) {
+        var array = Object.keys(response.data).map(function(key) { return response.data[key] });
+        if (array && array[0].includes('<')) {
+          await this.timeout(5000)
+          await this.refreshToken(log);
+          return this.getSaldo(cpf, log)
+        } else return response
+      } else return false;
     } catch(err) {
       if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.getSaldo(cpf, log)
       }
-      if (err.response && err.response.data && (Object.keys(err.response.data)[1].includes('<br />') || Object.keys(err.response.data)[1].includes('<br/>') || Object.keys(err.response.data)[1].includes('Fatal error'))) {
-        await this.timeout(5000)
-        await this.refreshToken(log);
-        return this.getSaldo(cpf, log)
+      if (err.response && err.response.data) {
+        var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
+        if (array && array[0].includes('<')) {
+          await this.timeout(5000)
+          await this.refreshToken(log);
+          return this.getSaldo(cpf, log)
+        } else {
+          console.log(`[API Facta ERROR(DB[2]) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
+          console.log(array[0])
+          console.log(err.response.data)
+          return false
+        }
       }
       console.log(`[API Facta ERROR(2) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
-      console.log(err);
+      console.log(err.response ? err.response.data : err);
       return err.response
     }
   }
@@ -73,12 +102,7 @@ class Facta {
           await this.timeout(5000)
           await this.refreshToken(log);
           return this.calcularSaldo(cpf, parcelas, tabela, taxa, log)
-        } else {
-          console.log(`[API Facta ERROR(INDEFINIDO1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
-          console.log(array[0])
-          console.log(array)
-          return response
-        }
+        } else return response
       } else return false;
     } catch(err) {
       if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
@@ -93,16 +117,11 @@ class Facta {
           await this.refreshToken(log);
           return this.calcularSaldo(cpf, parcelas, tabela, taxa, log)
         } else {
-          console.log(`[API Facta ERROR(INDEFINIDO1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
+          console.log(`[API Facta ERROR(DB[3]) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
           console.log(array[0])
-          console.log(array)
+          console.log(err.response.data)
           return false
         }
-      }
-      if (err.response && err.response.data && (Object.keys(err.response.data)[1].includes('<br />') || Object.keys(err.response.data)[1].includes('<br/>') || Object.keys(err.response.data)[1].includes('Fatal error'))) {
-        await this.timeout(5000)
-        await this.refreshToken(log);
-        return this.calcularSaldo(cpf, parcelas, tabela, taxa, log)
       }
       console.log(`[API Facta ERROR(3) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
@@ -116,24 +135,40 @@ class Facta {
       if (response.data.msg && response.data.msg.includes('Tente novamente em alguns minutos')) {
         await this.refreshToken(log);
         return this.getCidadesByCidade(cidade, estado, log)
-      }
-      const cidade = response.data.cidade;
-      if (!cidade) return { data: { msg: "Cidade do cliente não encontrada na Facta! Verifique e tente novamente..." } }
-      if (cidade && Object.keys(cidade).length > 1) {
-        let city;
-        Object.keys(cidade).map(k => { if (cidade[k].nome == nomeCidade) city = { [k]: cidade[k] } });
-        return city;
-      } else return cidade;
+      } else if (response && response.data) {
+        var array = Object.keys(response.data).map(function(key) { return response.data[key] });
+        if (array && array[0].includes('<')) {
+          await this.timeout(5000)
+          await this.refreshToken(log);
+          return this.getCidadesByCidade(nomeCidade, estado, log)
+        } else {
+          const cidade = response.data.cidade;
+          if (!cidade) return { data: { msg: "Cidade do cliente não encontrada na Facta! Verifique e tente novamente..." } }
+          if (cidade && Object.keys(cidade).length > 1) {
+            let city;
+            Object.keys(cidade).map(k => { if (cidade[k].nome == nomeCidade) city = { [k]: cidade[k] } });
+            return city;
+          } else return cidade;
+        }
+      } else return false;
     } catch(err) {
       if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.getCidadesByCidade(nomeCidade, estado, log)
       }
-      if (err.response && err.response.data && (Object.keys(err.response.data)[1].includes('<br />') || Object.keys(err.response.data)[1].includes('<br/>') || Object.keys(err.response.data)[1].includes('Fatal error'))) {
-        await this.timeout(5000)
-        await this.refreshToken(log);
-        return this.getCidadesByCidade(nomeCidade, estado, log)
+      if (err.response && err.response.data) {
+        var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
+        if (array && array[0].includes('<')) {
+          await this.timeout(5000)
+          await this.refreshToken(log);
+          return this.getCidadesByCidade(nomeCidade, estado, log)
+        } else {
+          console.log(`[API Facta ERROR(DB[4]) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
+          console.log(array[0])
+          console.log(err.response.data)
+          return false
+        }
       }
       if (err.response && err.response.data && String(err.response.data) && String(err.response.data).logEntryId) return err.response
       console.log(`[API Facta ERROR(4) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
@@ -157,17 +192,32 @@ class Facta {
       if (response.data.msg && response.data.msg.includes('Tente novamente em alguns minutos')) {
         await this.refreshToken(log);
         return this.simularProposta(cpf, simulacao_fgts, data_nascimento, log)
-      } else return response;
+      } else if (response && response.data) {
+        var array = Object.keys(response.data).map(function(key) { return response.data[key] });
+        if (array && array[0].includes('<')) {
+          await this.timeout(5000)
+          await this.refreshToken(log);
+          return this.simularProposta(cpf, simulacao_fgts, data_nascimento, log)
+        } else return response
+      } else return false;
     } catch(err) {
       if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.simularProposta(cpf, simulacao_fgts, data_nascimento, log)
       }
-      if (err.response && err.response.data && (Object.keys(err.response.data)[1].includes('<br />') || Object.keys(err.response.data)[1].includes('<br/>') || Object.keys(err.response.data)[1].includes('Fatal error'))) {
-        await this.timeout(5000)
-        await this.refreshToken(log);
-        return this.simularProposta(cpf, simulacao_fgts, data_nascimento, log)
+      if (err.response && err.response.data) {
+        var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
+        if (array && array[0].includes('<')) {
+          await this.timeout(5000)
+          await this.refreshToken(log);
+          return this.simularProposta(cpf, simulacao_fgts, data_nascimento, log)
+        } else {
+          console.log(`[API Facta ERROR(DB[5]) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
+          console.log(array[0])
+          console.log(err.response.data)
+          return false
+        }
       }
       console.log(`[API Facta ERROR(5) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
@@ -183,17 +233,32 @@ class Facta {
       if (response.data.msg && response.data.msg.includes('Tente novamente em alguns minutos')) {
         await this.refreshToken(log);
         return this.registerProposta(id_simulador, clientData, log)
-      } else return response;
+      } else if (response && response.data) {
+        var array = Object.keys(response.data).map(function(key) { return response.data[key] });
+        if (array && array[0].includes('<')) {
+          await this.timeout(5000)
+          await this.refreshToken(log);
+          return this.registerProposta(id_simulador, clientData, log)
+        } else return response
+      } else return false;
     } catch(err) {
       if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.registerProposta(id_simulador, clientData, log)
       }
-      if (err.response && err.response.data && (Object.keys(err.response.data)[1].includes('<br />') || Object.keys(err.response.data)[1].includes('<br/>') || Object.keys(err.response.data)[1].includes('Fatal error'))) {
-        await this.timeout(5000)
-        await this.refreshToken(log);
-        return this.registerProposta(id_simulador, clientData, log)
+      if (err.response && err.response.data) {
+        var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
+        if (array && array[0].includes('<')) {
+          await this.timeout(5000)
+          await this.refreshToken(log);
+          return this.registerProposta(id_simulador, clientData, log)
+        } else {
+          console.log(`[API Facta ERROR(DB[6]) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
+          console.log(array[0])
+          console.log(err.response.data)
+          return false
+        }
       }
       console.log(`[API Facta ERROR(6) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
@@ -216,17 +281,32 @@ class Facta {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.requestProposta(id_simulador, codigo_cliente, log, tentativa+1)
-      } else return response;
+      } else if (response && response.data) {
+        var array = Object.keys(response.data).map(function(key) { return response.data[key] });
+        if (array && array[0].includes('<')) {
+          await this.timeout(5000)
+          await this.refreshToken(log);
+          return this.requestProposta(id_simulador, codigo_cliente, log, tentativa)
+        } else return response
+      } else return false;
     } catch(err) {
       if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.requestProposta(id_simulador, codigo_cliente, log)
       }
-      if (err.response && err.response.data && (Object.keys(err.response.data)[1].includes('<br />') || Object.keys(err.response.data)[1].includes('<br/>') || Object.keys(err.response.data)[1].includes('Fatal error'))) {
-        await this.timeout(5000)
-        await this.refreshToken(log);
-        return this.requestProposta(id_simulador, codigo_cliente, log)
+      if (err.response && err.response.data) {
+        var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
+        if (array && array[0].includes('<')) {
+          await this.timeout(5000)
+          await this.refreshToken(log);
+          return this.requestProposta(id_simulador, codigo_cliente, log, tentativa)
+        } else {
+          console.log(`[API Facta ERROR(DB[7]) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
+          console.log(array[0])
+          console.log(err.response.data)
+          return false
+        }
       }
       console.log(`[API Facta ERROR(7) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
@@ -238,23 +318,32 @@ class Facta {
       log.situation = `[8]=> Puxando todas as propostas...`
       const form = new FormData();
       const response = await this.api.get(`/proposta/andamento-propostas?data_alteracao_ini=${dia}/${mes}/${ano}`, { headers: form.getHeaders() });
-      return response
+      if (response && response.data) {
+        var array = Object.keys(response.data).map(function(key) { return response.data[key] });
+        if (array && array[0].includes('<')) {
+          await this.timeout(5000)
+          await this.refreshToken(log);
+          return this.getEsteira(dia,mes,ano,log)
+        } else return response
+      } else return false;
     } catch(err) {
       if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.getEsteira(log);
       }
-      if (err.response && err.response.data && (Object.keys(err.response.data)[1].includes('<br />') || Object.keys(err.response.data)[1].includes('<br/>') || Object.keys(err.response.data)[1].includes('Fatal error'))) {
-        await this.timeout(5000)
-        await this.refreshToken(log);
-        return this.getEsteira(log);
-      }
       if (err.response && err.response.data) {
         var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
-        console.log(`[API Facta ERROR(INDEFINIDO2) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
-        console.log(array[0])
-        return false;
+        if (array && array[0].includes('<')) {
+          await this.timeout(5000)
+          await this.refreshToken(log);
+          return this.getEsteira(dia,mes,ano,log)
+        } else {
+          console.log(`[API Facta ERROR(DB[8]) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
+          console.log(array[0])
+          console.log(err.response.data)
+          return false
+        }
       }
       console.log(`[API Facta ERROR(8) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
@@ -266,23 +355,32 @@ class Facta {
       log.situation = `[9]=> Puxando proposta...`
       const form = new FormData();
       const response = await this.api.get(`/proposta/consulta-ocorrencias?af=${af}`, { headers: form.getHeaders() });
-      return response
+      if (response && response.data) {
+        var array = Object.keys(response.data).map(function(key) { return response.data[key] });
+        if (array && array[0].includes('<')) {
+          await this.timeout(5000)
+          await this.refreshToken(log);
+          return this.getOcorrencias(af, log)
+        } else return response
+      } else return false;
     } catch(err) {
       if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.getOcorrencias(af, log);
       }
-      if (err.response && err.response.data && (Object.keys(err.response.data)[1].includes('<br />') || Object.keys(err.response.data)[1].includes('<br/>') || Object.keys(err.response.data)[1].includes('Fatal error'))) {
-        await this.timeout(5000)
-        await this.refreshToken(log);
-        return this.getOcorrencias(af, log);
-      }
       if (err.response && err.response.data) {
         var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
-        console.log(`[API Facta ERROR(INDEFINIDO3) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
-        console.log(array[0])
-        return false;
+        if (array && array[0].includes('<')) {
+          await this.timeout(5000)
+          await this.refreshToken(log);
+          return this.getOcorrencias(af, log)
+        } else {
+          console.log(`[API Facta ERROR(DB[9]) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
+          console.log(array[0])
+          console.log(err.response.data)
+          return false
+        }
       }
       console.log(`[API Facta ERROR(9) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
