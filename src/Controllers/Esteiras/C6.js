@@ -30,6 +30,7 @@ const C6Esteira = async (pool, log) => {
       if (dia < 10) dia = `0${dia}`
       if (mes < 10) mes = `0${mes}`
       const propostas = await pool.request().input('date', new Date(`${ano}-${mes}-${dia} 00:00:00`)).input('bank',626).execute('pr_getPropostas_by_Bank_and_Date')
+      console.log(propostas.recordset.length)
       propostas.recordset.forEach((proposta, index)=>{
         queue[queue.length] = { codigo: proposta.NumeroContrato, proposta: proposta }
         if (queue.length == 1) return verifyFaseBank(c6, pool)
@@ -44,7 +45,7 @@ const C6Esteira = async (pool, log) => {
 module.exports = { C6Esteira }
 
 async function verifyFaseBank(c6, pool) {
-  await timeout(3000)
+  //await timeout(3000)
   if (queue <= 0) return console.log(`[C6 Esteira]=> Finalizado!`);
   var proposta = queue[0].proposta
   const getProposta = await c6.getProposta(proposta.NumeroContrato, { af: "C6 ESTEIRA" })
@@ -75,20 +76,33 @@ async function verifyFaseBank(c6, pool) {
       if (fase == 323) faseName = 'AGUARDA AUMENTO INSS'
       if (fase == 692) faseName = 'PROPOSTA EM ANALISE BANCO'
       if (fase == 10293) faseName = 'VERFICAÇÃO MANUAL OP'
+console.log(`
+{
+  Contrato: ${proposta.NumeroContrato} 
+  actualFase: ${proposta.CodFase} 
+  newFase: ${fase} 
+  situation: ${getProposta.data.loan_track.current_activity_description} 
+}
+`)
       if (fase && faseName) {
+        console.log(1)
         if ((fase == 3920 && proposta.CodFase == 2) || fase != 3) {
+          console.log(2)
           if (fase == 9 && getProposta.data.loan_track.current_activity_description.includes('PEN DOCUMENTOS')) {
+            console.log(3)
             await pool.request().input('fase',fase).input('contrato',proposta.NumeroContrato).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco!\nMotivo: Enviar novo documento e avisar cliente de possível contato do banco`).input('bank',626).execute('pr_changeFase_by_contrato')
-            //console.log(`[C6 Esteira]=> Contrato: ${proposta.NumeroContrato} - FaseOLD: ${proposta.Fase} - FaseNew: ${faseName} - Motivo: Enviar novo documento e avisar cliente de possível contato do banco`)
+            console.log(`[C6 Esteira]=> Contrato: ${proposta.NumeroContrato} - FaseOLD: ${proposta.Fase} - FaseNew: ${faseName} - Motivo: Enviar novo documento e avisar cliente de possível contato do banco`)
           } else if (fase == 9 && getProposta.data.loan_track.current_activity_description.includes('AGUARDA AUTORIZACAO')) {
+            console.log(4)
             await pool.request().input('fase',fase).input('contrato',proposta.NumeroContrato).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco!\nMotivo: Cliente cancelou a autorização! O mesmo precisa gerar novamente para darmos andamento na operação`).input('bank',626).execute('pr_changeFase_by_contrato')
-            //console.log(`[C6 Esteira]=> Contrato: ${proposta.NumeroContrato} - FaseOLD: ${proposta.Fase} - FaseNew: ${faseName} - Motivo: Cliente cancelou a autorização! O mesmo precisa gerar novamente para darmos andamento na operação`)
+            console.log(`[C6 Esteira]=> Contrato: ${proposta.NumeroContrato} - FaseOLD: ${proposta.Fase} - FaseNew: ${faseName} - Motivo: Cliente cancelou a autorização! O mesmo precisa gerar novamente para darmos andamento na operação`)
           } else {
+            console.log(5)
             await pool.request().input('fase',fase).input('contrato',proposta.NumeroContrato).input('texto','[ESTEIRA]=> Fase alterada para a mesma que está no banco!').input('bank',626).execute('pr_changeFase_by_contrato')
-            //console.log(`[C6 Esteira]=> Contrato: ${proposta.NumeroContrato} - FaseOLD: ${proposta.Fase} - FaseNew: ${faseName}`)
+            console.log(`[C6 Esteira]=> Contrato: ${proposta.NumeroContrato} - FaseOLD: ${proposta.Fase} - FaseNew: ${faseName}`)
           }
         }
-      } else{
+      } else {
         if (getProposta.data.loan_track.current_activity_description.includes('PAGO')) fase = 3 //PAGO AO CLIENTE
         if (getProposta.data.loan_track.current_activity_description.includes('AGUARDA FORM DIG WEB')) fase = 9232 //AGUARDANDO ASSINATURA DIGITAL
         if (getProposta.data.loan_track.current_activity_description.includes('ANALISE CORBAN')) fase = 1111 //AGUARDANDO ATUAÇÃO MASTER

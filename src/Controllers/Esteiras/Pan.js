@@ -1,16 +1,16 @@
-const C6 = require('../../APIs/C6');
+const Pan = require('../../APIs/Pan');
 const { saveDB, updateContratoDB, dadosCliente, bancoTranslate } = require('../../Utils/functions');
 const moment = require(`moment`);
 moment.locale("pt-BR");
 
 var queue = []
 
-const C6Esteira = async (pool, log) => {
+const PanEsteira = async (pool, log) => {
   try {
-    console.log('[C6 Esteira]=> Iniciando...')
-    const c6 = await new C6();
+    console.log('[Pan Esteira]=> Iniciando...')
+    const pan = await new Pan();
     log.situation = `[1]=> Conectando na API...`
-    const loadAPI = await c6.refreshToken(log)
+    const loadAPI = await pan.refreshToken(log)
     if (loadAPI) {
       var date = moment(new Date(), 'DD/MM/YYYY').format('DD-MM-YYYY');
       var dia = Number(date.slice(0,2))
@@ -32,33 +32,33 @@ const C6Esteira = async (pool, log) => {
       const propostas = await pool.request().input('date', new Date(`${ano}-${mes}-${dia} 00:00:00`)).input('bank',623).execute('pr_getPropostas_by_Bank_and_Date')
       propostas.recordset.forEach((proposta, index)=>{
         queue[queue.length] = { codigo: proposta.NumeroContrato, proposta: proposta }
-        if (queue.length == 1) return verifyFaseBank(c6, pool)
+        if (queue.length == 1) return verifyFaseBank(pan, pool)
       })
-    propostas.recordset[0]
     } else return { status: false, error: '[1]=> Problema na conexão da API! Tente novamente mais tarde...' }
   } catch(err) {
-    console.log(`[C6 Esteira ERROR] => ${err}`)
+    console.log(`[Pan Esteira ERROR] => ${err}`)
     console.log(err)
   }
 }
 
-module.exports = { C6Esteira }
+module.exports = { PanEsteira }
 
-async function verifyFaseBank(c6, pool) {
+async function verifyFaseBank(pan, pool) {
   await timeout(3000)
-  if (queue <= 0) return console.log(`[C6 Esteira]=> Finalizado!`);
+  if (queue <= 0) return console.log(`[Pan Esteira]=> Finalizado!`);
   var proposta = queue[0].proposta
-  const getProposta = await c6.getProposta(proposta.NumeroContrato, { af: "C6 ESTEIRA" })
-  if (getProposta && getProposta.data) {
-    if (getProposta.data.loan_track && getProposta.data.loan_track.current_activity_description) {
-      
+  const getContrato = await pan.getContrato('02499276088', { af: "PAN ESTEIRA" })
+  // const getContrato = await pan.getContrato(proposta.Cpf, { af: "PAN ESTEIRA" })
+  if (getContrato && getContrato.data) {
+    if (getContrato.data) {
+      console.log(getContrato.data)
     } else {
       if (queue.findIndex(r=>r.codigo == proposta.NumeroContrato) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == proposta.NumeroContrato), 1)
-      return verifyFaseBank(c6, pool)
+      return verifyFaseBank(pan, pool)
     }
   } else {
     if (queue.findIndex(r=>r.codigo == proposta.NumeroContrato) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == proposta.NumeroContrato), 1)
-    return verifyFaseBank(c6, pool)
+    return verifyFaseBank(pan, pool)
   }
 }
 
