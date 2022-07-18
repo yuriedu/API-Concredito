@@ -4,6 +4,7 @@ const { saveDB, updateContratoDB, dadosCliente, bancoTranslate, bantToString } =
 const PanFGTS = async (cliente, pool, log) => {
   try {
     log.situation = `[0]=> Verificando dados do cliente...`
+    console.log(cliente.CodBancoCliente)
     var client = await dadosCliente(cliente, "FGTS");
     if (client && client.status) {
       client = client.dados
