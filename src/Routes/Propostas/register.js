@@ -66,7 +66,7 @@ const registerPropostas = async (req, res, logs) => {
         element.NomePai = await fixName(element.NomePai)
         element.NomePai = await removeCaracteresSpeciais(element.NomePai)
       } else element.NomePai = 'nao identificado'
-      if (!element.EndNumero || element.EndNumero == 'SN' || element.EndNumero == 0) element.EndNumero = 1
+      if (!element.EndNumero || element.EndNumero == 'SN' || element.EndNumero == 0 || element.EndNumero == '0') element.EndNumero = '01'
       var response = false;
       if (element.BancoContrato == "FACTA FINANCEIRA" && req.body.proposta.orgaoProposta == "FGTS") {
         response = await FactaFGTS(element, pool, logUser);

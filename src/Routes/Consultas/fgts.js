@@ -41,7 +41,7 @@ const fgts = async (req, res, queue, verify) => {
         }
       }
       await timeout(3000)
-      console.log(`[Consulta FGTS]=> USER: ${req.body.user} - BANK: ${req.body.bank} - CPF: ${req.body.cpf}`)
+      //console.log(`[Consulta FGTS]=> USER: ${req.body.user} - BANK: ${req.body.bank} - CPF: ${req.body.cpf}`)
       var response = false
       if (req.body.bank == "FACTA FINANCEIRA") {
         response = await FactaFGTS(req.body.cpf, req.body.option1, { cpf: req.body.cpf, situation: 'Consultando FGTS...' });
