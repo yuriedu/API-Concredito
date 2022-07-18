@@ -58,6 +58,7 @@ async function verifyFaseBank(c6, pool) {
       if (proposta.CodFase != 692 && getProposta.data.loan_track.current_activity_description.includes('MESA PREVENCAO')) fase = 692 //PROPOSTA EM ANALISE BANCO
       if (proposta.CodFase != 692 && getProposta.data.loan_track.current_activity_description.includes('ANALISE SELFIE')) fase = 692 //PROPOSTA EM ANALISE BANCO
       if (proposta.CodFase != 9 && getProposta.data.loan_track.current_activity_description.includes('PEN DOCUMENTOS')) fase = 9 //PENDENTE
+      if (proposta.CodFase != 9 && getProposta.data.loan_track.current_activity_description.includes('AGUARDA AUTORIZACAO')) fase = 9 //PENDENTE
       if (proposta.CodFase != 10293 && getProposta.data.loan_track.current_activity_description.includes('REPROVA FGTS')) fase = 10293 //VERFICAÇÃO MANUAL OP
       if (proposta.CodFase != 10293 && getProposta.data.loan_track.current_activity_description.includes('REPROVA CREDITO')) fase = 10293 //VERFICAÇÃO MANUAL OP
       if (proposta.CodFase != 10293 && getProposta.data.loan_track.current_activity_description.includes('AJUSTAR MARGEM')) fase = 10293 //VERFICAÇÃO MANUAL OP
@@ -77,11 +78,14 @@ async function verifyFaseBank(c6, pool) {
       if (fase && faseName) {
         if ((fase == 3920 && proposta.CodFase == 2) || fase != 3) {
           if (fase == 9 && getProposta.data.loan_track.current_activity_description.includes('PEN DOCUMENTOS')) {
-            await pool.request().input('faseDestino',fase).input('CodContrato',proposta.NumeroContrato).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco!\nMotivo: Enviar novo documento e avisar cliente de possível contato do banco`).execute('pr_changeFase_by_contrato')
-            //console.log(`[C6 Esteira]=> Contrato: ${proposta.NumeroContrato} - FaseOLD: ${proposta.Fase} - FaseNew: ${faseName} - Motivo: Enviar novo documento e avisar cliente de possível contato do banco`)
+            await pool.request().input('fase',fase).input('contrato',proposta.NumeroContrato).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco!\nMotivo: Enviar novo documento e avisar cliente de possível contato do banco`).input('bank',626).execute('pr_changeFase_by_contrato')
+            console.log(`[C6 Esteira]=> Contrato: ${proposta.NumeroContrato} - FaseOLD: ${proposta.Fase} - FaseNew: ${faseName} - Motivo: Enviar novo documento e avisar cliente de possível contato do banco`)
+          } else if (fase == 9 && getProposta.data.loan_track.current_activity_description.includes('AGUARDA AUTORIZACAO')) {
+            await pool.request().input('fase',fase).input('contrato',proposta.NumeroContrato).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco!\nMotivo: Cliente cancelou a autorização! O mesmo precisa gerar novamente para darmos andamento na operação`).input('bank',626).execute('pr_changeFase_by_contrato')
+            console.log(`[C6 Esteira]=> Contrato: ${proposta.NumeroContrato} - FaseOLD: ${proposta.Fase} - FaseNew: ${faseName} - Motivo: Enviar novo documento e avisar cliente de possível contato do banco`)
           } else {
-            await pool.request().input('faseDestino',fase).input('CodContrato',proposta.NumeroContrato).input('texto','[ESTEIRA]=> Fase alterada para a mesma que está no banco!').execute('pr_changeFase_by_contrato')
-            //console.log(`[C6 Esteira]=> Contrato: ${proposta.NumeroContrato} - FaseOLD: ${proposta.Fase} - FaseNew: ${faseName}`)
+            await pool.request().input('fase',fase).input('contrato',proposta.NumeroContrato).input('texto','[ESTEIRA]=> Fase alterada para a mesma que está no banco!').input('bank',626).execute('pr_changeFase_by_contrato')
+            console.log(`[C6 Esteira]=> Contrato: ${proposta.NumeroContrato} - FaseOLD: ${proposta.Fase} - FaseNew: ${faseName}`)
           }
         }
       } else{
