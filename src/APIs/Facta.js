@@ -57,7 +57,7 @@ class Facta {
       }
       if (err.response && err.response.data) {
         var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
-        console.log(`[API Facta ERROR(2) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
+        console.log(`[API Facta ERROR(INDEFINIDO1) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
         console.log(array[0])
         return false;
       }
@@ -233,7 +233,7 @@ class Facta {
       }
       if (err.response && err.response.data) {
         var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
-        console.log(`[API Facta ERROR(8) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
+        console.log(`[API Facta ERROR(INDEFINIDO2) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
         console.log(array[0])
         return false;
       }
@@ -261,7 +261,7 @@ class Facta {
       }
       if (err.response && err.response.data) {
         var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
-        console.log(`[API Facta ERROR(9) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
+        console.log(`[API Facta ERROR(INDEFINIDO3) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
         console.log(array[0])
         return false;
       }
