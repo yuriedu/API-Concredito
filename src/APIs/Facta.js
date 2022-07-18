@@ -23,7 +23,7 @@ class Facta {
         return false
       } return false;
     } catch(err) {
-      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && !err.response && !err.response.data) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         return this.refreshToken(log);
       }
@@ -45,7 +45,7 @@ class Facta {
         return this.getSaldo(cpf, log)
       } else return response;
     } catch(err) {
-      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && !err.response && !err.response.data) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.getSaldo(cpf, log)
@@ -75,7 +75,7 @@ class Facta {
         return this.calcularSaldo(cpf, parcelas, tabela , taxa, log)
       } else return response;
     } catch(err) {
-      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && !err.response && !err.response.data) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.calcularSaldo(cpf, parcelas, tabela, taxa, log)
@@ -106,7 +106,7 @@ class Facta {
         return city;
       } else return cidade;
     } catch(err) {
-      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && !err.response && !err.response.data) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.getCidadesByCidade(nomeCidade, estado, log)
@@ -140,7 +140,7 @@ class Facta {
         return this.simularProposta(cpf, simulacao_fgts, data_nascimento, log)
       } else return response;
     } catch(err) {
-      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && !err.response && !err.response.data) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.simularProposta(cpf, simulacao_fgts, data_nascimento, log)
@@ -166,7 +166,7 @@ class Facta {
         return this.registerProposta(id_simulador, clientData, log)
       } else return response;
     } catch(err) {
-      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && !err.response && !err.response.data) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.registerProposta(id_simulador, clientData, log)
@@ -199,7 +199,7 @@ class Facta {
         return this.requestProposta(id_simulador, codigo_cliente, log, tentativa+1)
       } else return response;
     } catch(err) {
-      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && !err.response && !err.response.data) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.requestProposta(id_simulador, codigo_cliente, log)
@@ -221,7 +221,7 @@ class Facta {
       const response = await this.api.get(`/proposta/andamento-propostas?data_alteracao_ini=${dia}/${mes}/${ano}`, { headers: form.getHeaders() });
       return response
     } catch(err) {
-      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && !err.response && !err.response.data) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.getEsteira(log);
@@ -249,7 +249,7 @@ class Facta {
       const response = await this.api.get(`/proposta/consulta-ocorrencias?af=${af}`, { headers: form.getHeaders() });
       return response
     } catch(err) {
-      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && !err.response && !err.response.data) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.getOcorrencias(af, log);

@@ -21,7 +21,7 @@ async function Esteira() {
   setTimeout(function() {
     FactaEsteira(pool, {af: "FACTA ESTEIRA"})
     C6Esteira(pool, {af: "C6 ESTEIRA"})
-  },3600000)
+  },1800000)
   // const { BMGEsteira } = require('./src/Controllers/Esteiras/BMG')
   // await BMGEsteira(pool, {af: "BMG ESTEIRA"})
 }
