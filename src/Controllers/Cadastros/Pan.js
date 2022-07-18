@@ -19,12 +19,13 @@ const PanFGTS = async (cliente, pool, log) => {
         const simularProposta = await pan.simularProposta(data, log);
         if (simularProposta && simularProposta.data) {
           if (simularProposta.data[0] && simularProposta.data[0].condicoes_credito) {
-            var table = client.Tabela.includes('900001') ? 900001 : false
-            if (client.Tabela.includes('900001')) {
+            var table = '900001'
+            console.log(cliente.Tabela)
+            if (cliente.Tabela.includes('900001')) {
               table = '900001'
-            } else if (client.Tabela.includes('900006')) {
+            } else if (cliente.Tabela.includes('900006')) {
               table = '900006'
-            } else if (client.Tabela.includes('900007')) {
+            } else if (cliente.Tabela.includes('900007')) {
               table = '900007'
             } else return saveDB(pool, cliente.IdContrato, 824, '', '[7]=> Não cadastro propostas PANAMERICANO nessa tabela!', false)
             const tabela = simularProposta.data[0].condicoes_credito.find(element => element.codigo_tabela_financiamento == table)

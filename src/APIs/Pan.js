@@ -226,6 +226,43 @@ class Panamericano {
       return err.response
     }
   }
+  async getContrato(cpf, numeroProposta, log) {
+    try {
+      log.situation = `[4]=> Aguardando liberação na esteira...`
+      const response = await this.api.get(`consignado/v0/emprestimos/contratos?codigo_promotora=${process.env.PAN_PROMOTER_CODE}&codigo_convenio=007000&cpf_cliente=${cpf}&matricula=matr001`);
+      return response;
+    } catch(err) {
+      if (err.response && err.response.data && err.response.data.detalhes && err.response.data.detalhes[0]) return err.response
+      if(err.response && (err.response.status == 401 || err.response.status == 504 || err.response.status == 502)) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.getLink(id, tipoProposta, log)
+      }
+      if (err.code && (err.code == 'ETIMEDOUT')) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.getLink(id, tipoProposta, log)
+      }
+      if (err.response && err.response.data && err.response.data.mensagem == "Limite de requisições excedidas") {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.getLink(id, tipoProposta, log)
+      }
+      if (err.response && err.response.data && err.response.data.detalhes.includes('Tente novamente mais tarde')) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.getLink(data, log)
+      }
+      if (err.response && err.response.data && err.response.data.detalhes && err.response.data.detalhes[0].includes('Tente novamente mais tarde')) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.getLink(data, log)
+      }
+      console.log(`[API Pan ERROR(4) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
+      console.log(err.response ? err.response.data : err);
+      return err.response
+    }
+  }
 }
 
 module.exports = Panamericano
