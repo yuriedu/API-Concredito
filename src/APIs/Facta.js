@@ -19,7 +19,7 @@ class Facta {
         return true;
       } else if (response && response.data) {
         var array = Object.keys(response.data).map(function(key) { return response.data[key] });
-        if (array && array[0].includes('<')) {
+        if (array && array[0] && array[0].includes('<')) {
           await this.timeout(5000)
           return this.refreshToken(log);
         } else {
@@ -35,7 +35,7 @@ class Facta {
       }
       if (err.response && err.response.data) {
         var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
-        if (array && array[0].includes('<')) {
+        if (array && array[0] && array[0].includes('<')) {
           await this.timeout(5000)
           return this.refreshToken(log);
         } else {
@@ -59,7 +59,7 @@ class Facta {
         return this.getSaldo(cpf, log)
       } else if (response && response.data) {
         var array = Object.keys(response.data).map(function(key) { return response.data[key] });
-        if (array && array[0].includes('<')) {
+        if (array && array[0] && array[0].includes('<')) {
           await this.timeout(5000)
           await this.refreshToken(log);
           return this.getSaldo(cpf, log)
@@ -73,7 +73,7 @@ class Facta {
       }
       if (err.response && err.response.data) {
         var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
-        if (array && array[0].includes('<')) {
+        if (array && array[0] && array[0].includes('<')) {
           await this.timeout(5000)
           await this.refreshToken(log);
           return this.getSaldo(cpf, log)
@@ -98,7 +98,7 @@ class Facta {
         return this.calcularSaldo(cpf, parcelas, tabela , taxa, log)
       } else if (response && response.data) {
         var array = Object.keys(response.data).map(function(key) { return response.data[key] });
-        if (array && array[0].includes('<')) {
+        if (array && array[0] && array[0].includes('<')) {
           await this.timeout(5000)
           await this.refreshToken(log);
           return this.calcularSaldo(cpf, parcelas, tabela, taxa, log)
@@ -112,7 +112,7 @@ class Facta {
       }
       if (err.response && err.response.data) {
         var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
-        if (array && array[0].includes('<')) {
+        if (array && array[0] && array[0].includes('<')) {
           await this.timeout(5000)
           await this.refreshToken(log);
           return this.calcularSaldo(cpf, parcelas, tabela, taxa, log)
@@ -137,7 +137,7 @@ class Facta {
         return this.getCidadesByCidade(cidade, estado, log)
       } else if (response && response.data) {
         var array = Object.keys(response.data).map(function(key) { return response.data[key] });
-        if (array && array[0].includes('<')) {
+        if (array && array[0] && array[0].includes('<')) {
           await this.timeout(5000)
           await this.refreshToken(log);
           return this.getCidadesByCidade(nomeCidade, estado, log)
@@ -159,7 +159,7 @@ class Facta {
       }
       if (err.response && err.response.data) {
         var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
-        if (array && array[0].includes('<')) {
+        if (array && array[0] && array[0].includes('<')) {
           await this.timeout(5000)
           await this.refreshToken(log);
           return this.getCidadesByCidade(nomeCidade, estado, log)
@@ -194,7 +194,7 @@ class Facta {
         return this.simularProposta(cpf, simulacao_fgts, data_nascimento, log)
       } else if (response && response.data) {
         var array = Object.keys(response.data).map(function(key) { return response.data[key] });
-        if (array && array[0].includes('<')) {
+        if (array && array[0] && array[0].includes('<')) {
           await this.timeout(5000)
           await this.refreshToken(log);
           return this.simularProposta(cpf, simulacao_fgts, data_nascimento, log)
@@ -208,7 +208,7 @@ class Facta {
       }
       if (err.response && err.response.data) {
         var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
-        if (array && array[0].includes('<')) {
+        if (array && array[0] && array[0].includes('<')) {
           await this.timeout(5000)
           await this.refreshToken(log);
           return this.simularProposta(cpf, simulacao_fgts, data_nascimento, log)
@@ -235,7 +235,7 @@ class Facta {
         return this.registerProposta(id_simulador, clientData, log)
       } else if (response && response.data) {
         var array = Object.keys(response.data).map(function(key) { return response.data[key] });
-        if (array && array[0].includes('<')) {
+        if (array && array[0] && array[0].includes('<')) {
           await this.timeout(5000)
           await this.refreshToken(log);
           return this.registerProposta(id_simulador, clientData, log)
@@ -249,7 +249,7 @@ class Facta {
       }
       if (err.response && err.response.data) {
         var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
-        if (array && array[0].includes('<')) {
+        if (array && array[0] && array[0].includes('<')) {
           await this.timeout(5000)
           await this.refreshToken(log);
           return this.registerProposta(id_simulador, clientData, log)
@@ -283,7 +283,7 @@ class Facta {
         return this.requestProposta(id_simulador, codigo_cliente, log, tentativa+1)
       } else if (response && response.data) {
         var array = Object.keys(response.data).map(function(key) { return response.data[key] });
-        if (array && array[0].includes('<')) {
+        if (array && array[0] && array[0].includes('<')) {
           await this.timeout(5000)
           await this.refreshToken(log);
           return this.requestProposta(id_simulador, codigo_cliente, log, tentativa)
@@ -297,7 +297,7 @@ class Facta {
       }
       if (err.response && err.response.data) {
         var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
-        if (array && array[0].includes('<')) {
+        if (array && array[0] && array[0].includes('<')) {
           await this.timeout(5000)
           await this.refreshToken(log);
           return this.requestProposta(id_simulador, codigo_cliente, log, tentativa)
@@ -320,7 +320,7 @@ class Facta {
       const response = await this.api.get(`/proposta/andamento-propostas?data_alteracao_ini=${dia}/${mes}/${ano}`, { headers: form.getHeaders() });
       if (response && response.data) {
         var array = Object.keys(response.data).map(function(key) { return response.data[key] });
-        if (array && array[0].includes('<')) {
+        if (array && array[0] && array[0].includes('<')) {
           await this.timeout(5000)
           await this.refreshToken(log);
           return this.getEsteira(dia,mes,ano,log)
@@ -334,7 +334,7 @@ class Facta {
       }
       if (err.response && err.response.data) {
         var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
-        if (array && array[0].includes('<')) {
+        if (array && array[0] && array[0].includes('<')) {
           await this.timeout(5000)
           await this.refreshToken(log);
           return this.getEsteira(dia,mes,ano,log)
@@ -357,7 +357,7 @@ class Facta {
       const response = await this.api.get(`/proposta/consulta-ocorrencias?af=${af}`, { headers: form.getHeaders() });
       if (response && response.data) {
         var array = Object.keys(response.data).map(function(key) { return response.data[key] });
-        if (array && array[0].includes('<')) {
+        if (array && array[0] && array[0].includes('<')) {
           await this.timeout(5000)
           await this.refreshToken(log);
           return this.getOcorrencias(af, log)
@@ -371,7 +371,7 @@ class Facta {
       }
       if (err.response && err.response.data) {
         var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
-        if (array && array[0].includes('<')) {
+        if (array && array[0] && array[0].includes('<')) {
           await this.timeout(5000)
           await this.refreshToken(log);
           return this.getOcorrencias(af, log)
