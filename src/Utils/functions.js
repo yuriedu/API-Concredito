@@ -229,7 +229,7 @@ async function removeCaracteresSpeciais(s){
     r = r.replace(new RegExp("[ýÿ]", 'g'),"y");
     r = r.replaceAlll("'","");
     r = r.replaceAlll('"',"");
-    r = r.replaceAlll(`\n`,"");
+    r = r.replaceAll(`\n`,"");
     return r;
   } else return s;
 };
