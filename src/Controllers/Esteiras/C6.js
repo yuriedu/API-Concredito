@@ -96,6 +96,7 @@ async function verifyFaseBank(c6, pool) {
         if (getProposta.data.loan_track.current_activity_description.includes('MESA PREVENCAO')) fase = 692 //PROPOSTA EM ANALISE BANCO
         if (getProposta.data.loan_track.current_activity_description.includes('ANALISE SELFIE')) fase = 692 //PROPOSTA EM ANALISE BANCO
         if (getProposta.data.loan_track.current_activity_description.includes('PEN DOCUMENTOS')) fase = 9 //PENDENTE
+        if (getProposta.data.loan_track.current_activity_description.includes('AGUARDA AUTORIZACAO')) fase = 9 //PENDENTE
         if (getProposta.data.loan_track.current_activity_description.includes('REPROVA FGTS')) fase = 10293 //VERFICAÇÃO MANUAL OP
         if (getProposta.data.loan_track.current_activity_description.includes('REPROVA CREDITO')) fase = 10293 //VERFICAÇÃO MANUAL OP
         if (getProposta.data.loan_track.current_activity_description.includes('AJUSTAR MARGEM')) fase = 10293 //VERFICAÇÃO MANUAL OP
