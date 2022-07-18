@@ -112,10 +112,10 @@ async function verifyReason(facta, pool) {
           motivo = motivo[motivo.findIndex(r=> r.obs && r.status && r.status.includes('PENDENTE') && !r.status.includes('LOCALIZAÇAO') && !r.status.includes('Proposta cancelada através da WEB') && !r.status.includes('Proposta cancelada pelo usuário') && !r.status.includes('Informações gerais'))].obs
         } else motivo = false
       } else motivo = false
-      if (motivo) {
+      if (motivo && proposta.codigo_af && proposta.codigo_af != 0 && fase && fase != 0) {
         if (motivo.includes('Prazo expirado para assinatura digital')) fase = 1
-        console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${agilus.Fase} - FaseNew: ${faseName} - Motivo: ${fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`)
         await pool.request().input('fase',fase).input('contrato',proposta.codigo_af).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco!\nMotivo: ${fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`).input('bank',2020).execute('pr_changeFase_by_contrato')
+        console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${agilus.Fase} - FaseNew: ${faseName} - Motivo: ${fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`)
       }
       if (queue.findIndex(r=> r.codigo == proposta.codigo_af) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == proposta.codigo_af), 1)
       return verifyReason(facta, pool)
