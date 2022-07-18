@@ -29,7 +29,7 @@ class Facta {
         }
       } else return false;
     } catch(err) {
-      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET' || err.code == 'ECONNREFUSED') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         return this.refreshToken(log);
       }
@@ -66,7 +66,7 @@ class Facta {
         } else return response
       } else return response
     } catch(err) {
-      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET' || err.code == 'ECONNREFUSED') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.getSaldo(cpf, log)
@@ -105,7 +105,7 @@ class Facta {
         } else return response
       } else return response
     } catch(err) {
-      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET' || err.code == 'ECONNREFUSED') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.calcularSaldo(cpf, parcelas, tabela, taxa, log)
@@ -152,7 +152,7 @@ class Facta {
         }
       } else return response;
     } catch(err) {
-      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET' || err.code == 'ECONNREFUSED') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.getCidadesByCidade(nomeCidade, estado, log)
@@ -201,7 +201,7 @@ class Facta {
         } else return response
       } else return response
     } catch(err) {
-      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET' || err.code == 'ECONNREFUSED') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.simularProposta(cpf, simulacao_fgts, data_nascimento, log)
@@ -242,7 +242,7 @@ class Facta {
         } else return response
       } else return response
     } catch(err) {
-      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET' || err.code == 'ECONNREFUSED') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.registerProposta(id_simulador, clientData, log)
@@ -290,7 +290,7 @@ class Facta {
         } else return response
       } else return response
     } catch(err) {
-      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET' || err.code == 'ECONNREFUSED') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.requestProposta(id_simulador, codigo_cliente, log)
@@ -327,7 +327,7 @@ class Facta {
         } else return response
       } else return response
     } catch(err) {
-      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET' || err.code == 'ECONNREFUSED') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.getEsteira(log);
@@ -364,7 +364,7 @@ class Facta {
         } else return response
       } else return response
     } catch(err) {
-      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET') && (!err.response || !err.response.data)) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET' || err.code == 'ECONNREFUSED') && (!err.response || !err.response.data)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.getOcorrencias(af, log);

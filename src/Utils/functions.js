@@ -227,8 +227,9 @@ async function removeCaracteresSpeciais(s){
     r = r.replace(new RegExp("[òóôõö]", 'g'),"o");
     r = r.replace(new RegExp("[ùúûü]", 'g'),"u");
     r = r.replace(new RegExp("[ýÿ]", 'g'),"y");
-    r = r.replace(new RegExp("[']", 'g'),"");
-    r = r.replace(new RegExp('["]', 'g'),"");
+    r = r.replaceAlll("'","");
+    r = r.replaceAlll('"',"");
+    r = r.replaceAlll(`\n`,"");
     return r;
   } else return s;
 };
