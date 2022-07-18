@@ -77,10 +77,10 @@ async function verifyFaseBank(c6, pool) {
       if (fase && faseName) {
         if ((fase == 3920 && proposta.CodFase == 2) || fase != 3) {
           if (fase == 9 && getProposta.data.loan_track.current_activity_description.includes('PEN DOCUMENTOS')) {
-            await pool.request().input('id', proposta.IdContrato).input('faseDestino',fase).input('CodContrato',proposta.NumeroContrato).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco!\nMotivo: Enviar novo documento e avisar cliente de possível contato do banco`).execute('pr_changeFase_by_contrato')
+            await pool.request().input('faseDestino',fase).input('CodContrato',proposta.NumeroContrato).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco!\nMotivo: Enviar novo documento e avisar cliente de possível contato do banco`).execute('pr_changeFase_by_contrato')
             //console.log(`[C6 Esteira]=> Contrato: ${proposta.NumeroContrato} - FaseOLD: ${proposta.Fase} - FaseNew: ${faseName} - Motivo: Enviar novo documento e avisar cliente de possível contato do banco`)
           } else {
-            await pool.request().input('id', proposta.IdContrato).input('faseDestino',fase).input('CodContrato',proposta.NumeroContrato).input('texto','[ESTEIRA]=> Fase alterada para a mesma que está no banco!').execute('pr_changeFase_by_contrato')
+            await pool.request().input('faseDestino',fase).input('CodContrato',proposta.NumeroContrato).input('texto','[ESTEIRA]=> Fase alterada para a mesma que está no banco!').execute('pr_changeFase_by_contrato')
             //console.log(`[C6 Esteira]=> Contrato: ${proposta.NumeroContrato} - FaseOLD: ${proposta.Fase} - FaseNew: ${faseName}`)
           }
         }

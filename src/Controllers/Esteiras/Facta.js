@@ -65,7 +65,7 @@ const FactaEsteira = async (pool, log) => {
                     queue[queue.length] = { codigo: proposta.codigo_af, proposta: proposta, agilus: propostaDB.recordset[0], fase: fase, faseName: faseName }
                     if (queue.length == 1) return verifyReason(facta, pool)
                   } else {
-                    await pool.request().input('id', propostaDB.recordset[0].IdContrato).input('faseDestino',fase).input('CodContrato',proposta.codigo_af).input('texto','[ESTEIRA]=> Fase alterada para a mesma que está no banco!').execute('pr_changeFase_by_contrato')
+                    await pool.request().input('faseDestino',fase).input('CodContrato',proposta.codigo_af).input('texto','[ESTEIRA]=> Fase alterada para a mesma que está no banco!').execute('pr_changeFase_by_contrato')
                     //return console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${propostaDB.recordset[0].Fase} - FaseNew: ${faseName}`)
                   }
                 }
@@ -115,7 +115,7 @@ async function verifyReason(facta, pool) {
         motivo = motivo.find(r=> r.status.includes('PENDENTE') && !r.status.includes('LOCALIZAÇAO') && !r.status.includes('Proposta cancelada através da WEB')).obs
       } else motivo = false
       if (motivo) {
-        await pool.request().input('id', agilus.IdContrato).input('faseDestino',motivo.includes('Prazo expirado para assinatura digital') ? 1 : fase).input('CodContrato',proposta.codigo_af).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco!\nMotivo: ${motivo.includes('Prazo expirado para assinatura digital') ? `${motivo} OP. vai refazer o cadastro...` : motivo}`).execute('pr_changeFase_by_contrato')
+        await pool.request().input('faseDestino',motivo.includes('Prazo expirado para assinatura digital') ? 1 : fase).input('CodContrato',proposta.codigo_af).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco!\nMotivo: ${motivo.includes('Prazo expirado para assinatura digital') ? `${motivo} OP. vai refazer o cadastro...` : motivo}`).execute('pr_changeFase_by_contrato')
         //console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${agilus.Fase} - FaseNew: ${faseName} - Motivo: ${motivo}`)
       }
       if (queue.findIndex(r=> r.codigo == proposta.codigo_af) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == proposta.codigo_af), 1)
