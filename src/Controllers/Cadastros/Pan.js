@@ -20,8 +20,7 @@ const PanFGTS = async (cliente, pool, log) => {
         if (simularProposta && simularProposta.data) {
           if (simularProposta.data[0] && simularProposta.data[0].condicoes_credito) {
             var table = '900001'
-            console.log(cliente.Tabela)
-            if (cliente.Tabela.includes('900001')) {
+            if (cliente.Tabela.includes('900001') || cliente.Tabela.includes('NOVO FGTS')) {
               table = '900001'
             } else if (cliente.Tabela.includes('900006')) {
               table = '900006'
