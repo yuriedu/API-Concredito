@@ -8,6 +8,7 @@ const PanFGTS = async (cliente, pool, log) => {
     var client = await dadosCliente(cliente, "FGTS");
     if (client && client.status) {
       client = client.dados
+      console.log(client.CodBancoCliente)
       const pan = await new Pan();
       log.situation = `[1]=> Conectando na API...`
       const loadAPI = await pan.refreshToken(log)
