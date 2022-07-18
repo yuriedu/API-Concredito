@@ -62,7 +62,7 @@ class Facta {
         return false;
       }
       console.log(`[API Facta ERROR(2) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
-      console.log(err.response ? err.response.data : err);
+      console.log(err);
       return err.response
     }
   }
