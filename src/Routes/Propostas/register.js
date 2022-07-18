@@ -67,7 +67,7 @@ const registerPropostas = async (req, res, logs) => {
         element.NomePai = await removeCaracteresSpeciais(element.NomePai)
       } else element.NomePai = 'nao identificado'
       if (!element.EndNumero || element.EndNumero == 'SN' || element.EndNumero == 0 || element.EndNumero == '0') element.EndNumero = '01'
-      if (!element.CodBancoCliente || element.CodBancoCliente.length != 3) element.CodBancoCliente = `${String(element.CodBancoCliente).length == 1 ? `000${element.CodBancoCliente}` :  String(element.CodBancoCliente).length == 2 ? `00${element.CodBancoCliente}` : String(element.CodBancoCliente).length == 3 ? `0${element.CodBancoCliente}` : element.CodBancoCliente }`
+      if (!element.CodBancoCliente || String(element.CodBancoCliente).length != 3 || Number(element.CodBancoCliente) < 100) element.CodBancoCliente = `${String(element.CodBancoCliente).length == 1 ? `000${element.CodBancoCliente}` :  String(element.CodBancoCliente).length == 2 ? `00${element.CodBancoCliente}` : String(element.CodBancoCliente).length == 3 ? `0${element.CodBancoCliente}` : element.CodBancoCliente }`
 
       var response = false;
       if (element.BancoContrato == "FACTA FINANCEIRA" && req.body.proposta.orgaoProposta == "FGTS") {
