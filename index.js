@@ -20,7 +20,7 @@ async function Esteira() {
   const { C6Esteira } = require('./src/Controllers/Esteiras/C6')
   setInterval(function() {
     FactaEsteira(pool, {af: "FACTA ESTEIRA"})
-    C6Esteira(pool, {af: "C6 ESTEIRA"})
+    //C6Esteira(pool, {af: "C6 ESTEIRA"})
   },1800000)
   //const { PanEsteira } = require('./src/Controllers/Esteiras/Pan')
   //await PanEsteira(pool, {af: "PAN ESTEIRA"})
