@@ -116,8 +116,10 @@ async function verifyFase(facta, pool) {
         }
       }
     } else {
-      await pool.request().input('contrato',proposta.codigo_af).input('fase',queue[0].fase).input('bank',2020).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco: ${queue[0].faseName}!`).execute('pr_changeFase_by_contrato')
-      //console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${agilus.Fase} - FaseNew: ${queue[0].faseName}`)
+      if (queue[0].fase != '3920' || (queue[0].fase == '3920' && (agilus.Fase == 3920 || agilus.Fase == 2))) {
+        await pool.request().input('contrato',proposta.codigo_af).input('fase',queue[0].fase).input('bank',2020).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco: ${queue[0].faseName}!`).execute('pr_changeFase_by_contrato')
+        //console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${agilus.Fase} - FaseNew: ${queue[0].faseName}`)
+      }
     }
   }
   if (queue.findIndex(r=>r.codigo == proposta.codigo_af) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == proposta.codigo_af), 1)
