@@ -23,7 +23,7 @@ class C6 {
         return false
       } else return false;
     } catch(err) {
-      if (err.code && (err.code == 'ETIMEDOUT')) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'EHOSTUNREACH')) {
         await this.timeout(5000)
         return this.refreshToken(log);
       } else if (err.response && err.response.data && err.response.data.message == "An internal error has occurred"){
@@ -61,7 +61,7 @@ class C6 {
         return this.simularProposta(data, log)
       }
       if (err.response && err.response.data && (err.response.data.message || (err.response.data.details && err.response.data.details[0]))) return err.response;
-      if (err.code && (err.code == 'ETIMEDOUT')) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'EHOSTUNREACH')) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.simularProposta(data, log)
@@ -98,7 +98,7 @@ class C6 {
       }
       
       if (err.response && err.response.data && (err.response.data.message || (err.response.data.details && err.response.data.details[0]))) return err.response;
-      if (err.code && (err.code == 'ETIMEDOUT')) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'EHOSTUNREACH')) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.registerProposta(data, log)
@@ -153,7 +153,7 @@ class C6 {
         await this.refreshToken(log)
         return this.getLink(proposta, log)
       }
-      if (err.code && (err.code == 'ETIMEDOUT')) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'EHOSTUNREACH')) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.getLink(proposta, log)
@@ -192,7 +192,7 @@ class C6 {
       }
       
       if (err.response && err.response.data && (err.response.data.message || (err.response.data.details && err.response.data.details[0]))) return err.response;
-      if (err.code && (err.code == 'ETIMEDOUT')) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'EHOSTUNREACH')) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.getProposta(data, log)
