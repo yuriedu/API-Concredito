@@ -277,11 +277,11 @@ class Facta {
       if (response.data.msg && response.data.msg.includes('Tente novamente em alguns minutos')) {
         await this.refreshToken(log);
         return this.requestProposta(id_simulador, codigo_cliente, log)
-      } else if (!response.data.url_formalizacao || !response.data.codigo) {
+      } else if (response.data && !response.data.erro && (!response.data.url_formalizacao || !response.data.codigo)) {
         await this.timeout(5000)
         await this.refreshToken(log);
         return this.requestProposta(id_simulador, codigo_cliente, log, tentativa+1)
-      } else if (response && response.data) {
+      } else if (response && response.data && !response.data.erro) {
         var array = Object.keys(response.data).map(function(key) { return response.data[key] });
         if (array && array[0] && typeof array[0] == 'string' && array[0].includes('<')) {
           await this.timeout(5000)
@@ -313,6 +313,7 @@ class Facta {
       return err.response
     }
   }
+
   async getEsteira(dia,mes,ano,log) {
     try {
       log.situation = `[8]=> Puxando todas as propostas...`
@@ -387,6 +388,192 @@ class Facta {
       return err.response
     }
   }
+
+
+
+
+
+
+
+
+
+  async getSaldoCART(saldo, log) {
+    try {
+      log.situation = `[10]=> Simulando a proposta...`
+      const form = new FormData();
+      var params = ``
+      for (var key in saldo) { params += `${key}=${saldo[key]}&` }
+      const response = await this.api.get(`/proposta/operacoes-disponiveis?${params}`, { headers: form.getHeaders() });
+      if (response.data.msg && response.data.msg.includes('Tente novamente em alguns minutos')) {
+        await this.refreshToken(log);
+        return this.getSaldoCART(saldo, log)
+      } else if (response && response.data) {
+        var array = Object.keys(response.data).map(function(key) { return response.data[key] });
+        if (array && array[0] && typeof array[0] == 'string' && array[0].includes('<')) {
+          await this.timeout(5000)
+          await this.refreshToken(log);
+          return this.getSaldoCART(saldo, log)
+        } else return response
+      } else return response
+    } catch(err) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET' || err.code == 'ECONNREFUSED') && (!err.response || !err.response.data)) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.getSaldoCART(saldo, log)
+      }
+      if (err.response && err.response.data) {
+        var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
+        if (array && array[0] && typeof array[0] == 'string' && array[0].includes('<')) {
+          await this.timeout(5000)
+          await this.refreshToken(log);
+          return this.getSaldoCART(saldo, log)
+        } else {
+          console.log(`[API Facta ERROR(DB[10]) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
+          console.log(array[0])
+          console.log(err.response.data)
+          return false
+        }
+      }
+      console.log(`[API Facta ERROR(10) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
+      console.log(err.response ? err.response.data : err);
+      return err.response
+    }
+  }
+
+  async simularPropostaCART(simulation, log) {
+    try {
+      log.situation = `[11]=> Simulando a proposta...`
+      const form = new FormData();
+      for (var key in simulation) { await form.append(key, simulation[key]) }
+      const response = await this.api.post('/proposta/etapa1-simulador', form, { headers: form.getHeaders() });
+      if (response.data.msg && response.data.msg.includes('Tente novamente em alguns minutos')) {
+        await this.refreshToken(log);
+        return this.simularPropostaCART(simulation, log)
+      } else if (response && response.data) {
+        var array = Object.keys(response.data).map(function(key) { return response.data[key] });
+        if (array && array[0] && typeof array[0] == 'string' && array[0].includes('<')) {
+          await this.timeout(5000)
+          await this.refreshToken(log);
+          return this.simularPropostaCART(simulation, log)
+        } else return response
+      } else return response
+    } catch(err) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET' || err.code == 'ECONNREFUSED') && (!err.response || !err.response.data)) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.simularPropostaCART(simulation, log)
+      }
+      if (err.response && err.response.data) {
+        var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
+        if (array && array[0] && typeof array[0] == 'string' && array[0].includes('<')) {
+          await this.timeout(5000)
+          await this.refreshToken(log);
+          return this.simularPropostaCART(simulation, log)
+        } else {
+          console.log(`[API Facta ERROR(DB[11]) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
+          console.log(array[0])
+          console.log(err.response.data)
+          return false
+        }
+      }
+      console.log(`[API Facta ERROR(11) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
+      console.log(err.response ? err.response.data : err);
+      return err.response
+    }
+  }
+
+  async gravarPropostaCART(simulation, log) {
+    try {
+      log.situation = `[12]=> Gravando a proposta...`
+      const form = new FormData();
+      for (var key in simulation) { await form.append(key, simulation[key]) }
+      const response = await this.api.post('/proposta/etapa2-dados-pessoais', form, { headers: form.getHeaders() });
+      if (response.data.msg && response.data.msg.includes('Tente novamente em alguns minutos')) {
+        await this.refreshToken(log);
+        return this.gravarPropostaCART(simulation, log)
+      } else if (response && response.data) {
+        var array = Object.keys(response.data).map(function(key) { return response.data[key] });
+        if (array && array[0] && typeof array[0] == 'string' && array[0].includes('<')) {
+          await this.timeout(5000)
+          await this.refreshToken(log);
+          return this.gravarPropostaCART(simulation, log)
+        } else return response
+      } else return response
+    } catch(err) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET' || err.code == 'ECONNREFUSED') && (!err.response || !err.response.data)) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.gravarPropostaCART(simulation, log)
+      }
+      if (err.response && err.response.data) {
+        var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
+        if (array && array[0] && typeof array[0] == 'string' && array[0].includes('<')) {
+          await this.timeout(5000)
+          await this.refreshToken(log);
+          return this.gravarPropostaCART(simulation, log)
+        } else {
+          console.log(`[API Facta ERROR(DB[12]) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
+          console.log(array[0])
+          console.log(err.response.data)
+          return false
+        }
+      }
+      console.log(`[API Facta ERROR(12) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
+      console.log(err.response ? err.response.data : err);
+      return err.response
+    }
+  }
+
+  async finalizarPropostaCART(simulation, log) {
+    try {
+      log.situation = `[13]=> Finalizando a proposta...`
+      const form = new FormData();
+      for (var key in simulation) { await form.append(key, simulation[key]) }
+      const response = await this.api.post('/proposta/etapa3-proposta-cadastro', form, { headers: form.getHeaders() });
+      if (response.data.msg && response.data.msg.includes('Tente novamente em alguns minutos')) {
+        await this.refreshToken(log);
+        return this.finalizarPropostaCART(simulation, log)
+      } else if (response.data && !response.data.erro && (!response.data.url_formalizacao || !response.data.codigo)) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.finalizarPropostaCART(simulation, log)
+      } else if (response && response.data && !response.data.erro) {
+        var array = Object.keys(response.data).map(function(key) { return response.data[key] });
+        if (array && array[0] && typeof array[0] == 'string' && array[0].includes('<')) {
+          await this.timeout(5000)
+          await this.refreshToken(log);
+          return this.finalizarPropostaCART(simulation, log)
+        } else return response
+      } else return response
+    } catch(err) {
+      if (err.code && (err.code == 'ETIMEDOUT' || err.code == 'ECONNRESET' || err.code == 'ECONNREFUSED') && (!err.response || !err.response.data)) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.finalizarPropostaCART(simulation, log)
+      }
+      if (err.response && err.response.data) {
+        var array = Object.keys(err.response.data).map(function(key) { return err.response.data[key] });
+        if (array && array[0] && typeof array[0] == 'string' && array[0].includes('<')) {
+          await this.timeout(5000)
+          await this.refreshToken(log);
+          return this.finalizarPropostaCART(simulation, log)
+        } else {
+          console.log(`[API Facta ERROR(DB[13]) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => Erro desconhecido:`)
+          console.log(array[0])
+          console.log(err.response.data)
+          return false
+        }
+      }
+      console.log(`[API Facta ERROR(13) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
+      console.log(err.response ? err.response.data : err);
+      return err.response
+    }
+  }
+
+
+
+
+
 
 }
 

@@ -1,7 +1,7 @@
 const { MSSQL, MongoDB } = require('../../Utils/database');
 const { removeSpaces, removeCaracteresSpeciais, fixAgencia, fixName } = require('../../Utils/functions');
 
-const { FactaFGTS } = require('../../Controllers/Cadastros/Facta');
+const { FactaFGTS, FactaCART } = require('../../Controllers/Cadastros/Facta');
 const { C6FGTS } = require('../../Controllers/Cadastros/C6');
 const { MercantilFGTS } = require('../../Controllers/Cadastros/Mercantil');
 const { BMGFGTS } = require('../../Controllers/Cadastros/BMG');
@@ -86,6 +86,8 @@ const registerPropostas = async (req, res, logs) => {
         response = await PanINSS(element, pool, logUser);
       } else if (element.BancoContrato == "FACTA FINANCEIRA" && req.body.proposta.orgaoProposta == "INSS") {
         // response = await FactaINSS(element, pool, logUser);
+      } else if (element.BancoContrato == "FACTA FINANCEIRA" && req.body.proposta.orgaoProposta == "CART") {
+        response = await FactaCART(element, pool, logUser);
       } else if (element.BancoContrato == "BANRISUL" && req.body.proposta.orgaoProposta == "INSS") {
         response = await BanrisulINSS(element, pool, logUser);
       } else if (element.BancoContrato == "PANAMERICANO" && req.body.proposta.orgaoProposta == "CART") {
