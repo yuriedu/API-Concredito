@@ -29,7 +29,6 @@ const FactaEsteira = async (pool, log) => {
       } else dia -= 7
       if (dia < 10) dia = `0${dia}`
       if (mes < 10) mes = `0${mes}`
-      console.log(`${dia}/${mes}/${ano}`)
       const getEsteira = await facta.getEsteira(dia,mes,ano, log)
       if (getEsteira && getEsteira.data) {
         if (getEsteira.data.propostas && getEsteira.data.propostas[0] && getEsteira.data.propostas[0].codigo_af) {
@@ -71,7 +70,7 @@ const FactaEsteira = async (pool, log) => {
                     if (queue.length == 1) return verifyReason(facta, pool)
                   } else {
                     console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${propostaDB.recordset[0].Fase} - FaseNew: ${faseName}`)
-                    await pool.request().input('fase',fase).input('contrato',proposta.codigo_af).input('texto','[ESTEIRA]=> Fase alterada para a mesma que está no banco!').input('bank',2020).execute('pr_changeFase_by_contrato')
+                    //await pool.request().input('fase',fase).input('contrato',proposta.codigo_af).input('texto','[ESTEIRA]=> Fase alterada para a mesma que está no banco!').input('bank',2020).execute('pr_changeFase_by_contrato')
                   }
                 }
               } else console.log(`[Facta Esteira CODE: ${proposta.codigo_af}]=> Nova fase: ${proposta.status_proposta}`)
@@ -129,7 +128,7 @@ async function verifyReason(facta, pool) {
       if (motivo && proposta.codigo_af && proposta.codigo_af != 0 && fase && fase != 0) {
         if (motivo.includes('Prazo expirado para assinatura digital')) fase = 1
         console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${agilus.Fase} - FaseNew: ${faseName} - Motivo: ${fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`)
-        await pool.request().input('contrato',proposta.codigo_af).input('fase',fase).input('bank',2020).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco!\nMotivo: ${fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`).execute('pr_changeFase_by_contrato')
+        //await pool.request().input('contrato',proposta.codigo_af).input('fase',fase).input('bank',2020).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco!\nMotivo: ${fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`).execute('pr_changeFase_by_contrato')
       }
       if (queue.findIndex(r=> r.codigo == proposta.codigo_af) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == proposta.codigo_af), 1)
       return verifyReason(facta, pool)
