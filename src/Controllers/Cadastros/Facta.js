@@ -146,7 +146,7 @@ const FactaCART = async (cliente, pool, log) => {
           averbador: 3,
           convenio: 3,
           opcao_valor: 1,
-          valor: cliente.Valor,
+          valor: cliente.ValorParcela / 0.03636364,
           cpf: cliente.Cpf,
           data_nascimento: cliente.Datanascimento.toISOString().split('T')[0],
           valor_renda: cliente.ValorParcela / 5 * 100,
