@@ -32,7 +32,9 @@ const FactaEsteira = async (pool, log) => {
       const getEsteira = await facta.getEsteira(dia,mes,ano, log)
       if (getEsteira && getEsteira.data) {
         if (getEsteira.data.propostas && getEsteira.data.propostas[0] && getEsteira.data.propostas[0].codigo_af) {
+          const agilusPropostas = await pool.request().input('date', new Date(`${ano}-${mes}-${dia} 00:00:00`)).input('bank',2020).execute('pr_getPropostas_by_Bank_and_Date')
           getEsteira.data.propostas = await getEsteira.data.propostas.filter(r=>
+            agilusPropostas.recordset.find(r2=> r2.NumeroContrato == r.codigo_af) &&
             !r.status_proposta.includes('CLIENTE COM INADIMPLENCIA') && 
             !r.status_proposta.includes('AGUARDA CANCELAMENTO') && 
             !r.status_proposta.includes('RETORNO CORRETOR') && 
@@ -54,8 +56,10 @@ const FactaEsteira = async (pool, log) => {
               { status: 'CAMPANHA FACTA', fase: '323', faseName: 'AGUARDA AUMENTO INSS' },
             ]
             var fase = fases.find(r=> proposta.status_proposta.includes(r.status))
+            var agilus = agilusPropostas.recordset.find(r=> r.NumeroContrato == proposta.codigo_af && r.CodFase != fase.fase && r.CodFase != 4)
+            if (!agilus) return;
             if (fase) {
-              queue[queue.length] = { codigo: proposta.codigo_af, proposta: proposta, fase: fase.fase, faseName: fase.faseName }
+              queue[queue.length] = { codigo: proposta.codigo_af, proposta: proposta, agilus: agilus, fase: fase.fase, faseName: fase.faseName }
               if (queue.length == 1) return verifyFase(facta, pool)
             } else console.log(`[Facta Esteira CODE: ${proposta.codigo_af}]=> Nova fase: ${proposta.status_proposta}`)
           })
@@ -82,44 +86,41 @@ async function verifyFase(facta, pool) {
   await timeout(3000)
   if (queue <= 0) return console.log(`[Facta Esteira]=> Finalizado!`);
   var proposta = queue[0].proposta
-  var agilus = await pool.request().input('contrato', proposta.codigo_af).input('fase', queue[0].fase).execute('pr_getProposta_by_contrato_and_not_fase');
-  if (agilus.recordset && agilus.recordset[0]) {
-    agilus = agilus.recordset[0]
-    if (queue[0].fase == 700 || queue[0].fase == 9) {
-      const getOcorrencias = await facta.getOcorrencias(proposta.codigo_af, { af: "FACTA ESTEIRA" })
-      if (getOcorrencias && getOcorrencias.data) {
-        if (getOcorrencias.data.ocorrencias && getOcorrencias.data.ocorrencias[0]) {
-          var motivo = getOcorrencias.data.ocorrencias.filter(r=> r.obs && r.status &&
-            !r.status.includes('Assinatura digital de proposta') &&
-            !r.obs.includes('LOCALIZAÇÃO') && 
-            !r.obs.includes('LOCALIZAÇAO') && 
-            !r.obs.includes('LOCALIZACAO') && 
-            !r.obs.includes('Proposta cancelada através da WEB') && 
-            !r.obs.includes('Proposta cancelada pelo usuário')
-          )
-          if (motivo && motivo[0]) {
-            if (motivo.find(r=> r.status.includes('AGUARDA CANCELAMENTO'))) {
-              motivo = motivo.find(r=> r.status.includes('AGUARDA CANCELAMENTO')).obs
-            } else if (motivo.find(r=> r.status.includes('CANCELADO'))) {
-              motivo = motivo.find(r=> r.status.includes('CANCELADO')).obs
-            } else if (motivo.find(r=> r.status.includes('PENDENTE') && r.obs.includes('Validamos apenas CTPS com foto')) && motivo.find(r=> r.status.includes('PENDENTE') && !r.obs.includes('Validamos apenas CTPS com foto'))) {
-              motivo = motivo.find(r=> r.status.includes('PENDENTE') && !r.obs.includes('Validamos apenas CTPS com foto')).obs
-            } else if (motivo.find(r=> r.status.includes('PENDENTE'))) {
-              motivo = motivo.find(r=> r.status.includes('PENDENTE')).obs
-            } else motivo = false
+  var agilus = queue[0].agilus
+  if (queue[0].fase == 700 || queue[0].fase == 9) {
+    const getOcorrencias = await facta.getOcorrencias(proposta.codigo_af, { af: "FACTA ESTEIRA" })
+    if (getOcorrencias && getOcorrencias.data) {
+      if (getOcorrencias.data.ocorrencias && getOcorrencias.data.ocorrencias[0]) {
+        var motivo = getOcorrencias.data.ocorrencias.filter(r=> r.obs && r.status &&
+          !r.status.includes('Assinatura digital de proposta') &&
+          !r.obs.includes('LOCALIZAÇÃO') && 
+          !r.obs.includes('LOCALIZAÇAO') && 
+          !r.obs.includes('LOCALIZACAO') && 
+          !r.obs.includes('Proposta cancelada através da WEB') && 
+          !r.obs.includes('Proposta cancelada pelo usuário')
+        )
+        if (motivo && motivo[0]) {
+          if (motivo.find(r=> r.status.includes('AGUARDA CANCELAMENTO'))) {
+            motivo = motivo.find(r=> r.status.includes('AGUARDA CANCELAMENTO')).obs
+          } else if (motivo.find(r=> r.status.includes('CANCELADO'))) {
+            motivo = motivo.find(r=> r.status.includes('CANCELADO')).obs
+          } else if (motivo.find(r=> r.status.includes('PENDENTE') && r.obs.includes('Validamos apenas CTPS com foto')) && motivo.find(r=> r.status.includes('PENDENTE') && !r.obs.includes('Validamos apenas CTPS com foto'))) {
+            motivo = motivo.find(r=> r.status.includes('PENDENTE') && !r.obs.includes('Validamos apenas CTPS com foto')).obs
+          } else if (motivo.find(r=> r.status.includes('PENDENTE'))) {
+            motivo = motivo.find(r=> r.status.includes('PENDENTE')).obs
           } else motivo = false
-          if (motivo && proposta.codigo_af && proposta.codigo_af != 0 && queue[0].fase && queue[0].fase != 0) {
-            if (motivo.includes('Prazo expirado para assinatura digital')) fase = 1
-            await pool.request().input('contrato',proposta.codigo_af).input('fase',fase).input('bank',2020).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco: ${fase == 1 ? 'INCLUSÃO' : queue[0].faseName}!\nMotivo: ${fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`).execute('pr_changeFase_by_contrato')
-            //console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${agilus.Fase} - FaseNew: ${faseName} - Motivo: ${fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`)
-          }
+        } else motivo = false
+        if (motivo && proposta.codigo_af && proposta.codigo_af != 0 && queue[0].fase && queue[0].fase != 0) {
+          if (motivo.includes('Prazo expirado para assinatura digital')) queue[0].fase = 1
+          await pool.request().input('contrato',proposta.codigo_af).input('fase',queue[0].fase).input('bank',2020).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco: ${queue[0].fase == 1 ? 'INCLUSÃO' : queue[0].faseName}!\nMotivo: ${queue[0].fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`).execute('pr_changeFase_by_contrato')
+          //console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${agilus.Fase} - FaseNew: ${queue[0].faseName} - Motivo: ${queue[0].fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`)
         }
       }
-    } else {
-      if (queue[0].fase != '3920' || (queue[0].fase == '3920' && (agilus.Fase == 3920 || agilus.Fase == 2))) {
-        await pool.request().input('contrato',proposta.codigo_af).input('fase',queue[0].fase).input('bank',2020).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco: ${queue[0].faseName}!`).execute('pr_changeFase_by_contrato')
-        //console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${agilus.Fase} - FaseNew: ${queue[0].faseName}`)
-      }
+    }
+  } else {
+    if (queue[0].fase != '3920' || (queue[0].fase == '3920' && (agilus.CodFase == 3920 || agilus.CodFase == 9923 || agilus.CodFase == 2))) {
+      await pool.request().input('contrato',proposta.codigo_af).input('fase',queue[0].fase).input('bank',2020).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco: ${queue[0].faseName}!`).execute('pr_changeFase_by_contrato')
+      //console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${agilus.Fase} - FaseNew: ${queue[0].faseName}`)
     }
   }
   if (queue.findIndex(r=>r.codigo == proposta.codigo_af) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == proposta.codigo_af), 1)
