@@ -29,6 +29,7 @@ const FactaEsteira = async (pool, log) => {
       } else dia -= 7
       if (dia < 10) dia = `0${dia}`
       if (mes < 10) mes = `0${mes}`
+      console.log(`${dia}/${mes}/${ano}`)
       const getEsteira = await facta.getEsteira(dia,mes,ano, log)
       if (getEsteira && getEsteira.data) {
         if (getEsteira.data.propostas && getEsteira.data.propostas[0] && getEsteira.data.propostas[0].codigo_af) {
