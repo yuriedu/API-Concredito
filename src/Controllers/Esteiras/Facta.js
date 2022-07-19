@@ -32,10 +32,11 @@ const FactaEsteira = async (pool, log) => {
       const getEsteira = await facta.getEsteira(dia,mes,ano, log)
       if (getEsteira && getEsteira.data) {
         if (getEsteira.data.propostas && getEsteira.data.propostas[0] && getEsteira.data.propostas[0].codigo_af) {
-          getEsteira.data.propostas = getEsteira.data.propostas.filter(r=> !r.status_proposta.includes('CLIENTE COM INADIMPLENCIA') && !r.status_proposta.includes('AGUARDANDO ASSINATURA DIGITAL') && !r.status_proposta.includes('AGUARDA CANCELAMENTO') && !r.status_proposta.includes('RETORNO CORRETOR') && !r.status_proposta.includes('AGUARDA PGTO BCO'))
+          getEsteira.data.propostas = getEsteira.data.propostas.filter(r=> !r.status_proposta.includes('CLIENTE COM INADIMPLENCIA') && !r.status_proposta.includes('AGUARDA CANCELAMENTO') && !r.status_proposta.includes('RETORNO CORRETOR') && !r.status_proposta.includes('AGUARDA PGTO BCO'))
           getEsteira.data.propostas.forEach(async(proposta, index)=>{
             if (proposta.status_proposta && proposta.codigo_af) {
               var fase = false
+              if (proposta.status_proposta.includes('AGUARDANDO ASSINATURA DIGITAL')) fase = 120001 //PENDENTE POR ASSINATURA
               if (proposta.status_proposta.includes('AGUARDA AVERBACAO')) fase = 2 //AGUARDANDO AVERBAÇÃO
               if (proposta.status_proposta.includes('AVERBADO')) fase = 2 //AGUARDANDO AVERBAÇÃO
               if (proposta.status_proposta.includes('ANALISE MESA DE CONFERENCIA')) fase = 692 //PROPOSTA EM ANALISE BANCO
@@ -57,10 +58,12 @@ const FactaEsteira = async (pool, log) => {
               if (fase == 9) faseName = 'PENDENTE'
               if (fase == 323) faseName = 'AGUARDA AUMENTO INSS'
               if (fase == 692) faseName = 'PROPOSTA EM ANALISE BANCO'
+              if (fase == 120001) faseName = 'PENDENTE POR ASSINATURA'
+
               if (fase && faseName) {
                 const propostaDB = await pool.request().input('contrato', proposta.codigo_af).input('fase',fase).execute('pr_getProposta_by_contrato_and_not_fase');
                 if (propostaDB.recordset[0]) {
-                  if (fase == 3920 && propostaDB.recordset[0].CodFase != 2) return;
+                  if (fase == 3920 && propostaDB.recordset[0].CodFase != 2 && propostaDB.recordset[0].CodFase != 4002) return;
                   if (fase == 700 || fase == 9) {
                     queue[queue.length] = { codigo: proposta.codigo_af, proposta: proposta, agilus: propostaDB.recordset[0], fase: fase, faseName: faseName }
                     if (queue.length == 1) return verifyReason(facta, pool)
@@ -114,8 +117,8 @@ async function verifyReason(facta, pool) {
       } else motivo = false
       if (motivo && proposta.codigo_af && proposta.codigo_af != 0 && fase && fase != 0) {
         if (motivo.includes('Prazo expirado para assinatura digital')) fase = 1
-        await pool.request().input('contrato',proposta.codigo_af).input('fase',fase).input('bank',2020).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco!\nMotivo: ${fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`).execute('pr_changeFase_by_contrato')
-        //console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${agilus.Fase} - FaseNew: ${faseName} - Motivo: ${fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`)
+        //await pool.request().input('contrato',proposta.codigo_af).input('fase',fase).input('bank',2020).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco!\nMotivo: ${fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`).execute('pr_changeFase_by_contrato')
+        console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${agilus.Fase} - FaseNew: ${faseName} - Motivo: ${fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`)
       }
       if (queue.findIndex(r=> r.codigo == proposta.codigo_af) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == proposta.codigo_af), 1)
       return verifyReason(facta, pool)

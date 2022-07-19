@@ -46,17 +46,76 @@ const C6Esteira = async (pool, log) => {
 
 module.exports = { C6Esteira }
 async function verifyFaseBank(c6, pool) {
-  await timeout(3000)
+  //await timeout(3000)
   if (queue <= 0) return console.log(`[C6 Esteira]=> Finalizado!`);
   var proposta = queue[0].proposta
   const getProposta = await c6.getProposta(proposta.NumeroContrato, { af: "C6 ESTEIRA" })
   if (getProposta && getProposta.data) {
     if (getProposta.data.loan_track && getProposta.data.loan_track.current_activity_description) {
-      const getProposta = await c6.getProposta('424680458', { af: "C6 ESTEIRA" })
-      return console.log(getProposta.data.loan_track)
       var fases = [
-        { situacao: '', atividade: '', status: '' }
+        { situacao: 'PEN', atividade: 'AGUARDA FORM DIG WEB', status: [
+          { status: '476', fase: '', motivo: '', oldFase: [''] }, //NÃO INICIADO //AGUARDANDO ENVIO DOC
+          { status: '480', fase: '', motivo: '', oldFase: [''] }, //PENDENTE DOCUMENTOS
+          { status: '480', fase: '', motivo: '', oldFase: [''] }, //AGUARDANDO ENVIO DOC
+        ]},
+        { situacao: 'AND', atividade: 'ANALISE DOCUMENTAL', status: [
+          { status: '422', fase: '', motivo: '', oldFase: [''] }, //CONCLUIDO
+        ]},
+        { situacao: 'AND', atividade: 'ANALISE SELFIE', status: [
+          { status: '704', fase: '', motivo: '', oldFase: [''] }, //CONCLUIDO
+        ]},
+        { situacao: 'AND', atividade: 'EM AVERBACAO', status: [
+          { status: '384', fase: '', motivo: '', oldFase: [] }, //CONCLUIDO
+        ]},
+        { situacao: 'PEN', atividade: 'AJUSTAR MARGEM', status: [
+          { status: '14', fase: '', motivo: '', oldFase: [''] }, //CONCLUIDO
+        ]},
+        { situacao: 'PEN', atividade: 'AGUARDA AUTORIZACAO', status: [
+          { status: '19', fase: '', motivo: '', oldFase: [''] }, //CONCLUIDO
+        ]},
+        { situacao: 'PEN', atividade: 'ANALISE CORBAN', status: [
+          { status: '105', fase: '', motivo: '', oldFase: [''] }, //CONCLUIDO
+        ]},
+        { situacao: 'PEN', atividade: 'PEN DOCUMENTOS', status: [
+          { status: '404', fase: '', motivo: '', oldFase: [''] }, //CONCLUIDO
+        ]},
+        { situacao: 'AND', atividade: 'MESA PREVENCAO', status: [
+          { status: '221', fase: '', motivo: '', oldFase: [''] }, //CONCLUIDO
+        ]},
+        { situacao: 'INT', atividade: 'PAGO', status: [
+          { status: '409', fase: '', motivo: '', oldFase: [''] }, //CONCLUIDO
+        ]},
+        { situacao: 'REP', atividade: 'REPROVA FGTS', status: [
+          { status: '958', fase: '', motivo: '', oldFase: [''] }, //CANCELADO
+        ]},
+        { situacao: 'REP', atividade: 'REPROVA CREDITO', status: [
+          { status: '955', fase: '', motivo: '', oldFase: [''] }, //CANCELADO
+        ]},
       ]
+      const getProposta = await c6.getProposta(proposta.NumeroContrato, { af: "C6 ESTEIRA" })
+      // console.log(getProposta.data.loan_track)
+      var fase = fases.find(r=> r.situacao == getProposta.data.loan_track.situation && r.atividade == getProposta.data.loan_track.current_activity_description) 
+      if (fase) {
+        if (fase.status.find(r=>r.status == getProposta.data.loan_track.current_activity_number)) {
+          console.log(`[${proposta.NumeroContrato}]=> foi...`)
+        } else console.log(`
+  [2]=> ${proposta.NumeroContrato}: {
+    situacao: ${getProposta.data.loan_track.situation}
+    atividade ${getProposta.data.loan_track.current_activity_description}
+    status: ${getProposta.data.loan_track.current_activity_number}
+  } 
+`)
+      } else console.log(`
+  [1]=> ${proposta.NumeroContrato}: {
+    situacao: ${getProposta.data.loan_track.situation}
+    atividade ${getProposta.data.loan_track.current_activity_description}
+    status: ${getProposta.data.loan_track.current_activity_number}
+  } 
+`)
+
+if (queue.findIndex(r=>r.codigo == proposta.NumeroContrato) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == proposta.NumeroContrato), 1)
+return verifyFaseBank(c6, pool)
+      
     } else {
       if (queue.findIndex(r=>r.codigo == proposta.NumeroContrato) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == proposta.NumeroContrato), 1)
       return verifyFaseBank(c6, pool)
