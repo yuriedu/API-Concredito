@@ -27,7 +27,6 @@ async function Esteira() {
 }
 Esteira()
 
-
 express()
   .use(require('cors')())
   .use(express.json())

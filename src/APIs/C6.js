@@ -185,6 +185,7 @@ class C6 {
         await this.refreshToken(log)
         return this.getProposta(data, log)
       } else if (err.response && err.response.data && err.response.data.message == "An internal error has occurred"){
+        return { data: { details: ['Erro na API'] } }
         await this.timeout(5000)
         await this.refreshToken(log)
         return this.getProposta(data, log)
