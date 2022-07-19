@@ -54,36 +54,36 @@ async function verifyFaseBank(c6, pool) {
     if (getProposta.data.loan_track && getProposta.data.loan_track.current_activity_description) {
       var fases = [
         { situacao: 'PEN', atividade: 'AGUARDA FORM DIG WEB', status: [
-          { status: '476', fase: '', motivo: '', oldFase: [''] }, //NÃO INICIADO //AGUARDANDO ENVIO DOC
-          { status: '480', fase: '', motivo: '', oldFase: [''] }, //PENDENTE DOCUMENTOS
-          { status: '480', fase: '', motivo: '', oldFase: [''] }, //AGUARDANDO ENVIO DOC
+          { status: '476', fase: '10293', motivo: 'Verificar se o cliente já assinou ou está aguardando envio do documento', oldFase: ['4002'] }, //NÃO INICIADO
+          { status: '476', fase: '9', motivo: 'Favor anexar doc frente e verso do cliente', oldFase: ['2','9','9232'] }, //AGUARDANDO ENVIO DOC
+          { status: '480', fase: '9', motivo: 'Favor anexar doc frente e verso do cliente', oldFase: ['2','4002','9','9232'] }, //PENDENTE DOCUMENTOS
         ]},
         { situacao: 'AND', atividade: 'ANALISE DOCUMENTAL', status: [
-          { status: '422', fase: '', motivo: '', oldFase: [''] }, //CONCLUIDO
+          { status: '422', fase: '692', motivo: 'Banco esta analisando os documentos do cliente!', oldFase: ['2','4002','9','9232'] }, //CONCLUIDO
         ]},
         { situacao: 'AND', atividade: 'ANALISE SELFIE', status: [
-          { status: '704', fase: '', motivo: '', oldFase: [''] }, //CONCLUIDO
+          { status: '704', fase: '692', motivo: 'Banco esta analisando a selfie do cliente!', oldFase: ['2','4002','9','9232'] }, //CONCLUIDO
         ]},
         { situacao: 'AND', atividade: 'EM AVERBACAO', status: [
-          { status: '384', fase: '', motivo: '', oldFase: [] }, //CONCLUIDO
+          { status: '384', fase: '10293', motivo: 'Proposta em averbação, OP VERIFICAR', oldFase: [] }, //CONCLUIDO
         ]},
         { situacao: 'PEN', atividade: 'AJUSTAR MARGEM', status: [
-          { status: '14', fase: '', motivo: '', oldFase: [''] }, //CONCLUIDO
+          { status: '14', fase: '10293', motivo: 'Proposta em ajustar margem, OP VERIFICAR', oldFase: [''] }, //CONCLUIDO
         ]},
         { situacao: 'PEN', atividade: 'AGUARDA AUTORIZACAO', status: [
-          { status: '19', fase: '', motivo: '', oldFase: [''] }, //CONCLUIDO
+          { status: '19', fase: '9', motivo: 'Cliente cancelou a autorização! Favor solicitar para o mesmo gerar novamente para seguirmos com a operação!', oldFase: [''] }, //CONCLUIDO
         ]},
         { situacao: 'PEN', atividade: 'ANALISE CORBAN', status: [
-          { status: '105', fase: '', motivo: '', oldFase: [''] }, //CONCLUIDO
+          { status: '105', fase: '1111', motivo: '', oldFase: ['2','4002','9','9232'] }, //CONCLUIDO
         ]},
         { situacao: 'PEN', atividade: 'PEN DOCUMENTOS', status: [
-          { status: '404', fase: '', motivo: '', oldFase: [''] }, //CONCLUIDO
+          { status: '404', fase: '10293', motivo: 'OP VERIFICAR OBSERVAÇÕES DENTRO DO BANCO', oldFase: [''] }, //CONCLUIDO
         ]},
         { situacao: 'AND', atividade: 'MESA PREVENCAO', status: [
-          { status: '221', fase: '', motivo: '', oldFase: [''] }, //CONCLUIDO
+          { status: '221', fase: '9', motivo: 'Banco esta analisando a proposta e pode entrar em contato com o cliente! Informar o mesmo sobre o possivel contato', oldFase: ['692','2','4002' ] }, //CONCLUIDO
         ]},
         { situacao: 'INT', atividade: 'PAGO', status: [
-          { status: '409', fase: '', motivo: '', oldFase: [''] }, //CONCLUIDO
+          { status: '409', fase: '3920', motivo: '', oldFase: ['2','4002','9','9232'] }, //CONCLUIDO
         ]},
         { situacao: 'REP', atividade: 'REPROVA FGTS', status: [
           { status: '958', fase: '', motivo: '', oldFase: [''] }, //CANCELADO
@@ -93,11 +93,16 @@ async function verifyFaseBank(c6, pool) {
         ]},
       ]
       const getProposta = await c6.getProposta(proposta.NumeroContrato, { af: "C6 ESTEIRA" })
-      // console.log(getProposta.data.loan_track)
-      var fase = fases.find(r=> r.situacao == getProposta.data.loan_track.situation && r.atividade == getProposta.data.loan_track.current_activity_description) 
-      if (fase) {
-        if (fase.status.find(r=>r.status == getProposta.data.loan_track.current_activity_number)) {
-          console.log(`[${proposta.NumeroContrato}]=> foi...`)
+      var faseObject = fases.find(r=> r.situacao == getProposta.data.loan_track.situation && r.atividade == getProposta.data.loan_track.current_activity_description) 
+      if (faseObject && faseObject.status && faseObject.status.length >= 1) {
+        var fase = faseObject.status.find(r=>r.status == getProposta.data.loan_track.current_activity_number)
+        if (fase) {
+          if (fase.oldFase.length <= 0 || fase.oldFase.find(r=> r == proposta.CodFase)) {
+            fase = fase.status.find(r=>r.status == getProposta.data.loan_track.current_activity_number && (r.oldFase.length <= 0 || r.oldFase.find(r=> r == proposta.CodFase)))
+            console.log(`[${proposta.NumeroContrato}]=> mudando fase...`)
+          } else {
+            console.log(`[${proposta.NumeroContrato}]=> proposta já está certa...`)
+          }
         } else console.log(`
   [2]=> ${proposta.NumeroContrato}: {
     situacao: ${getProposta.data.loan_track.situation}

@@ -61,15 +61,17 @@ const FactaEsteira = async (pool, log) => {
               if (fase == 120001) faseName = 'PENDENTE POR ASSINATURA'
 
               if (fase && faseName) {
+                console.log(1)
                 const propostaDB = await pool.request().input('contrato', proposta.codigo_af).input('fase',fase).execute('pr_getProposta_by_contrato_and_not_fase');
-                if (propostaDB.recordset[0]) {
+                console.log(2)
+                if (propostaDB.recordset[0] && fase != propostaDB.recordset[0].CodFase) {
                   if (fase == 3920 && propostaDB.recordset[0].CodFase != 2 && propostaDB.recordset[0].CodFase != 4002) return;
                   if (fase == 700 || fase == 9) {
                     queue[queue.length] = { codigo: proposta.codigo_af, proposta: proposta, agilus: propostaDB.recordset[0], fase: fase, faseName: faseName }
                     if (queue.length == 1) return verifyReason(facta, pool)
                   } else {
                     await pool.request().input('fase',fase).input('contrato',proposta.codigo_af).input('texto','[ESTEIRA]=> Fase alterada para a mesma que está no banco!').input('bank',2020).execute('pr_changeFase_by_contrato')
-                    //return console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${propostaDB.recordset[0].Fase} - FaseNew: ${faseName}`)
+                    return console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${propostaDB.recordset[0].Fase} - FaseNew: ${faseName}`)
                   }
                 }
               } else console.log(`[Facta Esteira CODE: ${proposta.codigo_af}]=> Nova fase: ${proposta.status_proposta}`)
@@ -96,7 +98,7 @@ const FactaEsteira = async (pool, log) => {
 module.exports = { FactaEsteira }
 
 async function verifyReason(facta, pool) {
-  await timeout(3000)
+  await timeout(5000)
   if (queue <= 0) return console.log(`[Facta Esteira]=> Finalizado!`);
   var proposta = queue[0].proposta
   var agilus = queue[0].agilus
@@ -105,19 +107,28 @@ async function verifyReason(facta, pool) {
   const getOcorrencias = await facta.getOcorrencias(proposta.codigo_af, { af: "FACTA ESTEIRA" })
   if (getOcorrencias && getOcorrencias.data) {
     if (getOcorrencias.data.ocorrencias && getOcorrencias.data.ocorrencias[0]) {
-      var motivo = getOcorrencias.data.ocorrencias.filter(r=> r.obs && r.status && !r.status.includes('LOCALIZAÇAO') && !r.status.includes('Proposta cancelada através da WEB') && !r.status.includes('Proposta cancelada pelo usuário') && !r.status.includes('Assinatura digital de proposta'))
+      var motivo = getOcorrencias.data.ocorrencias.filter(r=> r.obs && r.status &&
+        !r.status.includes('Assinatura digital de proposta') &&
+        !r.obs.includes('LOCALIZAÇÃO') && 
+        !r.obs.includes('LOCALIZAÇAO') && 
+        !r.obs.includes('LOCALIZACAO') && 
+        !r.obs.includes('Proposta cancelada através da WEB') && 
+        !r.obs.includes('Proposta cancelada pelo usuário')
+      )
       if (motivo && motivo[0]) {
         if (motivo.find(r=> r.status.includes('AGUARDA CANCELAMENTO'))) {
-          motivo = motivo[motivo.findIndex(r=> r.obs && r.status && r.status.includes('AGUARDA CANCELAMENTO') && !r.status.includes('LOCALIZAÇAO') && !r.status.includes('Proposta cancelada através da WEB') && !r.status.includes('Proposta cancelada pelo usuário') && !r.status.includes('Assinatura digital de proposta')) - 1].obs
+          motivo = motivo.find(r=> r.status.includes('AGUARDA CANCELAMENTO')).obs
         } else if (motivo.find(r=> r.status.includes('CANCELADO'))) {
-          motivo = motivo[motivo.findIndex(r=> r.obs && r.status && r.status.includes('CANCELADO') && !r.status.includes('LOCALIZAÇAO') && !r.status.includes('Proposta cancelada através da WEB') && !r.status.includes('Proposta cancelada pelo usuário') && !r.status.includes('Assinatura digital de proposta'))].obs
+          motivo = motivo.find(r=> r.status.includes('CANCELADO')).obs
+        } else if (motivo.find(r=> r.status.includes('PENDENTE') && r.obs.includes('Validamos apenas CTPS com foto')) && motivo.find(r=> r.status.includes('PENDENTE') && !r.obs.includes('Validamos apenas CTPS com foto'))) {
+          motivo = motivo.find(r=> r.status.includes('PENDENTE') && !r.obs.includes('Validamos apenas CTPS com foto')).obs
         } else if (motivo.find(r=> r.status.includes('PENDENTE'))) {
-          motivo = motivo[motivo.findIndex(r=> r.obs && r.status && r.status.includes('PENDENTE') && !r.status.includes('LOCALIZAÇAO') && !r.status.includes('Proposta cancelada através da WEB') && !r.status.includes('Proposta cancelada pelo usuário') && !r.status.includes('Assinatura digital de proposta'))].obs
+          motivo = motivo.find(r=> r.status.includes('PENDENTE')).obs
         } else motivo = false
       } else motivo = false
       if (motivo && proposta.codigo_af && proposta.codigo_af != 0 && fase && fase != 0) {
         if (motivo.includes('Prazo expirado para assinatura digital')) fase = 1
-        //await pool.request().input('contrato',proposta.codigo_af).input('fase',fase).input('bank',2020).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco!\nMotivo: ${fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`).execute('pr_changeFase_by_contrato')
+        await pool.request().input('contrato',proposta.codigo_af).input('fase',fase).input('bank',2020).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco!\nMotivo: ${fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`).execute('pr_changeFase_by_contrato')
         console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${agilus.Fase} - FaseNew: ${faseName} - Motivo: ${fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`)
       }
       if (queue.findIndex(r=> r.codigo == proposta.codigo_af) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == proposta.codigo_af), 1)
