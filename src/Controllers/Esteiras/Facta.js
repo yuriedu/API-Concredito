@@ -32,50 +32,32 @@ const FactaEsteira = async (pool, log) => {
       const getEsteira = await facta.getEsteira(dia,mes,ano, log)
       if (getEsteira && getEsteira.data) {
         if (getEsteira.data.propostas && getEsteira.data.propostas[0] && getEsteira.data.propostas[0].codigo_af) {
-          getEsteira.data.propostas = getEsteira.data.propostas.filter(r=> !r.status_proposta.includes('CLIENTE COM INADIMPLENCIA') && !r.status_proposta.includes('AGUARDA CANCELAMENTO') && !r.status_proposta.includes('RETORNO CORRETOR') && !r.status_proposta.includes('AGUARDA PGTO BCO'))
-          console.log(getEsteira.data.propostas.length)
-          getEsteira.data.propostas.forEach(async(proposta, index)=>{
-            if (proposta.status_proposta && proposta.codigo_af) {
-              var fase = false
-              if (proposta.status_proposta.includes('AGUARDANDO ASSINATURA DIGITAL')) fase = 120001 //PENDENTE POR ASSINATURA
-              if (proposta.status_proposta.includes('AGUARDA AVERBACAO')) fase = 2 //AGUARDANDO AVERBAÇÃO
-              if (proposta.status_proposta.includes('AVERBADO')) fase = 2 //AGUARDANDO AVERBAÇÃO
-              if (proposta.status_proposta.includes('ANALISE MESA DE CONFERENCIA')) fase = 692 //PROPOSTA EM ANALISE BANCO
-              if (proposta.status_proposta.includes('ATUACAO MASTER')) fase = 1111 //AGUARDANDO ATUAÇÃO MASTER
-              if (proposta.status_proposta.includes('VALIDANDO DOCUMENTOS')) fase = 692 //PROPOSTA EM ANALISE BANCO
-              if (proposta.status_proposta.includes('CONTRATO PAGO')) fase = 3920 //PROPOSTA PAGA
-              if (proposta.status_proposta.includes('ESTEIRA DE ANALISE')) fase = 692 //PROPOSTA EM ANALISE BANCO
-              if (proposta.status_proposta.includes('CANCELADO')) fase = 9 //PENDENTE
-              if (proposta.status_proposta.includes('PENDENTE')) fase = 9 //PENDENTE
-              if (proposta.status_proposta.includes('CAMPANHA FACTA')) fase = 323 //Aguarda Aumento INSS
-              if (proposta.status_proposta.includes('ENVIO DATAPREV')) fase = 2 //AGUARDANDO AVERBAÇÃO
-              var faseName = false
-              if (fase == 2) faseName = 'AGUARDANDO AVERBAÇÃO'
-              if (fase == 1111) faseName = 'AGUARDANDO ATUAÇÃO MASTER'
-              if (fase == 692) faseName = 'PROPOSTA EM ANALISE BANCO'
-              if (fase == 3920) faseName = 'PROPOSTA PAGA'
-              if (fase == 4002) faseName = 'ASSINADO / RESPONDIDO'
-              if (fase == 700) faseName = 'REPROVADO'
-              if (fase == 9) faseName = 'PENDENTE'
-              if (fase == 323) faseName = 'AGUARDA AUMENTO INSS'
-              if (fase == 692) faseName = 'PROPOSTA EM ANALISE BANCO'
-              if (fase == 120001) faseName = 'PENDENTE POR ASSINATURA'
-
-              if (fase && faseName) {
-                const propostaDB = await pool.request().input('contrato', proposta.codigo_af).input('fase',fase).execute('pr_getProposta_by_contrato_and_not_fase');
-                if (propostaDB.recordset[0] && fase != propostaDB.recordset[0].CodFase) {
-                  if (fase == 3920 && propostaDB.recordset[0].CodFase != 2 && propostaDB.recordset[0].CodFase != 4002) return;
-                  if (fase == 700 || fase == 9) {
-                    queue[queue.length] = { codigo: proposta.codigo_af, proposta: proposta, agilus: propostaDB.recordset[0], fase: fase, faseName: faseName }
-                    if (queue.length == 1) return verifyReason(facta, pool)
-                  } else {
-                    console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${propostaDB.recordset[0].Fase} - FaseNew: ${faseName}`)
-                    //await pool.request().input('fase',fase).input('contrato',proposta.codigo_af).input('texto','[ESTEIRA]=> Fase alterada para a mesma que está no banco!').input('bank',2020).execute('pr_changeFase_by_contrato')
-                  }
-                }
-              } else console.log(`[Facta Esteira CODE: ${proposta.codigo_af}]=> Nova fase: ${proposta.status_proposta}`)
-            }
-            if (index == (getEsteira.data.propostas.length-1) && queue.length <= 0) return console.log(`[Facta Esteira]=> Finalizado!`);
+          getEsteira.data.propostas = await getEsteira.data.propostas.filter(r=>
+            !r.status_proposta.includes('CLIENTE COM INADIMPLENCIA') && 
+            !r.status_proposta.includes('AGUARDA CANCELAMENTO') && 
+            !r.status_proposta.includes('RETORNO CORRETOR') && 
+            !r.status_proposta.includes('AGUARDA PGTO BCO')
+          )
+          getEsteira.data.propostas.forEach(async (proposta, index)=>{
+            var fases = [
+              { status: 'CONTRATO PAGO', fase: '3920', faseName: 'PROPOSTA PAGA' },
+              { status: 'AGUARDANDO ASSINATURA DIGITAL', fase: '120001', faseName: 'PENDENTE POR ASSINATURA' },
+              { status: 'AGUARDA AVERBACAO', fase: '2', faseName: 'AGUARDANDO AVERBAÇÃO' },
+              { status: 'AVERBADO', fase: '2', faseName: 'AGUARDANDO AVERBAÇÃO' },
+              { status: 'ENVIO DATAPREV', fase: '2', faseName: 'AGUARDANDO AVERBAÇÃO' },
+              { status: 'ANALISE MESA DE CONFERENCIA', fase: '692', faseName: 'PROPOSTA EM ANALISE BANCO' },
+              { status: 'VALIDANDO DOCUMENTOS', fase: '692', faseName: 'PROPOSTA EM ANALISE BANCO' },
+              { status: 'ESTEIRA DE ANALISE', fase: '692', faseName: 'PROPOSTA EM ANALISE BANCO' },
+              { status: 'ATUACAO MASTER', fase: '1111', faseName: 'AGUARDANDO ATUAÇÃO MASTER' },
+              { status: 'PENDENTE', fase: '9', faseName: 'PENDENTE' },
+              { status: 'CANCELADO', fase: '9', faseName: 'PENDENTE' },
+              { status: 'CAMPANHA FACTA', fase: '323', faseName: 'AGUARDA AUMENTO INSS' },
+            ]
+            var fase = fases.find(r=> proposta.status_proposta.includes(r.status))
+            if (fase) {
+              queue[queue.length] = { codigo: proposta.codigo_af, proposta: proposta, fase: fase.fase, faseName: fase.faseName }
+              if (queue.length == 1) return verifyFase(facta, pool)
+            } else console.log(`[Facta Esteira CODE: ${proposta.codigo_af}]=> Nova fase: ${proposta.status_proposta}`)
           })
         } else {
           if (getEsteira.data.msg) return { status: false, error: `[ESTEIRA (7)]=> ${getEsteira.data.msg}` }
@@ -93,53 +75,53 @@ const FactaEsteira = async (pool, log) => {
     console.log(err)
   }
 }
-
+  
 module.exports = { FactaEsteira }
 
-async function verifyReason(facta, pool) {
-  await timeout(5000)
+async function verifyFase(facta, pool) {
+  await timeout(3000)
   if (queue <= 0) return console.log(`[Facta Esteira]=> Finalizado!`);
   var proposta = queue[0].proposta
-  var agilus = queue[0].agilus
-  var fase = queue[0].fase
-  var faseName = queue[0].faseName
-  const getOcorrencias = await facta.getOcorrencias(proposta.codigo_af, { af: "FACTA ESTEIRA" })
-  if (getOcorrencias && getOcorrencias.data) {
-    if (getOcorrencias.data.ocorrencias && getOcorrencias.data.ocorrencias[0]) {
-      var motivo = getOcorrencias.data.ocorrencias.filter(r=> r.obs && r.status &&
-        !r.status.includes('Assinatura digital de proposta') &&
-        !r.obs.includes('LOCALIZAÇÃO') && 
-        !r.obs.includes('LOCALIZAÇAO') && 
-        !r.obs.includes('LOCALIZACAO') && 
-        !r.obs.includes('Proposta cancelada através da WEB') && 
-        !r.obs.includes('Proposta cancelada pelo usuário')
-      )
-      if (motivo && motivo[0]) {
-        if (motivo.find(r=> r.status.includes('AGUARDA CANCELAMENTO'))) {
-          motivo = motivo.find(r=> r.status.includes('AGUARDA CANCELAMENTO')).obs
-        } else if (motivo.find(r=> r.status.includes('CANCELADO'))) {
-          motivo = motivo.find(r=> r.status.includes('CANCELADO')).obs
-        } else if (motivo.find(r=> r.status.includes('PENDENTE') && r.obs.includes('Validamos apenas CTPS com foto')) && motivo.find(r=> r.status.includes('PENDENTE') && !r.obs.includes('Validamos apenas CTPS com foto'))) {
-          motivo = motivo.find(r=> r.status.includes('PENDENTE') && !r.obs.includes('Validamos apenas CTPS com foto')).obs
-        } else if (motivo.find(r=> r.status.includes('PENDENTE'))) {
-          motivo = motivo.find(r=> r.status.includes('PENDENTE')).obs
-        } else motivo = false
-      } else motivo = false
-      if (motivo && proposta.codigo_af && proposta.codigo_af != 0 && fase && fase != 0) {
-        if (motivo.includes('Prazo expirado para assinatura digital')) fase = 1
-        console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${agilus.Fase} - FaseNew: ${faseName} - Motivo: ${fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`)
-        //await pool.request().input('contrato',proposta.codigo_af).input('fase',fase).input('bank',2020).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco!\nMotivo: ${fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`).execute('pr_changeFase_by_contrato')
+  var agilus = await pool.request().input('contrato', proposta.codigo_af).input('fase', queue[0].fase).execute('pr_getProposta_by_contrato_and_not_fase');
+  if (agilus.recordset && agilus.recordset[0]) {
+    agilus = agilus.recordset[0]
+    if (queue[0].fase == 700 || queue[0].fase == 9) {
+      const getOcorrencias = await facta.getOcorrencias(proposta.codigo_af, { af: "FACTA ESTEIRA" })
+      if (getOcorrencias && getOcorrencias.data) {
+        if (getOcorrencias.data.ocorrencias && getOcorrencias.data.ocorrencias[0]) {
+          var motivo = getOcorrencias.data.ocorrencias.filter(r=> r.obs && r.status &&
+            !r.status.includes('Assinatura digital de proposta') &&
+            !r.obs.includes('LOCALIZAÇÃO') && 
+            !r.obs.includes('LOCALIZAÇAO') && 
+            !r.obs.includes('LOCALIZACAO') && 
+            !r.obs.includes('Proposta cancelada através da WEB') && 
+            !r.obs.includes('Proposta cancelada pelo usuário')
+          )
+          if (motivo && motivo[0]) {
+            if (motivo.find(r=> r.status.includes('AGUARDA CANCELAMENTO'))) {
+              motivo = motivo.find(r=> r.status.includes('AGUARDA CANCELAMENTO')).obs
+            } else if (motivo.find(r=> r.status.includes('CANCELADO'))) {
+              motivo = motivo.find(r=> r.status.includes('CANCELADO')).obs
+            } else if (motivo.find(r=> r.status.includes('PENDENTE') && r.obs.includes('Validamos apenas CTPS com foto')) && motivo.find(r=> r.status.includes('PENDENTE') && !r.obs.includes('Validamos apenas CTPS com foto'))) {
+              motivo = motivo.find(r=> r.status.includes('PENDENTE') && !r.obs.includes('Validamos apenas CTPS com foto')).obs
+            } else if (motivo.find(r=> r.status.includes('PENDENTE'))) {
+              motivo = motivo.find(r=> r.status.includes('PENDENTE')).obs
+            } else motivo = false
+          } else motivo = false
+          if (motivo && proposta.codigo_af && proposta.codigo_af != 0 && queue[0].fase && queue[0].fase != 0) {
+            if (motivo.includes('Prazo expirado para assinatura digital')) fase = 1
+            await pool.request().input('contrato',proposta.codigo_af).input('fase',fase).input('bank',2020).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco: ${fase == 1 ? 'INCLUSÃO' : queue[0].faseName}!\nMotivo: ${fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`).execute('pr_changeFase_by_contrato')
+            //console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${agilus.Fase} - FaseNew: ${faseName} - Motivo: ${fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`)
+          }
+        }
       }
-      if (queue.findIndex(r=> r.codigo == proposta.codigo_af) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == proposta.codigo_af), 1)
-      return verifyReason(facta, pool)
     } else {
-      if (queue.findIndex(r=>r.codigo == proposta.codigo_af) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == proposta.codigo_af), 1)
-      return verifyReason(facta, pool)
+      await pool.request().input('contrato',proposta.codigo_af).input('fase',queue[0].fase).input('bank',2020).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco: ${queue[0].faseName}!`).execute('pr_changeFase_by_contrato')
+      //console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${agilus.Fase} - FaseNew: ${queue[0].faseName}`)
     }
-  } else {
-      if (queue.findIndex(r=>r.codigo == proposta.codigo_af) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == proposta.codigo_af), 1)
-      return verifyReason(facta, pool)
   }
+  if (queue.findIndex(r=>r.codigo == proposta.codigo_af) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == proposta.codigo_af), 1)
+  return verifyFase(facta, pool)
 }
 
 async function timeout(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
