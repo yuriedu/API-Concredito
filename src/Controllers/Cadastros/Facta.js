@@ -153,7 +153,7 @@ const FactaCART = async (cliente, pool, log) => {
         }
         var getSaldo = await facta.getSaldoCART(saldo, log)
         if (getSaldo && getSaldo.data) {
-          if (getSaldo.data.tabelas && getSaldo.data.tabelas.find(r=>r.codigoTabela == '98945')) {
+          if (getSaldo.data.tabelas && getSaldo.data.tabelas.length >= 1 && getSaldo.data.tabelas.find(r=>r.codigoTabela == '98945')) {
             getSaldo = getSaldo.data.tabelas.find(r=>r.codigoTabela == '98945')
             var simulation = {
               produto: 'D',
