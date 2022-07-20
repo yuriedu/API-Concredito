@@ -58,6 +58,7 @@ async function verifyFaseBank(c6, pool) {
           { status: '476', fase: '10293', faseName: 'Verificação manual OP', motivo: 'Verificar se o cliente já assinou ou está aguardando envio do documento', oldFase: ['2','4002','692'] }, //NÃO INICIADO //AGUARDANDO ENVIO DOC
           //{ status: '476', fase: '9', faseName: 'PENDENTE', motivo: 'Favor anexar doc frente e verso do cliente', oldFase: ['2'] }, //AGUARDANDO ENVIO DOC
           { status: '480', fase: '9', faseName: 'PENDENTE', motivo: 'Favor anexar doc frente e verso do cliente', oldFase: ['2','4002','9','9232'] }, //PENDENTE DOCUMENTOS
+          { status: '683', fase: '10293', faseName: 'Verificação manual OP', motivo: 'Aguardando Selfie', oldFase: ['2','4002','692'] }, //PENDENTE DOCUMENTOS
         ]},
         { situacao: 'AND', atividade: 'ANALISE DOCUMENTAL', status: [
           { status: '422', fase: '692', faseName: 'PROPOSTA EM ANALISE BANCO', motivo: 'Banco esta analisando os documentos do cliente!', oldFase: ['2','4002','9','9232'] }, //CONCLUIDO
