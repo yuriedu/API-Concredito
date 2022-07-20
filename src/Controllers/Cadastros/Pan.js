@@ -55,7 +55,8 @@ const PanFGTS = async (cliente, pool, log) => {
                 numero_conta: client.ContaCorrente.replace(/\D+/g, '').slice(0,-1),
                 codigo_meio_liberacao: bancoTranslate(client.CodBancoCliente) === 623 ? "024" : "020",
                 digito_conta: client.ContaCorrente.replace(/\D+/g, '').slice(-1),
-                tipo_conta: client.Poupanca ? 'CONTA_POUPANCA_INDIVIDUAL' : "CONTA_CORRENTE_INDIVIDUAL"
+                tipo_conta: client.Poupanca ? 'CONTA_POUPANCA_INDIVIDUAL' : "CONTA_CORRENTE_INDIVIDUAL",
+                CodOperCEF: bancoTranslate(client.CodBancoCliente) == 104 ? client.Poupanca ? '013' : '001' : ''
               },
               data_nascimento: client.Datanascimento.split('T')[0].split('-').reverse().join('-'),
               estado_civil: "OUTROS",

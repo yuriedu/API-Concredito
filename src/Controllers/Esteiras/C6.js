@@ -83,6 +83,7 @@ async function verifyFaseBank(c6, pool) {
         ]},
         { situacao: 'AND', atividade: 'MESA PREVENCAO', status: [
           { status: '221', fase: '9', faseName: 'PENDENTE', motivo: 'Banco esta analisando a proposta e pode entrar em contato com o cliente! Informar o mesmo sobre o possivel contato', oldFase: ['692','2','4002' ] }, //CONCLUIDO
+          { status: '222', fase: '9', faseName: 'PENDENTE', motivo: 'Banco esta analisando a proposta e pode entrar em contato com o cliente! Informar o mesmo sobre o possivel contato', oldFase: ['692','2','4002' ] }, //CONCLUIDO
         ]},
         { situacao: 'REP', atividade: 'REPROVA FGTS', status: [
           { status: '958', fase: '12', faseName: 'Pendência Resolvida', motivo: '', oldFase: [] }, //CANCELADO

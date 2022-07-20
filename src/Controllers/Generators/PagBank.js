@@ -11,21 +11,72 @@ const PagBankINSS = async (cliente) => {
       var ano = date.slice(0,4)
       var mes = date.slice(5,7)
       var dia = date.slice(8,10)
-      var code1 = `var allInputs = document.getElementsByTagName("*");
+var code1 = `var allInputs = document.getElementsByTagName("*");
 for (var i = 0, n = allInputs.length; i < n; ++i) {
   var input = allInputs[i];
   if (input.id && (input.tagName == "INPUT" || input.tagName == "SELECT")) {
     if (input.id.includes('DadosIniciais') && input.id.includes('TipoOperacao_CAMPO')) {
-      document.getElementById(input.id).value = 'Portabilidade'`
-      code1 += '\nsetTimeout(`__doPostBack(\'${input.id}\',\'\')`, 0)}'
-      code1+= `\nsetTimeout( 0)}`
-
-    code1+=`\nif (input.id.includes('DadosIniciais') && input.id.includes('CPF')) {
-      document.getElementById(input.id).value = '${cliente.Cpf}'
-      if (document.getElementById(input.id).onchange) document.getElementById(input.id).onchange()
-    }
+      document.getElementById(input.id).value = 'Portabilidade'\n`+
+'      setTimeout(`__doPostBack(\'${input.id}\',\'\')`, 0)\n'+
+`    }
+    setTimeout(()=>{
+      var allInputs = document.getElementsByTagName("*");
+      for (var i = 0, n = allInputs.length; i < n; ++i) {
+        var input = allInputs[i];
+        if (input.id && (input.tagName == "INPUT" || input.tagName == "SELECT")) {
+          if (input.id.includes('DadosIniciais') && input.id.includes('GrupoConvenio_CAMPO')) {
+            document.getElementById(input.id).value = '5'\n`+
+'            setTimeout(`__doPostBack(\'${input.id}\',\'\')`, 0)\n'+
+`          }
+        }
+      }
+      setTimeout(()=>{
+        var allInputs = document.getElementsByTagName("*");
+        for (var i = 0, n = allInputs.length; i < n; ++i) {
+          var input = allInputs[i];
+          if (input.id && (input.tagName == "INPUT" || input.tagName == "SELECT")) {
+            if (input.id && (input.tagName == "INPUT" || input.tagName == "SELECT")) {
+              if (input.id.includes('DadosIniciais') && input.id.includes('CPF_CAMPO')) {
+                document.getElementById(input.id).value = '${cliente.Cpf}'\n`+
+'                setTimeout(`__doPostBack(\'${input.id}\',\'\')`, 0)\n'+
+`              }
+              setTimeout(()=>{
+                if (input.id.includes('DadosIniciais') && input.id.includes('DataNascimento_CAMPO')) {
+                  document.getElementById(input.id).value = '${dia}/${mes}/${ano}'\n`+
+'                  setTimeout(`__doPostBack(\'${input.id}\',\'\')`, 0)\n'+
+`                }
+              }, 4000)
+            }
+          }
+        }
+      }, 5000)
+    }, 4000)
   }
 }`
+
+
+//     setTimeout(()=>{
+//       var allInputs = document.getElementsByTagName("*");
+//       for (var i = 0, n = allInputs.length; i < n; ++i) {
+//         var input = allInputs[i];
+//         if (input.id && (input.tagName == "INPUT" || input.tagName == "SELECT")) {
+//           if (input.id.includes('DadosIniciais') && input.id.includes('CPF_CAMPO')) {
+//             document.getElementById(input.id).value = '${cliente.Cpf}'\n`+
+// '            setTimeout(`__doPostBack(\'${input.id}\',\'\')`, 0)\n'+
+// `          }
+//           setTimeout(()=>{
+//             if (input.id.includes('DadosIniciais') && input.id.includes('DataNascimento_CAMPO')) {
+//               document.getElementById(input.id).value = '${dia}/${mes}/${ano}'\n`+
+// '              //setTimeout(`__doPostBack(\'${input.id}\',\'\')`, 0)\n'+
+// `            }
+//           }, 4000)
+//         }
+//       }
+//     }, 8000)
+
+
+
+
 
       return { status: true, code1: code1 }
     } else return { status: false, error: client && client.data ? client.data : '[0]=> Ocorreu algum erro ao verificar os dados! Verifique e tente novamente...' }
