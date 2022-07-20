@@ -84,8 +84,10 @@ class Banrisul {
     try {
       log.situation = `[4]=> Gravando a proposta...`
       const response = await this.api.post(`/consignado/Consignado/Proposta/GravarPropostaPortabilidade`, data);
-      if (!response.data.retorno.proposta || response.data.retorno.proposta == 0) {
-        console.log(response.data)
+      if (response.data && response.data.retorno && (!response.data.retorno.proposta || response.data.retorno.proposta == 0 || response.data.retorno.proposta == '0')) {
+        await this.timeout(5000)
+        await this.refreshToken(log);
+        return this.gravarPropostaPortabilidade(data, log)
       }
       return response;
     } catch(err) {

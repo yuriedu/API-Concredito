@@ -15,9 +15,9 @@ const PagBankINSS = async (cliente) => {
 for (var i = 0, n = allInputs.length; i < n; ++i) {
   var input = allInputs[i];
   if (input.id && (input.tagName == "INPUT" || input.tagName == "SELECT")) {
-    if (input.id.includes('DadosIniciais') && input.id.includes('TipoOperacao_CAMPO')) {
-      document.getElementById(input.id).value = 'Portabilidade'
-      if (document.getElementById(input.id).onfocus) document.getElementById(input.id).onfocus()
+    if (input.id.includes('DadosIniciais') && input.id.includes('CPF')) {
+      document.getElementById(input.id).value = '${cliente.Cpf}'
+      if (document.getElementById(input.id).onchange) document.getElementById(input.id).onchange()
     }
   }
 }`

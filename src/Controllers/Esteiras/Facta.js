@@ -56,7 +56,7 @@ const FactaEsteira = async (pool, log) => {
               { status: 'CAMPANHA FACTA', fase: '323', faseName: 'AGUARDA AUMENTO INSS' },
             ]
             var fase = fases.find(r=> proposta.status_proposta.includes(r.status))
-            var agilus = agilusPropostas.recordset.find(r=> r.NumeroContrato == proposta.codigo_af && r.CodFase != fase.fase && r.CodFase != 4)
+            var agilus = agilusPropostas.recordset.find(r=> fase && r.NumeroContrato == proposta.codigo_af && r.CodFase != fase.fase && r.CodFase != 4)
             if (!agilus) return;
             if (fase) {
               queue[queue.length] = { codigo: proposta.codigo_af, proposta: proposta, agilus: agilus, fase: fase.fase, faseName: fase.faseName }
