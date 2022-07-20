@@ -78,16 +78,16 @@ async function verifyFaseBank(c6, pool) {
           { status: '105', fase: '1111', faseName: 'AGUARDANDO ATUAÇÃO MASTER', motivo: '', oldFase: ['2','4002','9','9232'] }, //CONCLUIDO
         ]},
         { situacao: 'PEN', atividade: 'PEN DOCUMENTOS', status: [
-          { status: '404', fase: '10293', faseName: 'Verificação manual OP', motivo: 'OP VERIFICAR OBSERVAÇÕES DENTRO DO BANCO', oldFase: [] }, //CONCLUIDO
+          { status: '404', fase: '12', faseName: 'Pendência Resolvida', motivo: 'OP VERIFICAR OBSERVAÇÕES DENTRO DO BANCO', oldFase: [] }, //CONCLUIDO
         ]},
         { situacao: 'AND', atividade: 'MESA PREVENCAO', status: [
           { status: '221', fase: '9', faseName: 'PENDENTE', motivo: 'Banco esta analisando a proposta e pode entrar em contato com o cliente! Informar o mesmo sobre o possivel contato', oldFase: ['692','2','4002' ] }, //CONCLUIDO
         ]},
         { situacao: 'REP', atividade: 'REPROVA FGTS', status: [
-          { status: '958', fase: '10293', faseName: 'Verificação manual OP', motivo: '', oldFase: [] }, //CANCELADO
+          { status: '958', fase: '12', faseName: 'Pendência Resolvida', motivo: '', oldFase: [] }, //CANCELADO
         ]},
         { situacao: 'REP', atividade: 'REPROVA CREDITO', status: [
-          { status: '955', fase: '10293', faseName: 'Verificação manual OP', motivo: '', oldFase: [] }, //CANCELADO
+          { status: '955', fase: '12', faseName: 'Pendência Resolvida', motivo: '', oldFase: [] }, //CANCELADO
         ]},
       ]
       var faseObject = fases.find(r=> r.situacao == getProposta.data.loan_track.situation && r.atividade == getProposta.data.loan_track.current_activity_description) 
