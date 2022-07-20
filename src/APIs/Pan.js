@@ -44,7 +44,7 @@ class Panamericano {
   async simularProposta(data, log) {
     try {
       log.situation = `[2]=> Simulando a proposta...`
-      const response = await this.api.post(`openapi/consignado/v1/emprestimos/simulacao/fgts`, data);
+      const response = await this.api.post(`openapi/consignado/v2/emprestimos/simulacao/fgts`, data);
       return response;
     } catch(err) {
       if (err.response && err.response.data && err.response.data.detalhes && err.response.data.detalhes[0]) return err.response

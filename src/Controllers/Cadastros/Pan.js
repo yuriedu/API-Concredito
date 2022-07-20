@@ -16,11 +16,12 @@ const PanFGTS = async (cliente, pool, log) => {
           cpf_cliente: client.Cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4"),
           codigo_promotora: process.env.PAN_PROMOTER_CODE,
           valor_solicitado: client.Valor,
-          incluir_seguro: true
+          incluir_seguro: true,
+          data_nascimento: client.Datanascimento.split('T')[0].split('-').reverse().join('-'),
         };
         const simularProposta = await pan.simularProposta(data, log);
         if (simularProposta && simularProposta.data) {
-          if (simularProposta.data[0] && simularProposta.data[0].condicoes_credito) {
+          if (simularProposta.data && simularProposta.data.condicoes_credito) {
             var table = '900001'
             if (cliente.Tabela.includes('900001') || cliente.Tabela.includes('NOVO FGTS')) {
               table = '900001'
@@ -29,7 +30,7 @@ const PanFGTS = async (cliente, pool, log) => {
             } else if (cliente.Tabela.includes('900007')) {
               table = '900007'
             } else return saveDB(pool, cliente.IdContrato, 824, '', '[7]=> Não cadastro propostas PANAMERICANO nessa tabela!', false)
-            const tabela = simularProposta.data[0].condicoes_credito.find(element => element.codigo_tabela_financiamento == table)
+            const tabela = simularProposta.data.condicoes_credito.find(element => element.codigo_tabela_financiamento == table)
             if (parseFloat(tabela.valor_cliente) - client.Valor > client.Valor*0.05) return saveDB(pool, cliente.IdContrato, 824, '', `[6]=> Valor simulado é mais de 5% menor que o proposto ao cliente! Altere o valor e tente novamente... Valor da simulação: ${calcularSaldo.data.valor_liquido}`, false)
             //if (bancoTranslate(client.CodBancoCliente) == 104) return saveDB(pool, cliente.IdContrato, 824, '', '[7]=> A API da Pan não aceita Caixa Economica Federal! Faça MANUALMENTE...', false)
             const clienteDados = {

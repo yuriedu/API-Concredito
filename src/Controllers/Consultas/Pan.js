@@ -11,15 +11,16 @@ const PanFGTS = async (cpf, type, valor, table, log) => {
     const loadAPI = await pan.refreshToken(log)
     if (loadAPI) {
       const simulation = {
+        incluir_seguro: true,
         cpf_cliente: cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4"),
         codigo_promotora: process.env.PAN_PROMOTER_CODE,
-        incluir_seguro: true
-      };
+        data_nascimento: '10-08-1967',
+      }
       if (type == 'POR_VALOR_SOLICITADO') simulation.valor_solicitado = valor
       const simularProposta = await pan.simularProposta(simulation, log);
       if (simularProposta && simularProposta.data) {
-        if (simularProposta.data[0] && simularProposta.data[0].condicoes_credito) {
-          const tabela = simularProposta.data[0].condicoes_credito.find(element => element.codigo_tabela_financiamento == table)
+        if (simularProposta.data && simularProposta.data.condicoes_credito) {
+          const tabela = simularProposta.data.condicoes_credito.find(element => element.codigo_tabela_financiamento == table)
           if (tabela && tabela.parcelas && tabela.valor_cliente && tabela.valor_bruto) {
             var date = moment(new Date(), 'DD/MM/YYYY').format('DD-MM-YYYY').replace("-","/").replace("-","/")
             var data = {
