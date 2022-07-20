@@ -15,7 +15,8 @@ const PanFGTS = async (cliente, pool, log) => {
         const data = {
           cpf_cliente: client.Cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4"),
           codigo_promotora: process.env.PAN_PROMOTER_CODE,
-          valor_solicitado: client.Valor
+          valor_solicitado: client.Valor,
+          incluir_seguro: true
         };
         const simularProposta = await pan.simularProposta(data, log);
         if (simularProposta && simularProposta.data) {

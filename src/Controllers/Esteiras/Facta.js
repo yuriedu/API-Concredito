@@ -125,7 +125,6 @@ async function verifyFase(facta, pool) {
   } else {
     if (!queue[0].fase.oldFase || queue[0].fase.oldFase.length <= 0 || queue[0].fase.oldFase.find(r=> r == agilus.CodFase)) {
       console.log(agilus.CodeFase)
-      console.log(queue[0].fase.oldFase)
       await pool.request().input('contrato',proposta.codigo_af).input('fase',queue[0].fase.fase).input('bank',2020).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco: ${queue[0].fase.faseName}!`).execute('pr_changeFase_by_contrato')
       console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${agilus.Fase} - FaseNew: ${queue[0].fase.faseName}`)
     }
