@@ -42,7 +42,7 @@ const FactaEsteira = async (pool, log) => {
           )
           getEsteira.data.propostas.forEach(async (proposta, index)=>{
             var fases = [
-              { status: 'CONTRATO PAGO', fase: '3920', faseName: 'PROPOSTA PAGA', oldFase: ['2','3920'] },
+              { status: 'CONTRATO PAGO', fase: '3920', faseName: 'PROPOSTA PAGA', oldFase: ['2','4002','9232', '9923', '692'] },
               { status: 'AGUARDANDO ASSINATURA DIGITAL', fase: '120001', faseName: 'PENDENTE POR ASSINATURA', oldFase: ['2','4002'] },
               { status: 'AGUARDA AVERBACAO', fase: '2', faseName: 'AGUARDANDO AVERBAÇÃO' },
               { status: 'AVERBADO', fase: '2', faseName: 'AGUARDANDO AVERBAÇÃO' },
