@@ -11,6 +11,7 @@ const PagBankINSS = async (cliente) => {
       var ano = date.slice(0,4)
       var mes = date.slice(5,7)
       var dia = date.slice(8,10)
+      if (!client.dataExpedicao) return { status: false, error: '[0]=> Data de expedição não está definido no agilus!' }
       var dateExpec = client.dataExpedicao.toISOString().slice(0, 10)
       var anoExpec = dateExpec.slice(0,4)
       var mesExpec = dateExpec.slice(5,7)
@@ -49,8 +50,8 @@ function getInputs() {
         if (input.id.includes('Nome_CAMPO')) inputs.nome = input
         if (input.id.includes('Sexo_CAMPO')) inputs.sexo = input
         if (input.id.includes('EstadoCivil_CAMPO')) inputs.estadoCivil = input
-        if (input.id.includes('Documento_CAMPO')) inputs.rg = input
         if (input.id.includes('DvDocumento_CAMPO')) inputs.rgDV = input
+        if (input.id.includes('txtDocumento_CAMPO')) inputs.rg = input
         if (input.id.includes('Emissor_CAMPO')) inputs.emissor = input
         if (input.id.includes('UFDoc_CAMPO')) inputs.clientUF = input
         if (input.id.includes('DataEmissao_CAMPO')) inputs.dataEmissao = input
@@ -61,6 +62,22 @@ function getInputs() {
         if (input.id.includes('DddTelCelular_CAMPO')) inputs.ddd2 = input
         if (input.id.includes('TelCelular_CAMPO')) inputs.celular = input
         if (input.id.includes('Email_CAMPO')) inputs.email = input
+        if (input.id.includes('CEP_CAMPO')) inputs.cep = input
+        if (input.id.includes('Endereco_CAMPO')) inputs.endereco = input
+        if (input.id.includes('Numero_CAMPO')) inputs.numero = input
+        if (input.id.includes('Bairro_CAMPO')) inputs.bairro = input
+        if (input.id.includes('Cidade_CAMPO')) inputs.cidade = input
+        if (input.id.includes('UF_CAMPO')) inputs.endUF = input
+        if (input.id.includes('ResidenciaAtualAnos_CAMPO')) inputs.resAtualAno = input
+        if (input.id.includes('ResidenciaAtualMeses_CAMPO')) inputs.resAtualMes = input
+        if (input.id.includes('txtReferencia1_CAMPO')) inputs.referencia = input
+        if (input.id.includes('DDDReferencia1_CAMPO')) inputs.referenciaDDD = input
+        if (input.id.includes('TelReferencia1_CAMPO')) inputs.referenciaTelefone = input
+      } else if (input.id.includes('Simulacao')) {
+        if (input.id.includes('Dt1Vcto_CAMPO')) inputs.dt1vcto = input
+        if (input.id.includes('VlrParcela_CAMPO')) inputs.simulaValorParcela = input
+      } else if (input.id.includes('Simulacao')) {
+
       }
     }
   }
@@ -104,10 +121,10 @@ async function loadCode() {
                     inputs.contratoPort.value = '${cliente.PortabilidadeContrato}';
                     await timeout(1000);
                     if (inputs.valorParcelaPort) {
-                      inputs.valorParcelaPort.value = '${cliente.PortabilidadePrestacao}';
+                      inputs.valorParcelaPort.value = '${String(cliente.PortabilidadePrestacao).replace(".",",")}';
                       await timeout(1000);
                       if (inputs.valorPort) {
-                        inputs.valorPort.value = '${cliente.PortabilidadeValor}';
+                        inputs.valorPort.value = '${String(cliente.PortabilidadeValor).replace(".",",")}';
                         await timeout(1000);
                         if (inputs.parcelasPort) {
                           inputs.parcelasPort.value = '${cliente.PortabilidadeParcelas}';
@@ -128,8 +145,6 @@ async function loadCode() {
                                     inputs.dvBenef.value = '1';
                                     await reloadInputs(inputs.dvBenef.id, 5000)
                                     if (inputs.incluir) {
-                                      inputs.incluir.onclick()
-                                      await timeout(5000);
 
                                       if (inputs.nome) {
                                         inputs.nome.value = '${cliente.NomeCliente}';
@@ -176,7 +191,59 @@ async function loadCode() {
                                                                   if (inputs.email) {
                                                                     inputs.email.value = '${cliente.Email}';
                                                                     await reloadInputs(inputs.email.id, 5000)
-                            
+                                                                    if (inputs.cep) {
+                                                                      inputs.cep.value = '${cliente.Cep}';
+                                                                      await reloadInputs(inputs.cep.id, 5000)
+                                                                      if (inputs.endereco) {
+                                                                        inputs.endereco.value = '${cliente.Endereco}';
+                                                                        await reloadInputs(inputs.endereco.id, 5000)
+                                                                        if (inputs.numero) {
+                                                                          inputs.numero.value = '${cliente.EndNumero}';
+                                                                          await reloadInputs(inputs.numero.id, 5000)
+                                                                          if (inputs.bairro) {
+                                                                            inputs.bairro.value = '${cliente.Bairro}';
+                                                                            await reloadInputs(inputs.bairro.id, 5000)
+                                                                            if (inputs.cidade) {
+                                                                              inputs.cidade.value = '${cliente.Cidade}';
+                                                                              await reloadInputs(inputs.cidade.id, 5000)
+                                                                              if (inputs.endUF) {
+                                                                                inputs.endUF.value = '${cliente.UF}';
+                                                                                await reloadInputs(inputs.endUF.id, 5000)
+                                                                                if (inputs.resAtualAno) {
+                                                                                  inputs.resAtualAno.value = '01';
+                                                                                  await reloadInputs(inputs.resAtualAno.id, 5000)
+                                                                                  if (inputs.resAtualMes) {
+                                                                                    inputs.resAtualMes.value = '01';
+                                                                                    await reloadInputs(inputs.resAtualMes.id, 5000)
+                                                                                    if (inputs.dt1vcto) {
+                                                                                      inputs.dt1vcto.value = inputs.dt1vcto.options[1].value;
+                                                                                      await reloadInputs(inputs.dt1vcto.id, 5000)
+                                                                                      if (inputs.simulaValorParcela) {
+                                                                                        inputs.simulaValorParcela.value = '${String(cliente.PortabilidadePrestacao).replace(".",",")}';
+                                                                                        await reloadInputs(inputs.referencia.id, 5000)
+                                                                                        if (inputs.referencia) {
+                                                                                          inputs.referencia.value = '${cliente.NomeCliente}';
+                                                                                          await reloadInputs(inputs.referencia.id, 5000)
+                                                                                          if (inputs.referenciaDDD) {
+                                                                                            inputs.referenciaDDD.value = '${parseInt(cliente.TelefoneConvenio.split(' ')[0].replace(/\D+/g, '').slice(0,2))}';
+                                                                                            await reloadInputs(inputs.referenciaTelefone.id, 5000)
+                                                                                            if (inputs.referenciaTelefone) {
+                                                                                              inputs.referenciaTelefone.value = '${parseInt(cliente.TelefoneConvenio.split(' ')[0].replace(/\D+/g, '').slice(2))}';
+                                                                                              await reloadInputs(inputs.referenciaTelefone.id, 5000)
+                                                                                              alert('FINALIZADO')
+                                                                                            }
+                                                                                          }
+                                                                                        }
+                                                                                      }
+                                                                                    }
+                                                                                  }
+                                                                                }
+                                                                              }
+                                                                            }
+                                                                          }
+                                                                        }
+                                                                      }
+                                                                    }
                                                                   }
                                                                 }
                                                               }
