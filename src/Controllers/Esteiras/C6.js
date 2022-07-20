@@ -105,8 +105,8 @@ async function verifyFaseBank(c6, pool) {
               //console.log(`[C6 Esteira]=> Contrato: ${proposta.NumeroContrato} - FaseOLD: ${proposta.Fase} - FaseNew: ${fase.faseName} ${fase.motivo.length >= 1 ? queue[0].fase == 1 ? '\nMotivo: '+fase.motivo+' OP. vai refazer o cadastro...' : '\nMotivo: '+fase.motivo : ''}`)
             }
           }
-        } else console.log(`[C6 Esteira] => Novo Status - Situação: ${getProposta.data.loan_track.situation} - Atividade: ${getProposta.data.loan_track.current_activity_description} - Status: ${getProposta.data.loan_track.current_activity_number}`)
-      } else console.log(`[C6 Esteira] => Nova Atividade - Situação: ${getProposta.data.loan_track.situation} - Atividade: ${getProposta.data.loan_track.current_activity_description} - Status: ${getProposta.data.loan_track.current_activity_number}`)
+        } else console.log(`[C6 Esteira ${proposta.NumeroContrato}] => Novo Status - Situação: ${getProposta.data.loan_track.situation} - Atividade: ${getProposta.data.loan_track.current_activity_description} - Status: ${getProposta.data.loan_track.current_activity_number}`)
+      } else console.log(`[C6 Esteira  ${proposta.NumeroContrato}] => Nova Atividade - Situação: ${getProposta.data.loan_track.situation} - Atividade: ${getProposta.data.loan_track.current_activity_description} - Status: ${getProposta.data.loan_track.current_activity_number}`)
     }
   }
   if (queue.findIndex(r=>r.codigo == proposta.NumeroContrato) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == proposta.NumeroContrato), 1)
