@@ -47,6 +47,10 @@ module.exports = { C6Esteira }
 async function verifyFaseBank(c6, pool) {
   if (queue <= 0) return console.log(`[C6 Esteira]=> Finalizado!`);
   var proposta = queue[0].proposta
+  if (proposta.CodFase == 4) {
+    if (queue.findIndex(r=>r.codigo == proposta.NumeroContrato) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == proposta.NumeroContrato), 1)
+    return verifyFase(facta, pool)
+  }
   const getProposta = await c6.getProposta(proposta.NumeroContrato, { af: "C6 ESTEIRA" })
   if (getProposta && getProposta.data) {
     if (getProposta.data.loan_track && getProposta.data.loan_track.current_activity_description) {
@@ -79,7 +83,7 @@ async function verifyFaseBank(c6, pool) {
           { status: '105', fase: '1111', faseName: 'AGUARDANDO ATUAÇÃO MASTER', motivo: '', oldFase: ['2','4002','9','9232'] }, //CONCLUIDO
         ]},
         { situacao: 'PEN', atividade: 'PEN DOCUMENTOS', status: [
-          { status: '404', fase: '12', faseName: 'Pendência Resolvida', motivo: 'OP VERIFICAR OBSERVAÇÕES DENTRO DO BANCO', oldFase: [] }, //CONCLUIDO
+          { status: '404', fase: '9', faseName: 'PENDENTE', motivo: 'Favor anexar documentos do cliente! E avisar o mesmo, que o banco pode entrar em contato pelo telefone cadastrado!', oldFase: [] }, //CONCLUIDO
         ]},
         { situacao: 'AND', atividade: 'MESA PREVENCAO', status: [
           { status: '221', fase: '9', faseName: 'PENDENTE', motivo: 'Banco esta analisando a proposta e pode entrar em contato com o cliente! Informar o mesmo sobre o possivel contato', oldFase: ['692','2','4002' ] }, //CONCLUIDO

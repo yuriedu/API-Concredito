@@ -87,6 +87,10 @@ async function verifyFase(facta, pool) {
   if (queue <= 0) return console.log(`[Facta Esteira]=> Finalizado!`);
   var proposta = queue[0].proposta
   var agilus = queue[0].agilus
+  if (agilus.CodFase == 4) {
+    if (queue.findIndex(r=>r.codigo == proposta.codigo_af) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == proposta.codigo_af), 1)
+    return verifyFase(facta, pool)
+  }
   if (queue[0].fase.fase == 700 || queue[0].fase.fase == 9) {
     const getOcorrencias = await facta.getOcorrencias(proposta.codigo_af, { af: "FACTA ESTEIRA" })
     if (getOcorrencias && getOcorrencias.data) {
@@ -117,16 +121,15 @@ async function verifyFase(facta, pool) {
             console.log(queue[0].fase.oldFase)
             if (motivo.includes('Prazo expirado para assinatura digital')) queue[0].fase.fase = 1
             await pool.request().input('contrato',proposta.codigo_af).input('fase',queue[0].fase.fase).input('bank',2020).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco: ${queue[0].fase.fase == 1 ? 'INCLUSÃO' : queue[0].fase.faseName}!\nMotivo: ${queue[0].fase.fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`).execute('pr_changeFase_by_contrato')
-            console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${agilus.Fase} - FaseNew: ${queue[0].fase.faseName} - Motivo: ${queue[0].fase.fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`)
+            //console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${agilus.Fase} - FaseNew: ${queue[0].fase.faseName} - Motivo: ${queue[0].fase.fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`)
           }
         }
       }
     }
   } else {
     if (!queue[0].fase.oldFase || queue[0].fase.oldFase.length <= 0 || queue[0].fase.oldFase.find(r=> r == agilus.CodFase)) {
-      console.log(agilus.CodeFase)
       await pool.request().input('contrato',proposta.codigo_af).input('fase',queue[0].fase.fase).input('bank',2020).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco: ${queue[0].fase.faseName}!`).execute('pr_changeFase_by_contrato')
-      console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${agilus.Fase} - FaseNew: ${queue[0].fase.faseName}`)
+      //console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${agilus.Fase} - FaseNew: ${queue[0].fase.faseName}`)
     }
   }
   if (queue.findIndex(r=>r.codigo == proposta.codigo_af) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == proposta.codigo_af), 1)
