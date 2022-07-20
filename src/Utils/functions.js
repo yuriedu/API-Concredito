@@ -109,7 +109,7 @@ async function dadosCliente(cliente, orgao) {
       PortabilidadeValor: Joi.string().allow(null, ''),
       BeneficioAF: Joi.string().allow(null, ''),
       EspecieAF: Joi.string().allow(null, ''),
-      dataExpedicao: Joi.string().allow(null, ''),
+      dataExpedicao: Joi.date().cast('string').allow(null, ''),
     })
     const MoldeINSS = Joi.object({
       IdContrato: Joi.number().required(),
@@ -167,7 +167,7 @@ async function dadosCliente(cliente, orgao) {
       PortabilidadeValor: Joi.number().allow(null, ''),
       BeneficioAF: Joi.string().allow(null, ''),
       EspecieAF: Joi.string().allow(null, ''),
-      dataExpedicao: Joi.string().allow(null, ''),
+      dataExpedicao: Joi.date().cast('string').allow(null, ''),
     })
     if (orgao == "FGTS") {
       return { status: true, dados: await MoldeFGTS.validateAsync(cliente, { messages }) }

@@ -131,7 +131,6 @@ async function loadCode() {
                                       inputs.incluir.onclick()
                                       await timeout(5000);
 
-
                                       if (inputs.nome) {
                                         inputs.nome.value = '${cliente.NomeCliente}';
                                         await reloadInputs(inputs.nome.id, 5000)
@@ -156,7 +155,35 @@ async function loadCode() {
                                                     if (inputs.dataEmissao) {
                                                       inputs.dataEmissao.value = '${diaExpec}/${mesExpec}/${anoExpec}';
                                                       await reloadInputs(inputs.dataEmissao.id, 5000)
-              
+                                                      if (inputs.mae) {
+                                                        inputs.mae.value = '${cliente.NomeMae}';
+                                                        await reloadInputs(inputs.mae.id, 5000)
+                                                        if (inputs.pai) {
+                                                          inputs.pai.value = '${cliente.NomePai}';
+                                                          await reloadInputs(inputs.pai.id, 5000)
+                                                          if (inputs.ddd) {
+                                                            inputs.ddd.value = '${parseInt(cliente.TelefoneConvenio.split(' ')[0].replace(/\D+/g, '').slice(0,2))}';
+                                                            await reloadInputs(inputs.ddd.id, 5000)
+                                                            if (inputs.telefone) {
+                                                              inputs.telefone.value = '${parseInt(cliente.TelefoneConvenio.split(' ')[0].replace(/\D+/g, '').slice(2))}';
+                                                              await reloadInputs(inputs.telefone.id, 5000)
+                                                              if (inputs.ddd2) {
+                                                                inputs.ddd2.value = '${parseInt(cliente.TelefoneConvenio.split(' ')[0].replace(/\D+/g, '').slice(0,2))}';
+                                                                await reloadInputs(inputs.ddd2.id, 5000)
+                                                                if (inputs.celular) {
+                                                                  inputs.celular.value = '${parseInt(cliente.TelefoneConvenio.split(' ')[0].replace(/\D+/g, '').slice(2))}';
+                                                                  await reloadInputs(inputs.celular.id, 5000)
+                                                                  if (inputs.email) {
+                                                                    inputs.email.value = '${cliente.Email}';
+                                                                    await reloadInputs(inputs.email.id, 5000)
+                            
+                                                                  }
+                                                                }
+                                                              }
+                                                            }
+                                                          }
+                                                        }
+                                                      }
                                                     }
                                                   }
                                                 }
@@ -165,19 +192,6 @@ async function loadCode() {
                                           }
                                         }
                                       }
-                                      if (input.id.includes('Emissor_CAMPO')) inputs.emissor = input
-                                      if (input.id.includes('UFDoc_CAMPO')) inputs.clientUF = input
-                                      if (input.id.includes('DataEmissao_CAMPO')) inputs.dataEmissao = input
-                                      if (input.id.includes('Mae_CAMPO')) inputs.mae = input
-                                      if (input.id.includes('Pai_CAMPO')) inputs.pai = input
-                                      if (input.id.includes('DddTelResidencial_CAMPO')) inputs.ddd = input
-                                      if (input.id.includes('TelResidencial_CAMPO')) inputs.telefone = input
-                                      if (input.id.includes('DddTelCelular_CAMPO')) inputs.ddd2 = input
-                                      if (input.id.includes('TelCelular_CAMPO')) inputs.celular = input
-                                      if (input.id.includes('Email_CAMPO')) inputs.email = input
-
-
-
 
                                     }
                                   }
