@@ -112,7 +112,7 @@ async function verifyFase(facta, pool) {
           } else motivo = false
         } else motivo = false
         if (motivo && proposta.codigo_af && proposta.codigo_af != 0 && queue[0].fase && queue[0].fase != 0) {
-          if (!queue[0].oldFase || queue[0].oldFase.find(r=> r == agilus.CodFase)) {
+          if (queue[0].oldFase.length <= 0 || queue[0].oldFase.find(r=> r == agilus.CodFase)) {
             if (motivo.includes('Prazo expirado para assinatura digital')) queue[0].fase = 1
             await pool.request().input('contrato',proposta.codigo_af).input('fase',queue[0].fase).input('bank',2020).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco: ${queue[0].fase == 1 ? 'INCLUSÃO' : queue[0].faseName}!\nMotivo: ${queue[0].fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`).execute('pr_changeFase_by_contrato')
             //console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${agilus.Fase} - FaseNew: ${queue[0].faseName} - Motivo: ${queue[0].fase == 1 ? motivo+' OP. vai refazer o cadastro...' : motivo}`)
@@ -121,7 +121,7 @@ async function verifyFase(facta, pool) {
       }
     }
   } else {
-    if (!queue[0].oldFase || queue[0].oldFase.find(r=> r == agilus.CodFase)) {
+    if (queue[0].oldFase.length <= 0 || queue[0].oldFase.find(r=> r == agilus.CodFase)) {
       await pool.request().input('contrato',proposta.codigo_af).input('fase',queue[0].fase).input('bank',2020).input('texto',`[ESTEIRA]=> Fase alterada para a mesma que está no banco: ${queue[0].faseName}!`).execute('pr_changeFase_by_contrato')
       //console.log(`[Facta Esteira]=> Contrato: ${proposta.codigo_af} - FaseOLD: ${agilus.Fase} - FaseNew: ${queue[0].faseName}`)
     }

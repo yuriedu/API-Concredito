@@ -2,8 +2,7 @@ const { MSSQL, MongoDB } = require('../../Utils/database');
 const { removeSpaces, removeCaracteresSpeciais, fixAgencia, fixName } = require('../../Utils/functions');
 
 const { BMGCART } = require('../../Controllers/Generators/BMG');
-
-
+const { PagBankINSS } = require('../../Controllers/Generators/PagBank');
 
 const lista = async (req, res) => {
   try {
@@ -32,6 +31,8 @@ const lista = async (req, res) => {
         proposta.recordset[0].Email = 'concredito@gmail.com'
         if (!proposta.recordset[0].EndNumero) proposta.recordset[0].EndNumero = 01
         response = await BMGCART(proposta.recordset[0]);
+      } else if (req.body.bank == "PagBank") {
+        response = await PagBankINSS(proposta.recordset[0]);
       } else return res.status(200).json({ status: false, error: `Não é possivel gerar codigo de cadastros nesse banco!` })
       if (response && response.status) return res.status(200).json(response)
       if (response && response.error) return res.status(200).json(response)

@@ -1,4 +1,3 @@
-const BMG = require('../../APIs/BMG');
 const { saveDB, updateContratoDB, dadosCliente, bancoTranslate, bantToString } = require('../../Utils/functions');
 const moment = require(`moment`);
 moment.locale("pt-BR");
