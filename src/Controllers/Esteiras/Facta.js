@@ -47,12 +47,12 @@ const FactaEsteira = async (pool, log) => {
               { status: 'AGUARDA AVERBACAO', fase: '2', faseName: 'AGUARDANDO AVERBAÇÃO' },
               { status: 'AVERBADO', fase: '2', faseName: 'AGUARDANDO AVERBAÇÃO' },
               { status: 'ENVIO DATAPREV', fase: '2', faseName: 'AGUARDANDO AVERBAÇÃO' },
-              { status: 'ANALISE MESA DE CONFERENCIA', fase: '692', faseName: 'PROPOSTA EM ANALISE BANCO' },
+              { status: 'ANALISE MESA DE CONFERENCIA', fase: '12', faseName: 'Pendência Resolvida' },
               { status: 'VALIDANDO DOCUMENTOS', fase: '692', faseName: 'PROPOSTA EM ANALISE BANCO' },
               { status: 'ESTEIRA DE ANALISE', fase: '692', faseName: 'PROPOSTA EM ANALISE BANCO' },
               { status: 'ATUACAO MASTER', fase: '1111', faseName: 'AGUARDANDO ATUAÇÃO MASTER' },
               { status: 'PENDENTE', fase: '9', faseName: 'PENDENTE' },
-              { status: 'CANCELADO', fase: '9', faseName: 'PENDENTE' },
+              { status: 'CANCELADO', fase: '12', faseName: 'Pendência Resolvida' },
               { status: 'CAMPANHA FACTA', fase: '323', faseName: 'AGUARDA AUMENTO INSS' },
             ]
             var fase = fases.find(r=> proposta.status_proposta.includes(r.status))
