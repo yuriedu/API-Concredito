@@ -12,7 +12,8 @@ const PanFGTS = async (cpf, type, valor, table, log) => {
     if (loadAPI) {
       const simulation = {
         cpf_cliente: cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4"),
-        codigo_promotora: process.env.PAN_PROMOTER_CODE
+        codigo_promotora: process.env.PAN_PROMOTER_CODE,
+        incluir_seguro: true
       };
       if (type == 'POR_VALOR_SOLICITADO') simulation.valor_solicitado = valor
       const simularProposta = await pan.simularProposta(simulation, log);
