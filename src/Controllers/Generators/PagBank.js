@@ -15,14 +15,18 @@ const PagBankINSS = async (cliente) => {
 for (var i = 0, n = allInputs.length; i < n; ++i) {
   var input = allInputs[i];
   if (input.id && (input.tagName == "INPUT" || input.tagName == "SELECT")) {
-    if (input.id.includes('DadosIniciais') && input.id.includes('CPF')) {
-      document.getElementById(input.id).value = '${cliente.Cpf}'
-      if (document.getElementById(input.id).onchange) document.getElementById(input.id).onchange()
+    if (input.id.includes('DadosIniciais') && input.id.includes('TipoOperacao_CAMPO')) {
+      document.getElementById(input.id).value = 'Portabilidade'
+      setTimeout('__doPostBack(\'ctl00$Cph$UcPrp$FIJN1$JnDadosIniciais$UcDIni$cboTipoOperacao$CAMPO\',\'\')', 0)
     }
+    // if (input.id.includes('DadosIniciais') && input.id.includes('CPF')) {
+    //   document.getElementById(input.id).value = '${cliente.Cpf}'
+    //   if (document.getElementById(input.id).onchange) document.getElementById(input.id).onchange()
+    // }
   }
 }`
 
-      return { status: true, code1: code1, code2: code2 }
+      return { status: true, code1: code1 }
     } else return { status: false, error: client && client.data ? client.data : '[0]=> Ocorreu algum erro ao verificar os dados! Verifique e tente novamente...' }
   } catch(err) {
     console.log(`[BMG GENERATOR CARD ERROR] => ${err}`)
