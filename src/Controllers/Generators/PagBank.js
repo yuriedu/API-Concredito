@@ -76,8 +76,6 @@ function getInputs() {
       } else if (input.id.includes('Simulacao')) {
         if (input.id.includes('Dt1Vcto_CAMPO')) inputs.dt1vcto = input
         if (input.id.includes('VlrParcela_CAMPO')) inputs.simulaValorParcela = input
-      } else if (input.id.includes('Simulacao')) {
-
       }
     }
   }
@@ -113,6 +111,7 @@ async function loadCode() {
               if (inputs.renda) {
                 inputs.renda.value = '5000';
                 await reloadInputs(inputs.renda.id, 6000)
+                alert('CLIQUE EM OBTER MARGEM!')
               }
             }
           }
@@ -183,8 +182,6 @@ function getInputs() {
       } else if (input.id.includes('Simulacao')) {
         if (input.id.includes('Dt1Vcto_CAMPO')) inputs.dt1vcto = input
         if (input.id.includes('VlrParcela_CAMPO')) inputs.simulaValorParcela = input
-      } else if (input.id.includes('Simulacao')) {
-
       }
     }
   }
