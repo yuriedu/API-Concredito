@@ -22,6 +22,7 @@ async function Esteira() {
     FactaEsteira(pool, {af: "FACTA ESTEIRA"})
     //C6Esteira(pool, {af: "C6 ESTEIRA"})
   },600000)
+  FactaEsteira(pool, {af: "FACTA ESTEIRA"})
   //const { PanEsteira } = require('./src/Controllers/Esteiras/Pan')
   //await PanEsteira(pool, {af: "PAN ESTEIRA"})
 }
