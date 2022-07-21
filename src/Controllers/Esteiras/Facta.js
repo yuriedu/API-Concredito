@@ -43,6 +43,7 @@ const FactaEsteira = async (pool, log) => {
             '9923': 'Link de assinatura enviado ao cliente',
           */
           var agilus = await pool.request().input('date', new Date(`${ano}-${mes}-${dia} 00:00:00`)).input('bank',2020).execute('pr_getPropostas_by_Bank_and_Date')
+          agilus.recordset = agilus.recordset.filter(r=> r.NumeroContrato && r.NumeroContrato != 0)
           getEsteira.data.propostas = await getEsteira.data.propostas.filter(r=>
             agilus.recordset.find(r2=> r2.NumeroContrato == r.codigo_af) &&
             !r.status_proposta.includes('CLIENTE COM INADIMPLENCIA') && 
@@ -57,7 +58,7 @@ const FactaEsteira = async (pool, log) => {
               { status: 'AGUARDA AVERBACAO', newFase: '2' },
               { status: 'AVERBADO', newFase: '2' },
               { status: 'ENVIO DATAPREV', newFase: '2' },
-              { status: 'ANALISE MESA DE CONFERENCIA', newFase: '12' },
+              { status: 'ANALISE MESA DE CONFERENCIA', newFase: '10293' },
               { status: 'VALIDANDO DOCUMENTOS', newFase: '692' },
               { status: 'ESTEIRA DE ANALISE', newFase: '692' },
               { status: 'ATUACAO MASTER', newFase: '1111' },
@@ -143,6 +144,8 @@ async function verifyFase(facta, pool) {
       }
     }
   }
+  if (queue.findIndex(r=>r.codigo == proposta.codigo_af) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == proposta.codigo_af), 1)
+  verifyFase(facta, pool)
 }
 
 async function timeout(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
