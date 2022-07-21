@@ -348,7 +348,6 @@ async function loadCode2() {
                               }
                             }
                           }
-
                         }
                       }
                     }
@@ -361,7 +360,8 @@ async function loadCode2() {
       }
     }
   }
-}`
+}
+loadCode2()`
 
       return { status: true, code1: code1, code2: code2 }
     } else return { status: false, error: client && client.data ? client.data : '[0]=> Ocorreu algum erro ao verificar os dados! Verifique e tente novamente...' }
