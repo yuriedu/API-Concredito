@@ -318,6 +318,20 @@ async function saveDB(pool, id, fase, contrato, text, status) {
     console.log(err)
   }
 }
+
+const fasesAgilus = {
+  '1': 'Inclusão sem conferência',
+  '2': 'AGUARDANDO AVERBAÇÃO',
+  '9': 'PENDENTE',
+  '12': 'Pendência Resolvida',
+  '323': 'AGUARDA AUMENTO INSS',
+  '692': 'PROPOSTA EM ANALISE BANCO',
+  '1111': 'AGUARDANDO ATUAÇÃO MASTER',
+  '3920': 'PROPOSTA PAGA',
+  '4002': 'ASSINADO / RESPONDIDO',
+  '10293': 'Verificação manual OP',
+  '120001': 'PENDENTE POR ASSINATURA',
+}
 module.exports = {
   dadosCliente,
   RbancoTranslate,
@@ -328,4 +342,5 @@ module.exports = {
   fixName,
   updateContratoDB,
   saveDB,
+  fasesAgilus,
 }
