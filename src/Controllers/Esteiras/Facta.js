@@ -4,7 +4,7 @@ const moment = require(`moment`);
 moment.locale("pt-BR");
 
 var queue = []
-var logs = true
+var logs = false
 
 const FactaEsteira = async (pool, log) => {
   try {
@@ -53,7 +53,7 @@ const FactaEsteira = async (pool, log) => {
           )
           getEsteira.data.propostas.forEach(async (proposta, index)=>{
             var fases = [
-              { status: 'CONTRATO PAGO', newFase: '3920', oldFase: ['2','4002','9232', '9923', '692'] },
+              { status: 'CONTRATO PAGO', newFase: '3920', oldFase: ['2','2002','4002','9232', '9923', '692'] },
               { status: 'AGUARDANDO ASSINATURA DIGITAL', newFase: '120001', oldFase: ['2','4002'] },
               { status: 'AGUARDA AVERBACAO', newFase: '2' },
               { status: 'AVERBADO', newFase: '2' },
@@ -70,8 +70,10 @@ const FactaEsteira = async (pool, log) => {
             if (fase) {
               var propostaAgilus = agilus.recordset.find(r=> r.NumeroContrato == proposta.codigo_af && r.CodFase != fase.newFase)
               if (propostaAgilus) {
-                queue[queue.length] = { proposta: proposta, agilus: propostaAgilus, fase: fase, faseName: fasesAgilus[fase.newFase] ? fasesAgilus[fase.newFase] : 'Não encontrada...' }
-                if (queue.length == 1) return verifyFase(facta, pool)
+                queue[queue.length] = { codigo: proposta.codigo_af, proposta: proposta, agilus: propostaAgilus, fase: fase, faseName: fasesAgilus[fase.newFase] ? fasesAgilus[fase.newFase] : 'Não encontrada...' }
+                if (queue.length == 1) {
+                  return verifyFase(facta, pool)
+                }
               }
             } else console.log(`[Facta Esteira ${proposta.codigo_af}]=> Novo Status: ${proposta.status_proposta}`)
           })
@@ -95,17 +97,18 @@ const FactaEsteira = async (pool, log) => {
 module.exports = { FactaEsteira }
 
 async function verifyFase(facta, pool) {
-  if (queue <= 0) return console.log(`[Facta Esteira]=> Finalizado!`);
-  await timeout(3000)
-  if (!queue[0].fase.oldFase || !queue[0].fase.oldFase[0] || queue[0].fase.oldFase.length <= 0 || queue[0].fase.oldFase.find(r=> r == queue[0].agilus.CodFase)) {
-    if (queue[0].fase.newFase != 700 && queue[0].fase.newFase != 9) {
-      var verifyAgilus = await pool.request().input('af', queue[0].agilus.IdContrato).execute('pr_getProposta_by_af');
-      if (verifyAgilus && verifyAgilus.recordset && verifyAgilus.recordset[0] && verifyAgilus.recordset[0].CodFase == queue[0].agilus.CodFase) {
-        await pool.request().input('contrato',queue[0].proposta.codigo_af).input('fase',queue[0].fase.newFase).input('bank',2020).input('texto',`[FACTA ESTEIRA]=> Fase alterada para: ${queue[0].faseName}!`).execute('pr_changeFase_by_contrato')
-        if (logs) console.log(`[Facta Esteira]=> Contrato: ${queue[0].proposta.codigo_af} - FaseOLD: ${agilus.Fase} - FaseNew: ${queue[0].faseName}`)
+  if (queue.length <= 0 || !queue[0]) return console.log(`[Facta Esteira]=> Finalizado!`);
+  await timeout(500)
+  var fila = queue[0]
+  if (!fila.fase.oldFase || !fila.fase.oldFase[0] || fila.fase.oldFase.find(r=> r == fila.agilus.CodFase)) {
+    if (fila.fase.newFase != 700 && fila.fase.newFase != 9) {
+      var verifyAgilus = await pool.request().input('af', fila.agilus.IdContrato).execute('pr_getProposta_by_af');
+      if (verifyAgilus && verifyAgilus.recordset && verifyAgilus.recordset[0] && verifyAgilus.recordset[0].CodFase == fila.agilus.CodFase) {
+        await pool.request().input('contrato',fila.proposta.codigo_af).input('fase',fila.fase.newFase).input('bank',2020).input('texto',`[FACTA ESTEIRA]=> Fase alterada para: ${fila.faseName}!`).execute('pr_changeFase_by_contrato')
+        if (logs) console.log(`[Facta Esteira]=> Contrato: ${fila.proposta.codigo_af} - FaseOLD: ${fila.agilus.Fase} - FaseNew: ${fila.faseName}`)
       }
     } else {
-      const getOcorrencias = await facta.getOcorrencias(queue[0].proposta.codigo_af, { af: "FACTA ESTEIRA" })
+      const getOcorrencias = await facta.getOcorrencias(fila.proposta.codigo_af, { af: "FACTA ESTEIRA" })
       if (getOcorrencias && getOcorrencias.data) {
         if (getOcorrencias.data.ocorrencias && getOcorrencias.data.ocorrencias[0]) {
           var motivo = getOcorrencias.data.ocorrencias.filter(r=> r.obs && r.status &&
@@ -130,22 +133,26 @@ async function verifyFase(facta, pool) {
           } else motivo = false
           if (motivo) {
             if (motivo.includes('Prazo expirado para assinatura digital')) {
-              queue[0].fase.newFase = '1'
-              queue[0].faseName = 'Inclusão sem conferência'
+              fila.fase.newFase = '1'
+              fila.faseName = 'Inclusão sem conferência'
               motivo = `${motivo} OP. vai refazer o cadastro...`
             }
-            var verifyAgilus = await pool.request().input('af', queue[0].agilus.IdContrato).execute('pr_getProposta_by_af');
-            if (verifyAgilus && verifyAgilus.recordset && verifyAgilus.recordset[0] && verifyAgilus.recordset[0].CodFase == queue[0].agilus.CodFase) {
-              await pool.request().input('contrato',queue[0].proposta.codigo_af).input('fase',queue[0].fase.newFase).input('bank',2020).input('texto',`[FACTA ESTEIRA]=> Fase alterada para: ${queue[0].faseName}!\nMotivo: ${motivo}`).execute('pr_changeFase_by_contrato')
-              if (logs) console.log(`[Facta Esteira]=> Contrato: ${queue[0].proposta.codigo_af} - FaseOLD: ${agilus.Fase} - FaseNew: ${queue[0].faseName}\nMotivo: ${motivo}`)
+            var verifyAgilus = await pool.request().input('af', fila.agilus.IdContrato).execute('pr_getProposta_by_af');
+            if (verifyAgilus && verifyAgilus.recordset && verifyAgilus.recordset[0] && verifyAgilus.recordset[0].CodFase == fila.agilus.CodFase) {
+              await pool.request().input('contrato',fila.proposta.codigo_af).input('fase',fila.fase.newFase).input('bank',2020).input('texto',`[FACTA ESTEIRA]=> Fase alterada para: ${fila.faseName}!\nMotivo: ${motivo}`).execute('pr_changeFase_by_contrato')
+              if (logs) console.log(`[Facta Esteira]=> Contrato: ${fila.proposta.codigo_af} - FaseOLD: ${fila.agilus.Fase} - FaseNew: ${fila.faseName}\nMotivo: ${motivo}`)
+              await timeout(3000)
             }            
           }
         }
       }
     }
+    if (queue.findIndex(r=>r.codigo == fila.proposta.codigo_af) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == fila.proposta.codigo_af), 1)
+    verifyFase(facta, pool)
+  } else {
+    if (queue.findIndex(r=>r.codigo == fila.proposta.codigo_af) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == fila.proposta.codigo_af), 1)
+    verifyFase(facta, pool)
   }
-  if (queue.findIndex(r=>r.codigo == queue[0].proposta.codigo_af) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == queue[0].proposta.codigo_af), 1)
-  verifyFase(facta, pool)
 }
 
 async function timeout(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
