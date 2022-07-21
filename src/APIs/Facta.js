@@ -318,7 +318,7 @@ class Facta {
     try {
       log.situation = `[8]=> Puxando todas as propostas...`
       const form = new FormData();
-      const response = await this.api.get(`/proposta/andamento-propostas?data_ini=${dia}/${mes}/${ano}`, { headers: form.getHeaders() });
+      const response = await this.api.get(`/proposta/andamento-propostas?data_alteracao_ini=${dia}/${mes}/${ano}`, { headers: form.getHeaders() });
       if (response && response.data) {
         var array = Object.keys(response.data).map(function(key) { return response.data[key] });
         if (array && array[0] && typeof array[0] == 'string' && array[0].includes('<')) {

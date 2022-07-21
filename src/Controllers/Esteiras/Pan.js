@@ -1,9 +1,10 @@
 const Pan = require('../../APIs/Pan');
-const { saveDB, updateContratoDB, dadosCliente, bancoTranslate } = require('../../Utils/functions');
+const { saveDB, updateContratoDB, dadosCliente, bancoTranslate, fasesAgilus } = require('../../Utils/functions');
 const moment = require(`moment`);
 moment.locale("pt-BR");
 
 var queue = []
+var logs = true
 
 const PanEsteira = async (pool, log) => {
   try {
@@ -29,10 +30,12 @@ const PanEsteira = async (pool, log) => {
       } else dia -= 7
       if (dia < 10) dia = `0${dia}`
       if (mes < 10) mes = `0${mes}`
-      const propostas = await pool.request().input('date', new Date(`${ano}-${mes}-${dia} 00:00:00`)).input('bank',623).execute('pr_getPropostas_by_Bank_and_Date')
-      propostas.recordset.forEach((proposta, index)=>{
-        queue[queue.length] = { codigo: proposta.NumeroContrato, proposta: proposta }
-        if (queue.length == 1) return verifyFaseBank(pan, pool)
+      var agilus = await pool.request().input('date', new Date(`${ano}-${mes}-${dia} 00:00:00`)).input('bank',623).execute('pr_getPropostas_by_Bank_and_Date')
+      agilus.recordset = agilus.recordset.filter(r=> r.NumeroContrato && r.NumeroContrato != 0)
+      console.log(agilus.recordset.length)
+      agilus.recordset.forEach((proposta, index)=>{
+        queue[queue.length] = { codigo: proposta.NumeroContrato, agilus: proposta }
+        if (queue.length == 1) return verifyFase(pan, pool)
       })
     } else return { status: false, error: '[1]=> Problema na conexão da API! Tente novamente mais tarde...' }
   } catch(err) {
@@ -43,23 +46,92 @@ const PanEsteira = async (pool, log) => {
 
 module.exports = { PanEsteira }
 
-async function verifyFaseBank(pan, pool) {
-  await timeout(3000)
-  if (queue <= 0) return console.log(`[Pan Esteira]=> Finalizado!`);
-  var proposta = queue[0].proposta
-  const getContrato = await pan.getContrato('02499276088', { af: "PAN ESTEIRA" })
-  // const getContrato = await pan.getContrato(proposta.Cpf, { af: "PAN ESTEIRA" })
-  if (getContrato && getContrato.data) {
-    if (getContrato.data) {
-      console.log(getContrato.data)
-    } else {
-      if (queue.findIndex(r=>r.codigo == proposta.NumeroContrato) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == proposta.NumeroContrato), 1)
-      return verifyFaseBank(pan, pool)
+async function verifyFase(pan, pool) {
+  if (queue.length <= 0 || !queue[0]) return console.log(`[Pan Esteira]=> Finalizado!`);
+  await timeout(10)
+  console.log(queue.length)
+  var fila = queue[0]
+  const getProposta = await pan.getContrato(fila.agilus.Cpf, { af: "PAN ESTEIRA" })
+  if (getProposta && getProposta.data) {
+    if (getProposta.data[0].proposta.status && getProposta.data[0].esteira.atividade && getProposta.data[0].formalizacao.status) {
+      var faseAtividade = fases.find(r=> getProposta.data[0].esteira.atividade.includes(r.atividade) && r.situacao == getProposta.data[0].proposta.status)
+      if (faseAtividade) {
+        var fase = faseAtividade.status[getProposta.data[0].formalizacao.status]
+        if (fase) {
+          if (!fase.oldFase || !fase.oldFase[0] || fase.oldFase.find(r=> r == fila.agilus.CodFase)) {
+            fila.faseName = fasesAgilus[fase.newFase] ? fasesAgilus[fase.newFase] : 'Não encontrada...'
+            await pool.request()
+            .input('contrato',fila.agilus.NumeroContrato)
+            .input('fase',fase.newFase)
+            .input('bank',623)
+            .input('texto',`[C6 ESTEIRA]=> Fase alterada para: ${fila.faseName}!${fase.motivo ? '\nMotivo: '+fase.motivo : ''}`)
+            .execute('pr_changeFase_by_contrato')
+            if (logs) console.log(`[Pan Esteira]=> Contrato: ${fila.agilus.NumeroContrato} - FaseOLD: ${fila.agilus.Fase} - FaseNew: ${fila.faseName}${fase.motivo ? '\nMotivo: '+fase.motivo : ''}`)
+          }
+        } else console.log(`[Pan Esteira  ${fila.agilus.NumeroContrato}] => Novo Status - Situação: ${getProposta.data[0].proposta.status} - Atividade: ${getProposta.data[0].esteira.atividade} - Status: ${getProposta.data[0].formalizacao.status}`)
+      } else console.log(`[Pan Esteira  ${fila.agilus.NumeroContrato}] => Nova Atividade - Situação: ${getProposta.data[0].proposta.status} - Atividade: ${getProposta.data[0].esteira.atividade} - Status: ${getProposta.data[0].formalizacao.status}`)
     }
-  } else {
-    if (queue.findIndex(r=>r.codigo == proposta.NumeroContrato) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == proposta.NumeroContrato), 1)
-    return verifyFaseBank(pan, pool)
   }
+  await timeout(10)
+  if (queue.findIndex(r=>r.codigo == fila.agilus.NumeroContrato) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == fila.agilus.NumeroContrato), 1)
+  verifyFase(pan, pool)
 }
+
+const fases = [
+  { situacao: 'INTEGRADA', atividade: 'Proposta Finalizada', status: {
+    'APROVADO': { newFase: '' },
+  }},
+  { situacao: 'ANDAMENTO', atividade: 'Negociacao em andamento', status: {
+    'APROVADO': { newFase: '' },
+    'PENDENTE_IDENTIDADE_ASSINATURA': { newFase: '' },
+    'PENDENTE_ASSINATURA': { newFase: '' },
+    'REABRE_DOC_ID_ASSINATURA': { newFase: '' },
+  }},
+  { situacao: 'ANDAMENTO', atividade: 'Aguarda Autorização INSS', status: {
+    'APROVADO': { newFase: '' },
+  }},
+  { situacao: 'ANDAMENTO', atividade: 'Represa Beneficio INSS', status: {
+    'APROVADO': { newFase: '' },
+  }},
+  { situacao: 'ANDAMENTO', atividade: 'Rep CPF inexistente INSS', status: {
+    'APROVADO': { newFase: '' },
+  }},
+  { situacao: 'ANDAMENTO', atividade: 'Ajuste Seguro', status: {
+    'NAO_INICIADO': { newFase: '' },
+  }},
+  { situacao: 'ANDAMENTO', atividade: 'Aviso De Cadastro Cartao', status: {
+    'NAO_INICIADO': { newFase: '' },
+  }},
+  { situacao: 'PENDENTE', atividade: 'Aguardando Fluxo Digital', status: {
+    'PENDENTE_IDENTIDADE_ASSINATURA': { newFase: '' },
+    'PENDENTE_ASSINATURA': { newFase: '' },
+    'NOVA_ASSINATURA_NECESSARIA': { newFase: '' },
+    'PENDENTE_IDENTIDADE': { newFase: '' },
+    'REABRE_DOC_ID': { newFase: '' },
+  }},
+  { situacao: 'PENDENTE', atividade: 'Aguarda Reserva FGTS', status: {
+    'APROVADO': { newFase: '' },
+  }},
+  { situacao: 'PENDENTE', atividade: 'Analise Promotora', status: {
+    'APROVADO': { newFase: '' },
+  }},
+  { situacao: 'PENDENTE', atividade: 'Ag. aciona esteira FGTS', status: {
+    'APROVADO': { newFase: '' },
+  }},
+  { situacao: 'CANCELADA', atividade: 'Proposta Cancelada', status: {
+    'NAO_INICIADO': { newFase: '' },
+    'PENDENTE_ASSINATURA': { newFase: '' },
+    'PENDENTE_IDENTIDADE_ASSINATURA': { newFase: '' },
+  }},
+  { situacao: 'REPROVADA', atividade: 'Rep Pagto. Digital', status: {
+    'NAO_INICIADO': { newFase: '' },
+  }},
+  { situacao: 'REPROVADA', atividade: 'Rep CPF inexistente INSS', status: {
+    'APROVADO': { newFase: '' },
+  }},
+  { situacao: 'REPROVADA', atividade: 'Proposta Reprovada', status: {
+    'APROVADO': { newFase: '' },
+  }},
+]
 
 async function timeout(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }

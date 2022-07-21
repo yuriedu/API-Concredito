@@ -18,12 +18,12 @@ async function Esteira() {
   const pool = await MSSQL();
   const { FactaEsteira } = require('./src/Controllers/Esteiras/Facta')
   const { C6Esteira } = require('./src/Controllers/Esteiras/C6')
+  const { PanEsteira } = require('./src/Controllers/Esteiras/Pan')
   setInterval(function() {
     FactaEsteira(pool, {af: "FACTA ESTEIRA"})
-    //C6Esteira(pool, {af: "C6 ESTEIRA"})
+    C6Esteira(pool, {af: "C6 ESTEIRA"})
+    // await PanEsteira(pool, {af: "PAN ESTEIRA"})
   },600000)
-  //const { PanEsteira } = require('./src/Controllers/Esteiras/Pan')
-  //await PanEsteira(pool, {af: "PAN ESTEIRA"})
 }
 Esteira()
 

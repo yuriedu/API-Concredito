@@ -104,7 +104,12 @@ async function verifyFase(facta, pool) {
     if (fila.fase.newFase != 700 && fila.fase.newFase != 9) {
       var verifyAgilus = await pool.request().input('af', fila.agilus.IdContrato).execute('pr_getProposta_by_af');
       if (verifyAgilus && verifyAgilus.recordset && verifyAgilus.recordset[0] && verifyAgilus.recordset[0].CodFase == fila.agilus.CodFase) {
-        await pool.request().input('contrato',fila.proposta.codigo_af).input('fase',fila.fase.newFase).input('bank',2020).input('texto',`[FACTA ESTEIRA]=> Fase alterada para: ${fila.faseName}!`).execute('pr_changeFase_by_contrato')
+        await pool.request()
+          .input('contrato',fila.proposta.codigo_af)
+          .input('fase',fila.fase.newFase)
+          .input('bank',2020)
+          .input('texto',`[FACTA ESTEIRA]=> Fase alterada para: ${fila.faseName}!`)
+          .execute('pr_changeFase_by_contrato')
         if (logs) console.log(`[Facta Esteira]=> Contrato: ${fila.proposta.codigo_af} - FaseOLD: ${fila.agilus.Fase} - FaseNew: ${fila.faseName}`)
       }
     } else {
@@ -139,7 +144,12 @@ async function verifyFase(facta, pool) {
             }
             var verifyAgilus = await pool.request().input('af', fila.agilus.IdContrato).execute('pr_getProposta_by_af');
             if (verifyAgilus && verifyAgilus.recordset && verifyAgilus.recordset[0] && verifyAgilus.recordset[0].CodFase == fila.agilus.CodFase) {
-              await pool.request().input('contrato',fila.proposta.codigo_af).input('fase',fila.fase.newFase).input('bank',2020).input('texto',`[FACTA ESTEIRA]=> Fase alterada para: ${fila.faseName}!\nMotivo: ${motivo}`).execute('pr_changeFase_by_contrato')
+              await pool.request()
+                .input('contrato',fila.proposta.codigo_af)
+                .input('fase',fila.fase.newFase)
+                .input('bank',2020)
+                .input('texto',`[FACTA ESTEIRA]=> Fase alterada para: ${fila.faseName}!\nMotivo: ${motivo}`)
+                .execute('pr_changeFase_by_contrato')
               if (logs) console.log(`[Facta Esteira]=> Contrato: ${fila.proposta.codigo_af} - FaseOLD: ${fila.agilus.Fase} - FaseNew: ${fila.faseName}\nMotivo: ${motivo}`)
               await timeout(3000)
             }            
