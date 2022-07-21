@@ -24,6 +24,8 @@ async function Esteira() {
     C6Esteira(pool, {af: "C6 ESTEIRA"})
     // await PanEsteira(pool, {af: "PAN ESTEIRA"})
   },600000)
+  //const { BanrisulEsteira } = require('./src/Controllers/Esteiras/Banrisul')
+ // await BanrisulEsteira(pool, {af: "BANRISUL ESTEIRA"})
 }
 Esteira()
 
