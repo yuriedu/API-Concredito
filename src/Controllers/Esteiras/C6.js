@@ -36,37 +36,30 @@ const C6Esteira = async (pool, log) => {
           { situacao: 'INT', atividade: 'PAGO', status: {
             '409': { newFase: '3920', oldFase: ['2','4002','9232', '9923', '692'] }, //CONCLUIDO
           }},
-          { situacao: 'PEN', atividade: 'AGUARDA FORM DIG WEB', status: {
-            '476': { newFase: '10293', oldFase: ['2','4002','692'], motivo: 'Verificar se o cliente já assinou ou está aguardando envio do documento' }, //NÃO INICIADO //AGUARDANDO ENVIO DOC
-            '480': { newFase: '9', oldFase: ['2','4002','9','9232'], motivo: 'Favor anexar doc frente e verso do cliente' }, //PENDENTE DOCUMENTOS
-            '480': { newFase: '683', oldFase: ['2','4002','692'], motivo: 'Verificação manual OP' }, //PENDENTE DOCUMENTOS
+          { situacao: 'AND', atividade: 'ANALISE DOCUMENTAL', status: {
+            '422': { newFase: '692', oldFase: ['2','4002','9','9232'], motivo: 'Banco esta analisando os documentos do cliente!' }, //CONCLUIDO
           }},
-          
+          { situacao: 'AND', atividade: 'ANALISE SELFIE', status: {
+            '704': { newFase: '692', oldFase: ['2','4002','9','9232'], motivo: 'Banco esta analisando os documentos a selfie do cliente!' }, //CONCLUIDO
+          }},
+          { situacao: 'AND', atividade: 'EM AVERBACAO', status: {
+            '704': { newFase: '10293', motivo: 'Proposta em averbação, OP VERIFICAR' }, //CONCLUIDO
+          }},
+          { situacao: 'PEN', atividade: 'AJUSTAR MARGEM', status: {
+            '14': { newFase: '10293', motivo: 'Proposta em ajustar margem, OP VERIFICAR' }, //CONCLUIDO
+          }},
+          { situacao: 'PEN', atividade: 'AGUARDA AUTORIZACAO', status: {
+            '19': { newFase: '9', motivo: 'Cliente cancelou a autorização! Favor solicitar para o mesmo gerar novamente para seguirmos com a operação!' }, //CONCLUIDO
+          }},
+          { situacao: 'PEN', atividade: 'ANALISE CORBAN', status: {
+            '19': { newFase: '1111', oldFase: ['2','4002','9','9232'] }, //CONCLUIDO
+          }},
+          { situacao: 'PEN', atividade: 'AGUARDA FORM DIG WEB', status: {
+            '476': { newFase: '1111', oldFase: ['2','4002','692'], motivo: 'Verificar se o cliente já assinou ou está aguardando envio do documento' }, //NÃO INICIADO //AGUARDANDO ENVIO DOC
+            '480': { newFase: '9', oldFase: ['2','4002','9','9232'], motivo: 'Favor anexar doc frente e verso do cliente' }, //PENDENTE DOCUMENTOS
+            //'683': { newFase: '683', oldFase: ['2','4002','692'], motivo: 'Verificação manual OP' }, //PENDENTE DOCUMENTOS
+          }},
         ]
-        var fases = [
-          { situacao: 'INT', atividade: 'PAGO', status: [
-            { status: '409', fase: '3920', oldFase: ['2','4002','9232', '9923', '692'] }, //CONCLUIDO
-          ]},
-          { situacao: 'PEN', atividade: 'AGUARDA FORM DIG WEB', status: [
-            { status: '476', fase: '10293', motivo: 'Verificar se o cliente já assinou ou está aguardando envio do documento', oldFase: ['2','4002','692'] }, //NÃO INICIADO //AGUARDANDO ENVIO DOC
-            { status: '480', fase: '9', motivo: 'Favor anexar doc frente e verso do cliente', oldFase: ['2','4002','9','9232'] }, //PENDENTE DOCUMENTOS
-            { status: '683', fase: '10293', faseName: 'Verificação manual OP', motivo: 'Aguardando Selfie', oldFase: ['2','4002','692'] }, //PENDENTE DOCUMENTOS
-          ]},
-          { situacao: 'AND', atividade: 'ANALISE DOCUMENTAL', status: [
-            { status: '422', fase: '692', faseName: 'PROPOSTA EM ANALISE BANCO', motivo: 'Banco esta analisando os documentos do cliente!', oldFase: ['2','4002','9','9232'] }, //CONCLUIDO
-          ]},
-          { situacao: 'AND', atividade: 'ANALISE SELFIE', status: [
-            { status: '704', fase: '692', faseName: 'PROPOSTA EM ANALISE BANCO', motivo: 'Banco esta analisando a selfie do cliente!', oldFase: ['2','4002','9','9232'] }, //CONCLUIDO
-          ]},
-          { situacao: 'AND', atividade: 'EM AVERBACAO', status: [
-            { status: '384', fase: '10293', faseName: 'Verificação manual OP', motivo: 'Proposta em averbação, OP VERIFICAR', oldFase: [] }, //CONCLUIDO
-          ]},
-          { situacao: 'PEN', atividade: 'AJUSTAR MARGEM', status: [
-            { status: '14', fase: '10293', faseName: 'Verificação manual OP', motivo: 'Proposta em ajustar margem, OP VERIFICAR', oldFase: [] }, //CONCLUIDO
-          ]},
-          { situacao: 'PEN', atividade: 'AGUARDA AUTORIZACAO', status: [
-            { status: '19', fase: '9', faseName: 'PENDENTE', motivo: 'Cliente cancelou a autorização! Favor solicitar para o mesmo gerar novamente para seguirmos com a operação!', oldFase: [] }, //CONCLUIDO
-          ]},
           { situacao: 'PEN', atividade: 'ANALISE CORBAN', status: [
             { status: '105', fase: '1111', faseName: 'AGUARDANDO ATUAÇÃO MASTER', motivo: '', oldFase: ['2','4002','9','9232'] }, //CONCLUIDO
           ]},

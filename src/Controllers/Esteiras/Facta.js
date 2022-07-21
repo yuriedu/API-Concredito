@@ -144,7 +144,7 @@ async function verifyFase(facta, pool) {
       }
     }
   }
-  if (queue.findIndex(r=>r.codigo == proposta.codigo_af) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == proposta.codigo_af), 1)
+  if (queue.findIndex(r=>r.codigo == queue[0].proposta.codigo_af) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == queue[0].proposta.codigo_af), 1)
   verifyFase(facta, pool)
 }
 
