@@ -122,6 +122,9 @@ const fases = [
   { situacao: 'PENDENTE', atividade: 'Ag. aciona esteira FGTS', status: {
     'APROVADO': { newFase: '692' },
   }},
+  { situacao: 'PENDENTE', atividade: 'Ajuste Banco Digital', status: {
+    'PENDENTE_IDENTIDADE_ASSINATURA': { newFase: '120001', oldFase: ['2','692','9'], motivo: 'Cliente nao finalizou a assinatura! Precisamos tambem de uma foto do documento do cliente!' },
+  }},
   { situacao: 'CANCELADA', atividade: 'Proposta Cancelada', status: {
     'NAO_INICIADO': { newFase: '10293' },
     'PENDENTE_ASSINATURA': { newFase: '10293' },
