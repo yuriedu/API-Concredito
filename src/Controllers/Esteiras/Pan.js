@@ -107,6 +107,7 @@ const fases = [
     'NOVA_ASSINATURA_NECESSARIA': { newFase: '120001', oldFase: ['2','692','9'], motivo: 'Cliente nao finalizou a assinatura!' },
     'PENDENTE_IDENTIDADE': { newFase: '9', oldFase: ['2','692'], motivo: 'Favor anexar doc do cliente!' },
     'REABRE_DOC_ID': { newFase: '9', oldFase: ['2','692'], motivo: 'Favor anexar doc do cliente!' },
+    'REABRE_DOC_ID_ASSINATURA': { newFase: '9', oldFase: ['2','692'], motivo: 'Cliente nao finalizou a assinatura! Favor anexar doc do cliente!' },
     'REPROVADO': { newFase: '10293', motivo: 'OP-Verificar o motivo da reprova' },
   }},
   { situacao: 'PENDENTE', atividade: 'Aguarda Reserva FGTS', status: {
@@ -114,6 +115,9 @@ const fases = [
   }},
   { situacao: 'PENDENTE', atividade: 'Analise Promotora', status: {
     'APROVADO': { newFase: '1111' },
+  }},
+  { situacao: 'PENDENTE', atividade: 'Reenvia Solicitação FGTS', status: {
+    'APROVADO': { newFase: '10293', motivo: 'OP-Verificar o motivo da reprova' },
   }},
   { situacao: 'PENDENTE', atividade: 'Ag. aciona esteira FGTS', status: {
     'APROVADO': { newFase: '692' },
