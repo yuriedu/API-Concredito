@@ -32,7 +32,6 @@ const PanEsteira = async (pool, log) => {
       if (mes < 10) mes = `0${mes}`
       var agilus = await pool.request().input('date', new Date(`${ano}-${mes}-${dia} 00:00:00`)).input('bank',623).execute('pr_getPropostas_by_Bank_and_Date')
       agilus.recordset = agilus.recordset.filter(r=> r.NumeroContrato && r.NumeroContrato != 0)
-      console.log(agilus.recordset.length)
       agilus.recordset.forEach((proposta, index)=>{
         queue[queue.length] = { codigo: proposta.NumeroContrato, agilus: proposta }
         if (queue.length == 1) return verifyFase(pan, pool)
@@ -48,10 +47,11 @@ module.exports = { PanEsteira }
 
 async function verifyFase(pan, pool) {
   if (queue.length <= 0 || !queue[0]) return console.log(`[Pan Esteira]=> Finalizado!`);
-  await timeout(10)
+  await timeout(100)
   var fila = queue[0]
   const getProposta = await pan.getContrato(fila.agilus.Cpf, { af: "PAN ESTEIRA" })
   if (getProposta && getProposta.data) {
+    getProposta.data = getProposta.data.filter(r=> r.proposta.id == fila.agilus.NumeroContrato)
     if (getProposta.data[0].proposta.status && getProposta.data[0].esteira.atividade && getProposta.data[0].formalizacao.status && getProposta.data[0].esteira.atividade != 'Aviso De Cadastro Cartao') {
       var faseAtividade = fases.find(r=> getProposta.data[0].esteira.atividade.includes(r.atividade) && r.situacao == getProposta.data[0].proposta.status)
       if (faseAtividade) {
@@ -64,14 +64,14 @@ async function verifyFase(pan, pool) {
             .input('fase',fase.newFase)
             .input('bank',623)
             .input('texto',`[PAN ESTEIRA]=> Fase alterada para: ${fila.faseName}!${fase.motivo ? '\nMotivo: '+fase.motivo : ''}`)
-            //.execute('pr_changeFase_by_contrato')
+            .execute('pr_changeFase_by_contrato')
             if (logs) console.log(`[Pan Esteira]=> Contrato: ${fila.agilus.NumeroContrato} - FaseOLD: ${fila.agilus.Fase} - FaseNew: ${fila.faseName}${fase.motivo ? '\nMotivo: '+fase.motivo : ''}`)
           }
         } else console.log(`[Pan Esteira  ${fila.agilus.NumeroContrato}] => Novo Status - Situação: ${getProposta.data[0].proposta.status} - Atividade: ${getProposta.data[0].esteira.atividade} - Status: ${getProposta.data[0].formalizacao.status}`)
       } else console.log(`[Pan Esteira  ${fila.agilus.NumeroContrato}] => Nova Atividade - Situação: ${getProposta.data[0].proposta.status} - Atividade: ${getProposta.data[0].esteira.atividade} - Status: ${getProposta.data[0].formalizacao.status}`)
     }
   }
-  await timeout(10)
+  await timeout(2000)
   if (queue.findIndex(r=>r.codigo == fila.agilus.NumeroContrato) >= 0) await queue.splice(queue.findIndex(r=>r.codigo == fila.agilus.NumeroContrato), 1)
   verifyFase(pan, pool)
 }

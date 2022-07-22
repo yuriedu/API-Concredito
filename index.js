@@ -25,7 +25,8 @@ async function Esteira() {
     C6Esteira(pool, {af: "C6 ESTEIRA"})
     PanEsteira(pool, {af: "PAN ESTEIRA"})
     //BanrisulEsteira(pool, {af: "BANRISUL ESTEIRA"})
-},600000)
+  },600000)
+  PanEsteira(pool, {af: "PAN ESTEIRA"})
 }
 Esteira()
 
