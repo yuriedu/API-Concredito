@@ -93,6 +93,7 @@ const fases = [
   }},
   { situacao: 'AND', atividade: 'EM AVERBACAO', status: {
     '384': { newFase: '2' }, //CONCLUIDO
+    '387': { newFase: '2' }, //CONCLUIDO
   }},
   { situacao: 'PEN', atividade: 'AJUSTAR MARGEM', status: {
     '14': { newFase: '10293', motivo: 'Proposta em ajustar margem, OP VERIFICAR', }, //CONCLUIDO

@@ -4,7 +4,7 @@ const moment = require(`moment`);
 moment.locale("pt-BR");
 
 var queue = []
-var logs = true
+var logs = false
 
 const PanEsteira = async (pool, log) => {
   try {
@@ -49,7 +49,6 @@ module.exports = { PanEsteira }
 async function verifyFase(pan, pool) {
   if (queue.length <= 0 || !queue[0]) return console.log(`[Pan Esteira]=> Finalizado!`);
   await timeout(10)
-  console.log(queue.length)
   var fila = queue[0]
   const getProposta = await pan.getContrato(fila.agilus.Cpf, { af: "PAN ESTEIRA" })
   if (getProposta && getProposta.data) {
@@ -64,7 +63,7 @@ async function verifyFase(pan, pool) {
             .input('contrato',fila.agilus.NumeroContrato)
             .input('fase',fase.newFase)
             .input('bank',623)
-            .input('texto',`[C6 ESTEIRA]=> Fase alterada para: ${fila.faseName}!${fase.motivo ? '\nMotivo: '+fase.motivo : ''}`)
+            .input('texto',`[PAN ESTEIRA]=> Fase alterada para: ${fila.faseName}!${fase.motivo ? '\nMotivo: '+fase.motivo : ''}`)
             .execute('pr_changeFase_by_contrato')
             if (logs) console.log(`[Pan Esteira]=> Contrato: ${fila.agilus.NumeroContrato} - FaseOLD: ${fila.agilus.Fase} - FaseNew: ${fila.faseName}${fase.motivo ? '\nMotivo: '+fase.motivo : ''}`)
           }
