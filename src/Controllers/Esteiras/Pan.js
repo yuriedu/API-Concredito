@@ -101,6 +101,9 @@ const fases = [
   { situacao: 'ANDAMENTO', atividade: 'Ajuste Seguro', status: {
     'NAO_INICIADO': { newFase: '10293', motivo: 'OP-Verificar a especie do cliente, se for 87/88 é sem seguro!' },
   }},
+  { situacao: 'ANDAMENTO', atividade: 'Ag. Averb. On-Line INSS', status: {
+    'APROVADO': { newFase: '10293', motivo: 'OP-Verificar' },
+  }},
   { situacao: 'PENDENTE', atividade: 'Aguardando Fluxo Digital', status: {
     'PENDENTE_IDENTIDADE_ASSINATURA': { newFase: '120001', oldFase: ['2','692','9'], motivo: 'Cliente nao finalizou a assinatura! Precisamos tambem de uma foto do documento do cliente!' },
     'PENDENTE_ASSINATURA': { newFase: '120001', oldFase: ['2','692','9'], motivo: 'Cliente nao finalizou a assinatura!' },
@@ -124,6 +127,8 @@ const fases = [
   }},
   { situacao: 'PENDENTE', atividade: 'Ajuste Banco Digital', status: {
     'PENDENTE_IDENTIDADE_ASSINATURA': { newFase: '120001', oldFase: ['2','692','9'], motivo: 'Cliente nao finalizou a assinatura! Precisamos tambem de uma foto do documento do cliente!' },
+    'REPROVADO': { newFase: '10293', motivo: 'OP-Verificar o motivo da reprova' },
+    'APROVADO': { newFase: '692' },
   }},
   { situacao: 'CANCELADA', atividade: 'Proposta Cancelada', status: {
     'NAO_INICIADO': { newFase: '10293' },
