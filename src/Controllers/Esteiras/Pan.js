@@ -50,9 +50,9 @@ async function verifyFase(pan, pool) {
   await timeout(100)
   var fila = queue[0]
   const getProposta = await pan.getContrato(fila.agilus.Cpf, { af: "PAN ESTEIRA" })
-  if (getProposta && getProposta.data) {
+  if (getProposta && getProposta.data && getProposta.data[0]) {
     getProposta.data = getProposta.data.filter(r=> r.proposta.id == fila.agilus.NumeroContrato)
-    if (getProposta.data[0].proposta.status && getProposta.data[0].esteira.atividade && getProposta.data[0].formalizacao.status && getProposta.data[0].esteira.atividade != 'Aviso De Cadastro Cartao') {
+    if (getProposta.data[0] && getProposta.data[0].proposta.status && getProposta.data[0].esteira.atividade && getProposta.data[0].formalizacao.status && getProposta.data[0].esteira.atividade != 'Aviso De Cadastro Cartao') {
       var faseAtividade = fases.find(r=> getProposta.data[0].esteira.atividade.includes(r.atividade) && r.situacao == getProposta.data[0].proposta.status)
       if (faseAtividade) {
         var fase = faseAtividade.status[getProposta.data[0].formalizacao.status]
