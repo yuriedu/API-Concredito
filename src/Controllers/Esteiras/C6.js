@@ -92,7 +92,7 @@ const fases = [
     '704': { newFase: '692', oldFase: ['9232','2','4002','9923','10293','9'], motivo: 'Banco esta analisando a selfie do cliente!' }, //CONCLUIDO
   }},
   { situacao: 'AND', atividade: 'EM AVERBACAO', status: {
-    '384': { newFase: '10293', motivo: 'Proposta em averbação, OP VERIFICAR', }, //CONCLUIDO
+    '384': { newFase: '2' }, //CONCLUIDO
   }},
   { situacao: 'PEN', atividade: 'AJUSTAR MARGEM', status: {
     '14': { newFase: '10293', motivo: 'Proposta em ajustar margem, OP VERIFICAR', }, //CONCLUIDO

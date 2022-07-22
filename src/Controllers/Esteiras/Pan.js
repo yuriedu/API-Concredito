@@ -53,7 +53,7 @@ async function verifyFase(pan, pool) {
   var fila = queue[0]
   const getProposta = await pan.getContrato(fila.agilus.Cpf, { af: "PAN ESTEIRA" })
   if (getProposta && getProposta.data) {
-    if (getProposta.data[0].proposta.status && getProposta.data[0].esteira.atividade && getProposta.data[0].formalizacao.status) {
+    if (getProposta.data[0].proposta.status && getProposta.data[0].esteira.atividade && getProposta.data[0].formalizacao.status && getProposta.data[0].esteira.atividade != 'Aviso De Cadastro Cartao') {
       var faseAtividade = fases.find(r=> getProposta.data[0].esteira.atividade.includes(r.atividade) && r.situacao == getProposta.data[0].proposta.status)
       if (faseAtividade) {
         var fase = faseAtividade.status[getProposta.data[0].formalizacao.status]
@@ -79,59 +79,60 @@ async function verifyFase(pan, pool) {
 
 const fases = [
   { situacao: 'INTEGRADA', atividade: 'Proposta Finalizada', status: {
-    'APROVADO': { newFase: '' },
+    'APROVADO': { newFase: '3920', oldFase: ['2','9232','9923','692','9']},
+  }},
+  { situacao: 'INTEGRADA', atividade: 'Proposta Integrada', status: {
+    'APROVADO': { newFase: '3920', oldFase: ['2','9232','9923','692','9']},
   }},
   { situacao: 'ANDAMENTO', atividade: 'Negociacao em andamento', status: {
-    'APROVADO': { newFase: '' },
-    'PENDENTE_IDENTIDADE_ASSINATURA': { newFase: '' },
-    'PENDENTE_ASSINATURA': { newFase: '' },
-    'REABRE_DOC_ID_ASSINATURA': { newFase: '' },
+    'APROVADO': { newFase: '10293' },
+    'PENDENTE_IDENTIDADE_ASSINATURA': { newFase: '120001', oldFase: ['2','692','9'], motivo: 'Cliente nao finalizou a assinatura! Precisamos tambem de uma foto do documento do cliente!' },
+    'PENDENTE_ASSINATURA': { newFase: '120001', oldFase: ['2','692','9'], motivo: 'Cliente nao finalizou a assinatura!' },
+    'REABRE_DOC_ID_ASSINATURA': { newFase: '120001', oldFase: ['2','692','9'], motivo: 'Cliente nao finalizou a assinatura e solicitar novo RG parar o cliente!' },
   }},
   { situacao: 'ANDAMENTO', atividade: 'Aguarda Autorização INSS', status: {
-    'APROVADO': { newFase: '' },
+    'APROVADO': { newFase: '692' },
   }},
   { situacao: 'ANDAMENTO', atividade: 'Represa Beneficio INSS', status: {
-    'APROVADO': { newFase: '' },
+    'APROVADO': { newFase: '323' },
   }},
   { situacao: 'ANDAMENTO', atividade: 'Rep CPF inexistente INSS', status: {
-    'APROVADO': { newFase: '' },
+    'APROVADO': { newFase: '10293', motivo: 'OP-Verificar se o beneficio do cliente ainda esta ativo, e se foi digitado com o cpf/matrícula correto' },
   }},
   { situacao: 'ANDAMENTO', atividade: 'Ajuste Seguro', status: {
-    'NAO_INICIADO': { newFase: '' },
-  }},
-  { situacao: 'ANDAMENTO', atividade: 'Aviso De Cadastro Cartao', status: {
-    'NAO_INICIADO': { newFase: '' },
+    'NAO_INICIADO': { newFase: '10293', motivo: 'OP-Verificar a especie do cliente, se for 87/88 é sem seguro!' },
   }},
   { situacao: 'PENDENTE', atividade: 'Aguardando Fluxo Digital', status: {
-    'PENDENTE_IDENTIDADE_ASSINATURA': { newFase: '' },
-    'PENDENTE_ASSINATURA': { newFase: '' },
-    'NOVA_ASSINATURA_NECESSARIA': { newFase: '' },
-    'PENDENTE_IDENTIDADE': { newFase: '' },
-    'REABRE_DOC_ID': { newFase: '' },
+    'PENDENTE_IDENTIDADE_ASSINATURA': { newFase: '120001', oldFase: ['2','692','9'], motivo: 'Cliente nao finalizou a assinatura! Precisamos tambem de uma foto do documento do cliente!' },
+    'PENDENTE_ASSINATURA': { newFase: '120001', oldFase: ['2','692','9'], motivo: 'Cliente nao finalizou a assinatura!' },
+    'NOVA_ASSINATURA_NECESSARIA': { newFase: '120001', oldFase: ['2','692','9'], motivo: 'Cliente nao finalizou a assinatura!' },
+    'PENDENTE_IDENTIDADE': { newFase: '9', oldFase: ['2','692'], motivo: 'Favor anexar doc do cliente!' },
+    'REABRE_DOC_ID': { newFase: '9', oldFase: ['2','692'], motivo: 'Favor anexar doc do cliente!' },
   }},
   { situacao: 'PENDENTE', atividade: 'Aguarda Reserva FGTS', status: {
-    'APROVADO': { newFase: '' },
+    'APROVADO': { newFase: '2' },
   }},
   { situacao: 'PENDENTE', atividade: 'Analise Promotora', status: {
-    'APROVADO': { newFase: '' },
+    'APROVADO': { newFase: '1111' },
   }},
   { situacao: 'PENDENTE', atividade: 'Ag. aciona esteira FGTS', status: {
-    'APROVADO': { newFase: '' },
+    'APROVADO': { newFase: '692' },
   }},
   { situacao: 'CANCELADA', atividade: 'Proposta Cancelada', status: {
-    'NAO_INICIADO': { newFase: '' },
-    'PENDENTE_ASSINATURA': { newFase: '' },
-    'PENDENTE_IDENTIDADE_ASSINATURA': { newFase: '' },
+    'NAO_INICIADO': { newFase: '10293' },
+    'PENDENTE_ASSINATURA': { newFase: '10293' },
+    'PENDENTE_IDENTIDADE_ASSINATURA': { newFase: '10293' },
   }},
   { situacao: 'REPROVADA', atividade: 'Rep Pagto. Digital', status: {
-    'NAO_INICIADO': { newFase: '' },
+    'NAO_INICIADO': { newFase: '10293', oldFase: ['2','692','9'], motivo: 'OP-Verificar o banco do cliente, caso seja pan, precisa ser recadastrada manualmente' },
   }},
   { situacao: 'REPROVADA', atividade: 'Rep CPF inexistente INSS', status: {
-    'APROVADO': { newFase: '' },
+    'APROVADO':{ newFase: '10293', motivo: 'OP-Verificar se o benefício do cliente ainda está ativo, e se foi digitado com o cpf/matrícula correto' },
   }},
   { situacao: 'REPROVADA', atividade: 'Proposta Reprovada', status: {
-    'APROVADO': { newFase: '' },
+    'APROVADO': { newFase: '10293', motivo: 'OP-Verificar o motivo da reprova' },
   }},
 ]
+
 
 async function timeout(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }

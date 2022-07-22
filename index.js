@@ -19,13 +19,13 @@ async function Esteira() {
   const { FactaEsteira } = require('./src/Controllers/Esteiras/Facta')
   const { C6Esteira } = require('./src/Controllers/Esteiras/C6')
   const { PanEsteira } = require('./src/Controllers/Esteiras/Pan')
+  const { BanrisulEsteira } = require('./src/Controllers/Esteiras/Banrisul')
   setInterval(function() {
     FactaEsteira(pool, {af: "FACTA ESTEIRA"})
     C6Esteira(pool, {af: "C6 ESTEIRA"})
-    // await PanEsteira(pool, {af: "PAN ESTEIRA"})
-  },600000)
-  //const { BanrisulEsteira } = require('./src/Controllers/Esteiras/Banrisul')
- // await BanrisulEsteira(pool, {af: "BANRISUL ESTEIRA"})
+    PanEsteira(pool, {af: "PAN ESTEIRA"})
+    //BanrisulEsteira(pool, {af: "BANRISUL ESTEIRA"})
+},600000)
 }
 Esteira()
 

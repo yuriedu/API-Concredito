@@ -103,17 +103,17 @@ class Banrisul {
     }
   }
 
-  async getEsteira(data, log) {
+  async getStatus(data, log) {
     try {
       log.situation = `[4]=> Puxando esteira...`
-      const response = await this.api.get(`/consignado/Consignado/Proposta/ListarPropostasPorDataInclusao?dataInclusao=${data}`);
+      const response = await this.api.get(`/consignado/Consignado/Proposta/V2/${data}/ObterSituacao?dataInclusao=${data}`);
       return response;
     } catch(err) {
       if (err.response && err.response.data && err.response.data.erros && err.response.data.erros[0] && err.response.data.erros[0].mensagem) return err.response
       if (err.code && (err.code == 'ETIMEDOUT')) {
         await this.timeout(5000)
         await this.refreshToken(log);
-        return this.gravarPropostaPortabilidade(data, log)
+        return this.getStatus(data, log)
       }
       console.log(`[API Banrisul ERROR(4) - ${log.af ? 'AF: '+log.af : 'CPF: '+log.cpf}] => ${err}`)
       console.log(err.response ? err.response.data : err);
