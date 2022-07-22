@@ -79,15 +79,18 @@ async function timeout(ms) { return new Promise(resolve => setTimeout(resolve, m
 
 const fases = [
   { situacao: 'APROVADA', atividades: {
-    'PROPOSTA EFETIVADA': { newFase: '3920', oldFase: ['2','9232','9923','692','9'] },
+    'PROPOSTA EFETIVADA': { newFase: '3920' },
+    'PRONTO P/ PAGTO': { newFase: '2' },
   }},
   { situacao: 'ANDAMENTO', atividades: {
     'AGUARDANDO ASSINATURA/CAPTURA BIOMÉTRICA': { newFase: '120001', oldFase: ['4002','2'] },
-    'PENDENTE SITE FORA DO AR': { newFase: '' },
-    'PENDENTE': { newFase: '10293' },
-    'AGUARD RETORNO SOLIC SALDO': { newFase: '11' },
+    'PENDENTE SITE FORA DO AR': { newFase: '392' },
+    'PENDENTE': { newFase: '10293', oldFase: ['2','430','692','1111','2002','4002'] },
+    'AGUARD RETORNO SOLIC SALDO': { newFase: '10293' },
     'PAPERLESS - ANALISE ASSINATURA ELETRÔNICA': { newFase: '692' },
     'AGUARD ENVIO SOLIC SALDO (CTC)': { newFase: '202552' },
+    'PENDENTE - AUTOMÁTICO': { newFase: '', oldFase: ['2','430','692','1111','2002','4002'] },
+    'AGUARDANDO ECO': { newFase: '692' },
   }},
   { situacao: 'REPROVADA', atividades: {
     'REPROVAÇÃO AUTOMÁTICA': { newFase: '10923' },

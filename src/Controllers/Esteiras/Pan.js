@@ -112,6 +112,8 @@ const fases = [
     'REABRE_DOC_ID': { newFase: '9', oldFase: ['2','692','4002'], motivo: 'Favor anexar doc do cliente!' },
     'REABRE_DOC_ID_ASSINATURA': { newFase: '10293', motivo: 'OP. verificar - Cliente nao finalizou a assinatura ou não anexaram doc do cliente!' },
     'REPROVADO': { newFase: '10293', motivo: 'OP-Verificar o motivo da reprova' },
+    'EM_ANALISE_AUTOMATICA': { newFase: '692' },
+    'EM_ANALISE_MANUAL': { newFase: '692' },
   }},
   { situacao: 'PENDENTE', atividade: 'Aguarda Reserva FGTS', status: {
     'APROVADO': { newFase: '2' },
