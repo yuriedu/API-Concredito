@@ -85,9 +85,9 @@ const fases = [
   }},
   { situacao: 'ANDAMENTO', atividade: 'Negociacao em andamento', status: {
     'APROVADO': { newFase: '10293' },
-    'PENDENTE_IDENTIDADE_ASSINATURA': { newFase: '120001', oldFase: ['2','692','9'], motivo: 'Cliente nao finalizou a assinatura! Precisamos tambem de uma foto do documento do cliente!' },
-    'PENDENTE_ASSINATURA': { newFase: '120001', oldFase: ['2','692','9'], motivo: 'Cliente nao finalizou a assinatura!' },
-    'REABRE_DOC_ID_ASSINATURA': { newFase: '120001', oldFase: ['2','692','9'], motivo: 'Cliente nao finalizou a assinatura e solicitar novo RG parar o cliente!' },
+    'PENDENTE_IDENTIDADE_ASSINATURA': { newFase: '120001', oldFase: ['2','692','9','4002'], motivo: 'Cliente nao finalizou a assinatura! Precisamos tambem de uma foto do documento do cliente!' },
+    'PENDENTE_ASSINATURA': { newFase: '120001', oldFase: ['2','692','9','4002'], motivo: 'Cliente nao finalizou a assinatura!' },
+    'REABRE_DOC_ID_ASSINATURA': { newFase: '120001', oldFase: ['2','692','9','4002'], motivo: 'Cliente nao finalizou a assinatura e solicitar novo RG parar o cliente!' },
   }},
   { situacao: 'ANDAMENTO', atividade: 'Aguarda Autorização INSS', status: {
     'APROVADO': { newFase: '692' },
@@ -102,16 +102,16 @@ const fases = [
     'NAO_INICIADO': { newFase: '10293', motivo: 'OP-Verificar a especie do cliente, se for 87/88 é sem seguro!' },
   }},
   { situacao: 'ANDAMENTO', atividade: 'Ag. Averb. On-Line INSS', status: {
-    'APROVADO': { newFase: '10293', motivo: 'OP-Verificar' },//
+    'APROVADO': { newFase: '2' },
   }},
   { situacao: 'PENDENTE', atividade: 'Aguardando Fluxo Digital', status: {
-    'PENDENTE_IDENTIDADE_ASSINATURA': { newFase: '120001', oldFase: ['2','692','9'], motivo: 'Cliente nao finalizou a assinatura! Precisamos tambem de uma foto do documento do cliente!' },
-    'PENDENTE_ASSINATURA': { newFase: '120001', oldFase: ['2','692','9'], motivo: 'Cliente nao finalizou a assinatura!' },
-    'NOVA_ASSINATURA_NECESSARIA': { newFase: '120001', oldFase: ['2','692','9'], motivo: 'Cliente nao finalizou a assinatura!' },
-    'PENDENTE_IDENTIDADE': { newFase: '9', oldFase: ['2','692'], motivo: 'Favor anexar doc do cliente!' },
-    'REABRE_DOC_ID': { newFase: '9', oldFase: ['2','692'], motivo: 'Favor anexar doc do cliente!' },
-    'REABRE_DOC_ID_ASSINATURA': { newFase: '9', oldFase: ['2','692'], motivo: 'Cliente nao finalizou a assinatura! Favor anexar doc do cliente!' },//
-    'REPROVADO': { newFase: '10293', motivo: 'OP-Verificar o motivo da reprova' },//
+    'PENDENTE_IDENTIDADE_ASSINATURA': { newFase: '120001', oldFase: ['2','692','9','4002'], motivo: 'Cliente nao finalizou a assinatura! Precisamos tambem de uma foto do documento do cliente!' },
+    'PENDENTE_ASSINATURA': { newFase: '120001', oldFase: ['2','692','9','4002'], motivo: 'Cliente nao finalizou a assinatura!' },
+    'NOVA_ASSINATURA_NECESSARIA': { newFase: '120001', oldFase: ['2','692','9','4002'], motivo: 'Cliente nao finalizou a assinatura!' },
+    'PENDENTE_IDENTIDADE': { newFase: '9', oldFase: ['2','692','4002'], motivo: 'Favor anexar doc do cliente!' },
+    'REABRE_DOC_ID': { newFase: '9', oldFase: ['2','692','4002'], motivo: 'Favor anexar doc do cliente!' },
+    'REABRE_DOC_ID_ASSINATURA': { newFase: '10293', motivo: 'OP. verificar - Cliente nao finalizou a assinatura ou não anexaram doc do cliente!' },
+    'REPROVADO': { newFase: '10293', motivo: 'OP-Verificar o motivo da reprova' },
   }},
   { situacao: 'PENDENTE', atividade: 'Aguarda Reserva FGTS', status: {
     'APROVADO': { newFase: '2' },
@@ -120,18 +120,18 @@ const fases = [
     'APROVADO': { newFase: '1111' },
   }},
   { situacao: 'PENDENTE', atividade: 'Reenvia Solicitação FGTS', status: {
-    'APROVADO': { newFase: '10293', motivo: 'OP-Verificar o motivo da reprova' },//
+    'APROVADO': { newFase: '2' },
   }},
   { situacao: 'PENDENTE', atividade: 'Ag. aciona esteira FGTS', status: {
-    'APROVADO': { newFase: '692' },//
+    'APROVADO': { newFase: '692' },
   }},
   { situacao: 'PENDENTE', atividade: 'Ajuste PMT Margem Livre', status: {
-    'APROVADO': { newFase: '692' },//
+    'APROVADO': { newFase: '10293', motivo: 'Verificar margem do cliente!' },
   }},
   { situacao: 'PENDENTE', atividade: 'Ajuste Banco Digital', status: {
-    'PENDENTE_IDENTIDADE_ASSINATURA': { newFase: '120001', oldFase: ['2','692','9'], motivo: 'Cliente nao finalizou a assinatura! Precisamos tambem de uma foto do documento do cliente!' },//
-    'REPROVADO': { newFase: '10293', motivo: 'OP-Verificar o motivo da reprova' },//
-    'APROVADO': { newFase: '692' },//
+    'PENDENTE_IDENTIDADE_ASSINATURA': { newFase: '10293', oldFase: ['2','692','9','4002'], motivo: 'OP. verificar banco cadastrado!' },
+    'REPROVADO': { newFase: '10293', motivo: 'OP-Verificar o motivo da reprova' },
+    'APROVADO': { newFase: '10293', motivo: 'Ajustar banco digital' },
   }},
   { situacao: 'CANCELADA', atividade: 'Proposta Cancelada', status: {
     'NAO_INICIADO': { newFase: '10293' },
@@ -139,14 +139,14 @@ const fases = [
     'PENDENTE_IDENTIDADE_ASSINATURA': { newFase: '10293' },
   }},
   { situacao: 'REPROVADA', atividade: 'Rep Pagto. Digital', status: {
-    'NAO_INICIADO': { newFase: '10293', oldFase: ['2','692','9'], motivo: 'OP-Verificar o banco do cliente, caso seja pan, precisa ser recadastrada manualmente' },
+    'NAO_INICIADO': { newFase: '10293', oldFase: ['2','692','9','4002'], motivo: 'OP-Verificar o banco do cliente, caso seja pan, precisa ser recadastrada manualmente' },
   }},
   { situacao: 'REPROVADA', atividade: 'Rep CPF inexistente INSS', status: {
     'APROVADO':{ newFase: '10293', motivo: 'OP-Verificar se o benefício do cliente ainda está ativo, e se foi digitado com o cpf/matrícula correto' },
   }},
   { situacao: 'REPROVADA', atividade: 'Proposta Reprovada', status: {
     'APROVADO': { newFase: '10293', motivo: 'OP-Verificar o motivo da reprova' },
-    'REPROVADO': { newFase: '10293', motivo: 'OP-Verificar o motivo da reprova' },//
+    'REPROVADO': { newFase: '10293', motivo: 'OP-Verificar o motivo da reprova' },
   }},
 ]
 

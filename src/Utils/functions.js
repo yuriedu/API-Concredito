@@ -331,7 +331,6 @@ const fasesAgilus = {
   '3920': 'PROPOSTA PAGA',
   '4002': 'ASSINADO / RESPONDIDO',
   '10293': 'Verificação manual OP',
-  '10923': 'Verificação manual OP',
   '120001': 'PENDENTE POR ASSINATURA',
   '202552': 'Envia Requisição CIP',
 }
