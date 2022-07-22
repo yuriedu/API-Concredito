@@ -133,6 +133,9 @@ const fases = [
     'REPROVADO': { newFase: '10293', motivo: 'OP-Verificar o motivo da reprova' },
     'APROVADO': { newFase: '10293', motivo: 'Ajustar banco digital' },
   }},
+  { situacao: 'PENDENTE', atividade: 'Pend Ajuste Dados Inss', status: {
+    'APROVADO': { newFase: '10293', motivo: 'Ajustar dados do cliente conforme INSS!' },
+  }},
   { situacao: 'CANCELADA', atividade: 'Proposta Cancelada', status: {
     'NAO_INICIADO': { newFase: '10293' },
     'PENDENTE_ASSINATURA': { newFase: '10293' },
