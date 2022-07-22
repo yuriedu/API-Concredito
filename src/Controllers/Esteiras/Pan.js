@@ -64,7 +64,7 @@ async function verifyFase(pan, pool) {
             .input('fase',fase.newFase)
             .input('bank',623)
             .input('texto',`[PAN ESTEIRA]=> Fase alterada para: ${fila.faseName}!${fase.motivo ? '\nMotivo: '+fase.motivo : ''}`)
-            .execute('pr_changeFase_by_contrato')
+            //.execute('pr_changeFase_by_contrato')
             if (logs) console.log(`[Pan Esteira]=> Contrato: ${fila.agilus.NumeroContrato} - FaseOLD: ${fila.agilus.Fase} - FaseNew: ${fila.faseName}${fase.motivo ? '\nMotivo: '+fase.motivo : ''}`)
           }
         } else console.log(`[Pan Esteira  ${fila.agilus.NumeroContrato}] => Novo Status - Situação: ${getProposta.data[0].proposta.status} - Atividade: ${getProposta.data[0].esteira.atividade} - Status: ${getProposta.data[0].formalizacao.status}`)
@@ -107,6 +107,7 @@ const fases = [
     'NOVA_ASSINATURA_NECESSARIA': { newFase: '120001', oldFase: ['2','692','9'], motivo: 'Cliente nao finalizou a assinatura!' },
     'PENDENTE_IDENTIDADE': { newFase: '9', oldFase: ['2','692'], motivo: 'Favor anexar doc do cliente!' },
     'REABRE_DOC_ID': { newFase: '9', oldFase: ['2','692'], motivo: 'Favor anexar doc do cliente!' },
+    'REPROVADO': { newFase: '10293', motivo: 'OP-Verificar o motivo da reprova' },
   }},
   { situacao: 'PENDENTE', atividade: 'Aguarda Reserva FGTS', status: {
     'APROVADO': { newFase: '2' },
@@ -130,6 +131,7 @@ const fases = [
   }},
   { situacao: 'REPROVADA', atividade: 'Proposta Reprovada', status: {
     'APROVADO': { newFase: '10293', motivo: 'OP-Verificar o motivo da reprova' },
+    'REPROVADO': { newFase: '10293', motivo: 'OP-Verificar o motivo da reprova' },
   }},
 ]
 
